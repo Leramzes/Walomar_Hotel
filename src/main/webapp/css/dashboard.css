@@ -1,0 +1,105 @@
+.custom-row-rooms {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Distribuye las tarjetas equitativamente */
+    gap: 10px;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.custom-row-rooms > div {
+    flex: 1 1 calc(33.333% - 10px); /* Ocupa un tercio del ancho total */
+    max-width: calc(33.333% - 10px); /* Evita que se expanda demasiado */
+}
+
+@media (max-width: 768px) { /* En pantallas pequeñas, cada tarjeta en una fila */
+    .custom-row-rooms > div {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
+
+.col-lg-4 {
+    flex: 1;
+    max-width: 28%;
+    min-width: 250px;
+}
+
+.small-box {
+    border-radius: 0.25rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    padding: 30px 15px 50px;
+}
+
+.small-box .inner {
+    text-align: left;
+}
+
+.small-box .inner h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.small-box .inner p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.small-box .icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 0;
+    font-size: 2.6rem;
+    opacity: 0.2;
+}
+
+.small-box a {
+    display: block;
+    padding: 10px 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-decoration: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.small-box a:hover {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.bg-info {
+    background-color: #17a2b8;
+}
+
+.bg-success {
+    background-color: #28a745;
+}
+
+.bg-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.bg-danger {
+    background-color: #ec5122 !important;
+    color: #212529;
+}
+
+@media (max-width: 768px) {
+    .col-lg-4 {
+        flex: 1;
+        max-width: 100%;
+        min-width: 250px;
+    }
+}

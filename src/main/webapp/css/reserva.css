@@ -1,0 +1,18 @@
+.square {
+    width: 25px;
+    height: 25px;
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 12px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.square:hover {
+    transform: rotate(30deg);
+}
+
+hr {
+    border: 4px double #0e2238;
+    height: 4px;
+    background-color: #0e2238;
+}

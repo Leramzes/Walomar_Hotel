@@ -1,0 +1,272 @@
+<%@ page import="development.team.hoteltransylvania.Model.TypeRoom" %>
+<%@ page import="java.util.List" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionTypeRoom" %>
+<%@ page import="development.team.hoteltransylvania.Model.Floor" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionRoom" %>
+<%@ page import="java.util.Comparator" %>
+<%@ page import="java.util.stream.Collectors" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Calendario de Reservas</title>
+    <style>
+        #calendar {
+            max-width: 100%;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<%
+    List<TypeRoom> allTypeRooms = GestionTypeRoom.getAllTypeRoomsActive();
+    List<Floor> floors = GestionRoom.quantityFloorsEnabled().stream()
+            .sorted(Comparator.comparing(Floor::getId))
+            .collect(Collectors.toList());;
+%>
+
+<body class="p-4">
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+    <h4><i class="fa-solid fa-calendar-days me-2"></i> Reserva</h4>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/menu.jsp">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Reserva</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Calendario de Reservaciones - <span id="currentDate"></span></h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarReserva">
+        <i class="fas fa-plus"></i> Nueva Reservación
+    </button>
+</div>
+
+<!-- Calendario -->
+<div id='calendar'></div>
+
+<!-- Modal Nueva Reservación -->
+<div class="modal fade" id="modalAgregarReserva" tabindex="-1" aria-labelledby="nuevaReservaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="agregarReserva">Agregar Reserva</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formReserva">
+                    <input type="hidden" id="inputAgregarReserva">
+                    <div class="row">
+                        <!-- Datos del Cliente -->
+                        <div class="col-md-4 border-end">
+                            <h5>Datos del Cliente</h5>
+                            <input type="text" class="form-control mb-3" id="numberDocument" placeholder="Buscar por Documento"
+                                   onkeyup="buscarCliente()">
+                            <div id="datosCliente">
+                                <p style='color:red;' class='mt-2'>⚠️ Debes ingresar un número de documento</p>
+                                <div class="mb-3">
+                                    <label for="nombre">Nombre Completo</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tipoDocumento">Tipo de Documento</label>
+                                    <select class="form-select" id="tipoDocumento" name="tipoDocumento" required>
+                                        <option value="#">DNI</option>
+                                        <option value="#">PASAPORTE</option>
+                                        <option value="#">RUC</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="documento">Documento</label>
+                                    <input type="text" class="form-control" id="documento" name="documento" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="correo">Correo</label>
+                                    <input type="email" class="form-control" id="correo" name="correo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Datos del Alojamiento -->
+                        <div class="col-md-4 border-end">
+                            <h5>Datos del Alojamiento</h5>
+                            <div class="mb-3">
+                                <label for="tipoHabitacion">Tipo de Habitación</label>
+                                <select class="form-select" id="tipoHabitacion" onchange="getRoomsByType('#tipoHabitacion')" required>
+                                    <%for(TypeRoom typeRoom : allTypeRooms){%>
+                                    <option value="<%=typeRoom.getId()%>"><%=typeRoom.getName()%></option>
+                                    <%}%>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="combRooms">
+                                <label for="habitacion">Habitación</label>
+                                <select class="form-select" id="habitacion" required>
+                                    <option value="">Seleccione una habitación</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fechaEntrada">Fecha y Hora de Entrada</label>
+                                <input type="datetime-local" class="form-control" id="fechaEntrada" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fechaSalida">Fecha y Hora de Salida</label>
+                                <input type="datetime-local" class="form-control" id="fechaSalida" required>
+                            </div>
+                        </div>
+
+                        <!-- Costo -->
+                        <div class="col-md-4">
+                            <h5>Costo</h5>
+                            <div class="mb-3">
+                                <label for="descuento">Descuento</label>
+                                <select class="form-select" id="descuento">
+                                    <option value="#">0%</option>
+                                    <option value="#">5%</option>
+                                    <option value="#">10%</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cobroExtra">Cobro extra</label>
+                                <input type="number" class="form-control" id="cobroExtra">
+                            </div>
+                            <div class="mb-3">
+                                <label for="adelanto">Adelanto</label>
+                                <input type="number" class="form-control" id="adelanto">
+                            </div>
+                            <div class="mb-3">
+                                <label for="totalPagar">Total a Pagar</label>
+                                <input type="number" class="form-control" id="totalPagar" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="observacion">Observaciones</label>
+                                <textarea id="observacion" class="form-control" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal al seleccionar rango -->
+<div class="modal fade" id="rangoReservaModal" tabindex="-1" aria-labelledby="rangoReservaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rangoReservaLabel">Reservar Rango Seleccionado</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+                    <form id="formRango">
+                        <input type="hidden" id="inputRangoReserva">
+                        <div class="row">
+                            <!-- Datos del Cliente -->
+                            <div class="col-md-4 border-end">
+                                <h5>Datos del Cliente</h5>
+                                <input type="text" class="form-control mb-3" id="numberDocumentRango" placeholder="Buscar por Documento"
+                                       onkeyup="buscarCliente()">
+                                <div id="datosClienteRango">
+                                    <p style='color:red;' class='mt-2'>⚠️ Debes ingresar un número de documento</p>
+                                    <div class="mb-3">
+                                        <label for="nombreRango">Nombre Completo</label>
+                                        <input type="text" class="form-control" id="nombreRango" name="nombre" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tipoDocumentoRango">Tipo de Documento</label>
+                                        <select class="form-select" id="tipoDocumentoRango" name="tipoDocumento" required>
+                                            <option value="#">DNI</option>
+                                            <option value="#">PASAPORTE</option>
+                                            <option value="#">RUC</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="documentoRango">Documento</label>
+                                        <input type="text" class="form-control" id="documentoRango" name="documento" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="correoRango">Correo</label>
+                                        <input type="email" class="form-control" id="correoRango" name="correo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Datos del Alojamiento -->
+                            <div class="col-md-4 border-end">
+                                <h5>Datos del Alojamiento</h5>
+                                <div class="mb-3">
+                                    <label for="tipoHabitacionRango">Tipo de Habitación</label>
+                                    <select class="form-select" id="tipoHabitacionRango" onchange="getRoomsByType('#tipoHabitacionRango')" required>
+                                    <%for(TypeRoom typeRoom : allTypeRooms){%>
+                                        <option value="<%=typeRoom.getId()%>"><%=typeRoom.getName()%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="combRoomsRango">
+                                    <label for="habitacionRango">Habitación</label>
+                                    <select class="form-select" id="habitacionRango" required>
+                                        <option value="">Seleccione una habitación</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fechaEntradaRango">Fecha y Hora de Entrada</label>
+                                    <input type="datetime-local" class="form-control" id="fechaEntradaRango" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="fechaSalidaRango">Fecha y Hora de Salida</label>
+                                    <input type="datetime-local" class="form-control" id="fechaSalidaRango" required>
+                                </div>
+                            </div>
+
+                            <!-- Costo -->
+                            <div class="col-md-4">
+                                <h5>Costo</h5>
+                                <div class="mb-3">
+                                    <label for="descuentoRango">Descuento</label>
+                                    <select class="form-select" id="descuentoRango">
+                                        <option value="#">0%</option>
+                                        <option value="#">5%</option>
+                                        <option value="#">10%</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cobroExtraRango">Cobro extra</label>
+                                    <input type="number" class="form-control" id="cobroExtraRango">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="adelantoRango">Adelanto</label>
+                                    <input type="number" class="form-control" id="adelantoRango">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="totalPagarRango">Total a Pagar</label>
+                                    <input type="number" class="form-control" id="totalPagarRango" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="observacionRango">Observaciones</label>
+                                    <textarea id="observacionRango" class="form-control" rows="4"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success">Reservar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

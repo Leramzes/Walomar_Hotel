@@ -1,0 +1,64 @@
+package development.team.hoteltransylvania.Controller;
+
+import com.google.gson.Gson;
+import development.team.hoteltransylvania.Business.GestionFloor;
+import development.team.hoteltransylvania.Model.Floor;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@WebServlet(name = "floorcontroller", urlPatterns = {"/floorcontroller"})
+public class FloorController extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
+
+        if ("get".equals(action)) {
+            int idFloor = Integer.parseInt(req.getParameter("idfloor"));
+            System.out.println(idFloor);
+
+            Floor floor = GestionFloor.getFloorById(idFloor);
+            System.out.println(floor.toString());
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            PrintWriter out = resp.getWriter();
+            out.print(new Gson().toJson(floor));
+            out.flush();
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("actionFloor");
+
+        switch (action) {
+            case "add":
+                String nombre = req.getParameter("nombreFloor");
+                GestionFloor.registerFloor(new Floor(1,nombre,"Activo"));
+                resp.sendRedirect("menu.jsp?view=pisos");
+                break;
+            case "update":
+                int id = Integer.parseInt(req.getParameter("idFloor"));
+                String nombreUpdate = req.getParameter("nombreEditar");
+                GestionFloor.updateFloor(new Floor(id,nombreUpdate,"Activo"));
+                resp.sendRedirect("menu.jsp?view=pisos");
+                break;
+            case "inactivate":
+                int idFloor = Integer.parseInt(req.getParameter("idFloor"));
+                GestionFloor.updateStatus(idFloor, "Inactivo");
+                resp.sendRedirect("menu.jsp?view=pisos");
+                break;
+            case "activate":
+                int idPiso = Integer.parseInt(req.getParameter("idFloor"));
+                GestionFloor.updateStatus(idPiso, "Activo");
+                resp.sendRedirect("menu.jsp?view=pisos");
+                break;
+        }
+    }
+}
+

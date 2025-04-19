@@ -1,0 +1,46 @@
+.table-responsive .table {
+    width: 100%;
+}
+
+.card-header {
+    background: #0e2238;
+}
+
+.card-header .form-control,
+.card-header .form-select {
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .card-header .row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .card-header .col-9,
+    .card-header .col-3 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .card-header .col-9 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card-header .form-control,
+    .card-header .form-select,
+    .card-header .btn {
+        width: 100%;
+    }
+
+    .card-header .col-3 {
+        text-align: center;
+    }
+
+    .table-responsive .table {
+        table-layout: auto;
+        text-align: center;
+    }
+}
