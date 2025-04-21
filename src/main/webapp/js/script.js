@@ -495,35 +495,74 @@ function calcularDias() {
     }
     return 1; // Valor por defecto
 }
-function mostrarDatos(){
-    let datos = {
-        nombre: document.getElementById("nombre").value,
-        tipoDocumento: document.getElementById("tipoDocumento").value,
-        documento: document.getElementById("documento").value,
-        correo: document.getElementById("correo").value,
-        tipoHabitacion: document.getElementById("tipoHabitacion").value,
-        habitacion: document.getElementById("habitacion").value,
-        fechaEntrada: document.getElementById("fechaEntrada").value,
-        fechaSalida: document.getElementById("fechaSalida").value,
-        descuento: document.getElementById("descuento").value,
-        cobroExtra: document.getElementById("cobroExtra").value,
-        adelanto: document.getElementById("adelanto").value,
-        totalPagar: document.getElementById("totalPagar").value,
-        observacion: document.getElementById("observacion").value
-    };
 
-    console.log("Datos de la Reserva:");
-    console.log("Nombre:", datos.nombre);
-    console.log("Tipo de Documento:", datos.tipoDocumento);
-    console.log("Documento:", datos.documento);
-    console.log("Correo:", datos.correo);
-    console.log("Tipo de Habitación:", datos.tipoHabitacion);
-    console.log("Habitación:", datos.habitacion);
-    console.log("Fecha de Entrada:", datos.fechaEntrada);
-    console.log("Fecha de Salida:", datos.fechaSalida);
-    console.log("Descuento:", datos.descuento + "%");
-    console.log("Cobro Extra:", datos.cobroExtra);
-    console.log("Adelanto:", datos.adelanto);
-    console.log("Total a Pagar:", datos.totalPagar);
-    console.log("Observaciones:", datos.observacion);
+
+document.getElementById('documento').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // Previene que el formulario se envíe automáticamente
+
+        const dni = this.value.trim();
+
+        if (dni.length === 8) {
+            fetch(`https://api.apis.net.pe/v1/dni?numero=${dni}`, {
+                headers: {
+                    "Authorization": "apis-token-14450.89dFFK5wtOjb14SJuyXGFU65rWPJHkal" // Reemplaza con tu token real
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.nombres) {
+                        const nombreCompleto = `${data.nombres} ${data.apellidoPaterno} ${data.apellidoMaterno}`;
+                        document.getElementById('nombre').value = nombreCompleto;
+                    } else {
+                        alert('DNI no encontrado');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al consultar el DNI:', error);
+                });
+        } else {
+            alert('Ingrese un DNI válido de 8 dígitos.');
+        }
+    }
+});
+function buscarDNI() {
+    var documento = $("#documento").val();
+    var tipo_documento = $("#tipoDocumento").val();
+    var documento = $("#documento").val();
+    $.ajax({
+        url: "apireniec",
+        data: {
+            numDoc: documento,
+            typeDoc: tipo_documento
+        },
+        success: function (result) {
+            let data = JSON.parse(result);
+            if (tipo_documento === "DNI") {
+                if (data.nombres) {
+                    let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
+                    $("#nombre").val(nombreCompleto);
+                    $("#numberDocumentoHidden").val(documento);
+                    $("#tipoDocumentoHidden").val(tipo_documento);
+                } else {
+                    $("#nombre").val("No encontrado");
+                    $("#numberDocumentoHidden").val("");
+                    $("#tipoDocumentoHidden").val("");
+                }
+            } else if (tipo_documento === "RUC") {
+                if (data.nombre) {
+                    $("#nombre").val(data.nombre);
+                    $("#numberDocumentoHidden").val(documento);
+                    $("#tipoDocumentoHidden").val(tipo_documento);
+                } else {
+                    $("#nombre").val("No encontrado");
+                    $("#numberDocumentoHidden").val("");
+                    $("#tipoDocumentoHidden").val("");
+                }
+            } else {
+                $("#nombre").val("No encontrado");
+            }
+
+        }
+    });
 }

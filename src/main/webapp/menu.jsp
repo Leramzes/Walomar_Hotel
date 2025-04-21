@@ -457,6 +457,29 @@
             }
         });
 
+        /*// Alerta para registrar cliente
+        document.getElementById('contenido').addEventListener('submit', function (e) {
+            if (e.target.id === 'formCliente') {
+                e.preventDefault();
+                Swal.fire({
+                    title: '¿Registrar cliente?',
+                    text: "Se agregará un nuevo cliente al sistema.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#198754',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sí, registrar',
+                    cancelButtonText: 'Cancelar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        e.target.submit();
+                    }
+                });
+            }
+        });*/
+
         // Alerta para editar usuario
         document.getElementById('contenido').addEventListener('submit', function (e) {
             if (e.target.id === 'formEditarUsuario') {

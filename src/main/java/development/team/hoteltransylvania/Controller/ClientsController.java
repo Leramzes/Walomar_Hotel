@@ -49,8 +49,17 @@ public class ClientsController extends HttpServlet {
                 String typeDocument = req.getParameter("typedocument");
                 String document = req.getParameter("document");
                 String telephone = req.getParameter("telephone");
-                GestionClient.registerClient(new Client(clientName,telephone,clientEmail, TypeDocument.valueOf(typeDocument),document));
-                resp.sendRedirect("menu.jsp?view=clientes");
+                //search number document replicated
+                boolean isDuplicated = GestionClient.getAllClients()
+                        .stream()
+                        .anyMatch(c -> c.getNumberDocument().equals(document));
+                if (isDuplicated) {
+
+                }else{
+                    GestionClient.registerClient(new Client(clientName,telephone,clientEmail, TypeDocument.valueOf(typeDocument),document));
+                    resp.sendRedirect("menu.jsp?view=clientes");
+                }
+
                 break;
             case "delete":
                 int idClient = Integer.parseInt(req.getParameter("idClient"));

@@ -57,13 +57,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <form method="post" action="clientcontrol">
-            <input type="hidden" id="inputAgregarCliente">
-            <input type="hidden" value="add" name="actionclient">
-            <div class="mb-3">
-              <label for="nombre">Nombre Completo</label>
-              <input type="text" class="form-control" id="nombre" name="clientname" required>
-            </div>
+          <form>
             <div class="mb-3">
               <label for="tipoDocumento">Tipo de Documento</label>
               <select class="form-select" id="tipoDocumento" name="typedocument" required>
@@ -74,7 +68,22 @@
             </div>
             <div class="mb-3">
               <label for="documento">Documento</label>
-              <input type="text" class="form-control" id="documento" name="document" required>
+              <div class="d-flex">
+                <input type="text" class="form-control me-2" id="documento" name="document" required>
+                <button type="button" class="btn btn-success" onclick="buscarDNI()">Buscar</button>
+              </div>
+            </div>
+          </form>
+
+          <form id="formCliente" method="post" action="clientcontrol">
+            <input type="hidden" id="inputAgregarCliente">
+            <input type="hidden" value="add" name="actionclient">
+
+            <input type="text" id="tipoDocumentoHidden" name="typedocument">
+            <input type="text" id="numberDocumentoHidden" name="numberdocument">
+            <div class="mb-3">
+              <label for="nombre">Nombre Completo</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" readonly>
             </div>
             <div class="mb-3">
               <label for="correo">Correo</label>
@@ -86,6 +95,7 @@
             </div>
             <button type="submit" class="btn btn-success">Guardar</button>
           </form>
+
         </div>
       </div>
     </div>
@@ -175,11 +185,11 @@
                       onclick="editarClient(<%=client.getId()%>)">
                 ✏️
               </button>
-              <form action="clientcontrol" method="post">
+              <%--<form action="clientcontrol" method="post">
                 <input type="hidden" name="idClient" value="<%=client.getId()%>">
                 <input type="hidden" name="actionclient" value="delete">
                 <button class="btn btn-danger btn-sm">❌</button>
-              </form>
+              </form>--%>
             </td>
           </tr>
         <%count++;}%>
