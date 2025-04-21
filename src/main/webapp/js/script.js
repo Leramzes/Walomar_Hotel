@@ -546,8 +546,6 @@ function buscarDNI() {
                     $("#tipoDocumentoHidden").val(tipo_documento);
                 } else {
                     $("#nombre").val("No encontrado");
-                    $("#numberDocumentoHidden").val("");
-                    $("#tipoDocumentoHidden").val("");
                 }
             } else if (tipo_documento === "RUC") {
                 if (data.nombre) {
@@ -556,13 +554,19 @@ function buscarDNI() {
                     $("#tipoDocumentoHidden").val(tipo_documento);
                 } else {
                     $("#nombre").val("No encontrado");
-                    $("#numberDocumentoHidden").val("");
-                    $("#tipoDocumentoHidden").val("");
                 }
             } else {
                 $("#nombre").val("No encontrado");
             }
-
+        },
+        error: function (xhr) {
+            let errorMsg = "Error al consultar documento";
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                errorMsg = xhr.responseJSON.error;
+            }
+            $("#nombre").val(errorMsg);
+            $("#numberDocumentoHidden").val("");
+            $("#tipoDocumentoHidden").val("");
         }
     });
 }

@@ -52,6 +52,9 @@ public class apiConsultaReniec extends HttpServlet {
 
                 PrintWriter out = resp.getWriter();
                 out.println(response.toString());
+            }else {
+
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // Devuelve error 400 al frontend
             }
         } catch (Exception e) {
             e.printStackTrace();
