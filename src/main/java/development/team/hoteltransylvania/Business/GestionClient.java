@@ -96,6 +96,7 @@ public class GestionClient {
             }
         } catch (SQLException e) {
             LOGGER.warning("Error when registering the client: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
         return result;
     }

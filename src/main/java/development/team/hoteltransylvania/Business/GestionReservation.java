@@ -4,6 +4,7 @@ import development.team.hoteltransylvania.DTO.TableReservationDTO;
 import development.team.hoteltransylvania.Model.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -18,18 +19,39 @@ public class GestionReservation {
     private static final Logger LOGGER = LoggerConfifg.getLogger(GestionReservation.class);
 
     public static List<TableReservationDTO> getReservationPaginated(int page, int pageSize) {
-        //TODO: FALTA LOGICA
-        /*SELECT cl.id AS id_cliente, cl.nombre, cl.tipo_documento, cl.numero_documento,
-                h.id AS id_habitacion, h.numero, th.nombre, r.fecha_inicio, r.fecha_fin,
-                er.estado
-        FROM reservas r
-        INNER JOIN estado_reserva er ON er.id=r.estado_id
-        INNER JOIN clientes cl ON r.cliente_id=cl.id
-        INNER JOIN detalle_habitacion dh ON dh.reserva_id=r.id
-        INNER JOIN habitaciones h ON h.id=dh.habitacion_id
-        INNER JOIN tipo_habitacion th ON th.id=h.tipo_id
-        WHERE r.id=2*/
-        return null;
+        String sql = "SELECT * FROM obtener_reservas_paginado(?,?)";
+
+        List<TableReservationDTO> reservationDTOS = new ArrayList<>();
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize); // OFFSET = (página - 1) * tamaño
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                TableReservationDTO dto = new TableReservationDTO();
+                dto.setIdClient(rs.getInt("id_cliente"));
+                dto.setClientName(rs.getString("nombre"));
+                dto.setDocumentType(rs.getString("tipo_documento"));
+                dto.setDocumentNumber(rs.getString("numero_documento"));
+                dto.setIdRoom(rs.getInt("id_habitacion"));
+                dto.setNumberRoom(rs.getString("numero"));
+                dto.setRoomType(rs.getString("tipo_habitacion"));
+                dto.setCheckInDate(rs.getTimestamp("fecha_inicio"));
+                dto.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                dto.setReservationStatus(rs.getString("estado"));
+
+                reservationDTOS.add(dto);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving Reservations: " + e.getMessage());
+        }
+
+        return reservationDTOS;
     }
 
     public static int registerReservation(Reservation reservation, Room room, double payment, Checkout checkout) {

@@ -250,7 +250,6 @@ public class GestionRoom {
 
         } catch (SQLException e) {
             LOGGER.severe("Error retrieving Rooms: " + e.getMessage());
-            System.out.println("Error retrieving Rooms: " + e.getMessage());
         }
 
         return rooms;

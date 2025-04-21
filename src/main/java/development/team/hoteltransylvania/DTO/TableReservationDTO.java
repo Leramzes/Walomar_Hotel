@@ -1,38 +1,58 @@
 package development.team.hoteltransylvania.DTO;
 
+import java.sql.Timestamp;
+
 public class TableReservationDTO {
-    private int idClient;
     private int idReservation;
+    private int idClient;
     private String clientName;
     private String documentType;
     private String documentNumber;
-    private String room;
-    private String checkInDate;
-    private String checkOutDate;
+    private int idRoom;
+    private String numberRoom;
+    private String roomType;
+    private Timestamp checkInDate;
+    private Timestamp checkOutDate;
     private String reservationStatus;
 
-    public TableReservationDTO(int idClient, int idReservation, String clientName, String documentType, String documentNumber, String room,
-                               String checkInDate, String checkOutDate, String reservationStatus) {
-        this.idClient = idClient;
+    public TableReservationDTO() {
+    }
+
+    public TableReservationDTO(int idReservation, int idClient, String clientName, String documentType, String documentNumber, int idRoom,
+                               String numberRoom, String roomType, Timestamp checkInDate, Timestamp checkOutDate, String reservationStatus) {
         this.idReservation = idReservation;
+        this.idClient = idClient;
         this.clientName = clientName;
         this.documentType = documentType;
         this.documentNumber = documentNumber;
-        this.room = room;
+        this.idRoom = idRoom;
+        this.numberRoom = numberRoom;
+        this.roomType = roomType;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationStatus = reservationStatus;
     }
 
-    public TableReservationDTO() {
-    }
-
-    public int getIdClient() {
-        return idClient;
-    }
-
-    public void setIdClient(int idClient) {
+    public TableReservationDTO(int idClient, String clientName, String documentType, String documentNumber, int idRoom, String numberRoom,
+                               String roomType, Timestamp checkInDate, Timestamp checkOutDate, String reservationStatus) {
         this.idClient = idClient;
+        this.clientName = clientName;
+        this.documentType = documentType;
+        this.documentNumber = documentNumber;
+        this.idRoom = idRoom;
+        this.numberRoom = numberRoom;
+        this.roomType = roomType;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.reservationStatus = reservationStatus;
+    }
+
+    public String getReservationStatus() {
+        return reservationStatus;
+    }
+
+    public void setReservationStatus(String reservationStatus) {
+        this.reservationStatus = reservationStatus;
     }
 
     public int getIdReservation() {
@@ -41,6 +61,14 @@ public class TableReservationDTO {
 
     public void setIdReservation(int idReservation) {
         this.idReservation = idReservation;
+    }
+
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
     }
 
     public String getClientName() {
@@ -67,35 +95,60 @@ public class TableReservationDTO {
         this.documentNumber = documentNumber;
     }
 
-    public String getRoom() {
-        return room;
+    public int getIdRoom() {
+        return idRoom;
     }
 
-    public void setRoom(String room) {
-        this.room = room;
+    public void setIdRoom(int idRoom) {
+        this.idRoom = idRoom;
     }
 
-    public String getCheckInDate() {
+    public String getNumberRoom() {
+        return numberRoom;
+    }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public Timestamp getCheckInDate() {
         return checkInDate;
     }
 
-    public void setCheckInDate(String checkInDate) {
+    public void setCheckInDate(Timestamp checkInDate) {
         this.checkInDate = checkInDate;
     }
 
-    public String getCheckOutDate() {
+    public Timestamp getCheckOutDate() {
         return checkOutDate;
     }
 
-    public void setCheckOutDate(String checkOutDate) {
+    public void setCheckOutDate(Timestamp checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
-    public String getReservationStatus() {
-        return reservationStatus;
-    }
-
-    public void setReservationStatus(String reservationStatus) {
-        this.reservationStatus = reservationStatus;
+    @Override
+    public String toString() {
+        return "TableReservationDTO{" +
+                "idReservation=" + idReservation +
+                ", idClient=" + idClient +
+                ", clientName='" + clientName + '\'' +
+                ", documentType='" + documentType + '\'' +
+                ", documentNumber='" + documentNumber + '\'' +
+                ", idRoom=" + idRoom +
+                ", numberRoom='" + numberRoom + '\'' +
+                ", roomType='" + roomType + '\'' +
+                ", checkInDate=" + checkInDate +
+                ", checkOutDate=" + checkOutDate +
+                ", reservationStatus='" + reservationStatus + '\'' +
+                '}';
     }
 }

@@ -7,6 +7,7 @@
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionReservation" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionEmployee" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -27,9 +28,9 @@
     pagina = Integer.parseInt(pageParam);
   }
 
-  /*List<TableReservationDTO> allReservations = GestionReservation.getReservationPaginated(pagina, pageSize);
+  List<TableReservationDTO> allReservations = GestionReservation.getReservationPaginated(pagina, pageSize);
   int totalEmployee = GestionEmployee.getAllEmployees().size();
-  int totalPages = (int) Math.ceil((double) totalEmployee / pageSize);*/
+  int totalPages = (int) Math.ceil((double) totalEmployee / pageSize);
 %>
 
 <body>
@@ -441,23 +442,29 @@
       </tr>
       </thead>
       <tbody id="tablaReserva">
-      <tr>
-        <td>1</td>
-        <td>Gonashi</td>
-        <td>DNI</td>
-        <td>12345678</td>
-        <td>696 - Presidencial</td>
-        <td>15-05-25 13:33</td>
-        <td>16-05-25 12:05</td>
-        <td class="text-primary">Nueva Reservación</td>
-        <td class="align-middle text-center">
-          <div class="d-flex justify-content-center align-items-center gap-1">
-            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">👁️</button>
-            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarReserva">✏️</button>
-            <button class="btn btn-danger btn-sm">❌</button>
-          </div>
-        </td>
-      </tr>
+      <%
+        int count=0;
+        for(TableReservationDTO reservations : allReservations){
+          count++;
+      %>
+        <tr>
+          <td><%=count%></td>
+          <td><%=reservations.getClientName()%></td>
+          <td><%=reservations.getDocumentType()%></td>
+          <td><%=reservations.getDocumentNumber()%></td>
+          <td><%=reservations.getNumberRoom()%> - <%=reservations.getRoomType()%></td>
+          <td><%=reservations.getCheckInDate()%></td>
+          <td><%=reservations.getCheckOutDate()%></td>
+          <td><%=reservations.getReservationStatus()%></td>
+          <td class="align-middle text-center">
+            <div class="d-flex justify-content-center align-items-center gap-1">
+              <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">👁️</button>
+              <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarReserva">✏️</button>
+              <button class="btn btn-danger btn-sm">❌</button>
+            </div>
+          </td>
+        </tr>
+      <%}%>
       </tbody>
     </table>
   </div>

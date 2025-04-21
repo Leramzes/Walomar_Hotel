@@ -102,6 +102,7 @@ public class ReservationController extends HttpServlet {
 
         int reservationResgitered = GestionReservation.registerReservation(reservation,room,payment, checkout);
         System.out.println("se registro: "+reservationResgitered);
+        resp.sendRedirect("menu.jsp?view=reserva");
         //aun falta pasr bien el employee
 
     }

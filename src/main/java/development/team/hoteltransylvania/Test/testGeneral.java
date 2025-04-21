@@ -1,6 +1,7 @@
 package development.team.hoteltransylvania.Test;
 
 import development.team.hoteltransylvania.Business.GestionProduct;
+import development.team.hoteltransylvania.Business.GestionReservation;
 import development.team.hoteltransylvania.Business.GestionRoom;
 import development.team.hoteltransylvania.Model.Product;
 import development.team.hoteltransylvania.Model.Room;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class testGeneral {
     public static void main(String[] args) {
 
-        GestionRoom.getAllRooms().forEach(System.out::println);
+        GestionReservation.getReservationPaginated(1, 10).forEach(System.out::println);
 
 
     }
