@@ -44,17 +44,17 @@ public class ClientsController extends HttpServlet {
 
         switch (action) {
             case "add":
-                String clientName = req.getParameter("clientname");
+                String clientName = req.getParameter("nombre");
                 String clientEmail = req.getParameter("clientemail");
-                String typeDocument = req.getParameter("typedocument");
-                String document = req.getParameter("document");
+                String typeDocument = req.getParameter("typedocumentHidden");
+                String document = req.getParameter("numberdocumentHidden");
                 String telephone = req.getParameter("telephone");
                 //search number document replicated
                 boolean isDuplicated = GestionClient.getAllClients()
                         .stream()
                         .anyMatch(c -> c.getNumberDocument().equals(document));
                 if (isDuplicated) {
-
+                    //aqui hacer que mande una alerta cuando detecte duplicado
                 }else{
                     GestionClient.registerClient(new Client(clientName,telephone,clientEmail, TypeDocument.valueOf(typeDocument),document));
                     resp.sendRedirect("menu.jsp?view=clientes");

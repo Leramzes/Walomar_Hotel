@@ -111,12 +111,6 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="#" class="sidebar-link" data-pagina="reservaCalendario" onclick="cargarPagina('jsp/reservaCalendario.jsp')">
-                    <i class="fa-solid fa-calendar-days me-2"></i>
-                    <span>Reserva en Calendario</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
                 <a href="#" class="sidebar-link" data-pagina="recepcion" onclick="cargarPagina('jsp/recepcion.jsp')">
                     <i class="fa-solid fa-right-to-bracket me-2"></i>
                     <span>Recepción</span>

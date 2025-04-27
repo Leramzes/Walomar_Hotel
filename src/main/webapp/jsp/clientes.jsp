@@ -79,8 +79,8 @@
             <input type="hidden" id="inputAgregarCliente">
             <input type="hidden" value="add" name="actionclient">
 
-            <input type="text" id="tipoDocumentoHidden" name="typedocument">
-            <input type="text" id="numberDocumentoHidden" name="numberdocument">
+            <input type="hidden" id="tipoDocumentoHidden" name="typedocumentHidden">
+            <input type="hidden" id="numberDocumentoHidden" name="numberdocumentHidden">
             <div class="mb-3">
               <label for="nombre">Nombre Completo</label>
               <input type="text" class="form-control" id="nombre" name="nombre" readonly>
