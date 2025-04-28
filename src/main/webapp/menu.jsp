@@ -15,6 +15,8 @@
     }
     User usuario = (User) sessionObj.getAttribute("usuario");
     boolean mostrarModal = BCrypt.checkpw("123456", usuario.getPassword());
+    int rolUser = Integer.parseInt(usuario.getEmployee().getPosition());
+
 %>
 
 <!DOCTYPE html>
@@ -38,7 +40,7 @@
     <!-- Estilo de ventaDirecta.jsp y venderProductos.jsp -->
     <link rel="stylesheet" href="css/venderProductos.css">
     <!-- FullCalendar CSS -->
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet'/>
 </head>
 
 <body>
@@ -161,7 +163,8 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a href="#" class="sidebar-link" data-pagina="clientes" onclick="cargarPagina('jsp/clientes.jsp')">
+                <a href="#" class="sidebar-link disabled" data-pagina="clientes"
+                   onclick="cargarPagina('jsp/clientes.jsp')">
                     <i class="fa-solid fa-users me-2"></i>
                     <span>Clientes</span>
                 </a>
@@ -189,41 +192,48 @@
                     </li>
                 </ul>
             </li>
-            <li class="sidebar-item">
+
+            <%
+                String mod = "";
+                if (rolUser == 2) {
+                    mod = "d-none";
+                }
+            %>
+            <li class="sidebar-item <%=mod%>">
                 <a href="#" class="sidebar-link" data-pagina="usuarios" onclick="cargarPagina('jsp/usuarios.jsp')">
                     <i class="fa-solid fa-users-gear me-2"></i>
                     <span>Usuarios</span>
                 </a>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item <%=mod%>">
                 <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#configuracion" aria-expanded="false" aria-controls="auth">
                     <i class="fa-solid fa-gears me-2"></i>
                     <span>Configuración</span>
                 </a>
                 <ul id="configuracion" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item">
+                    <li class="sidebar-item <%=mod%>">
                         <a href="#" class="sidebar-link" data-pagina="informacionHotelera"
                            onclick="cargarPagina('jsp/informacionHotelera.jsp')">
                             <i class="fa-solid fa-gears me-2"></i>
                             Información Hotelera
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item <%=mod%>">
                         <a href="#" class="sidebar-link" data-pagina="habitaciones"
                            onclick="cargarPagina('jsp/habitaciones.jsp')">
                             <i class="fa-solid fa-gears me-2"></i>
                             Habitaciones
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item <%=mod%>">
                         <a href="#" class="sidebar-link" data-pagina="habitacionesTipo"
                            onclick="cargarPagina('jsp/habitacionesTipo.jsp')">
                             <i class="fa-solid fa-gears me-2"></i>
                             Tipos de Habitación
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item <%=mod%>">
                         <a href="#" class="sidebar-link" data-pagina="pisos" onclick="cargarPagina('jsp/pisos.jsp')">
                             <i class="fa-solid fa-gears me-2"></i>
                             Pisos / Niveles
@@ -231,6 +241,8 @@
                     </li>
                 </ul>
             </li>
+
+
         </ul>
 
         <div class="sidebar-footer">
@@ -504,7 +516,7 @@
 <script>
     function iniciarCalendario() {
         const fecha = new Date();
-        const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+        const opcionesFecha = {year: 'numeric', month: 'long', day: 'numeric'};
         const fechaTexto = fecha.toLocaleDateString('es-ES', opcionesFecha);
         document.getElementById('currentDate').textContent = fecha.toLocaleDateString('es-ES', opcionesFecha);
 
@@ -521,11 +533,11 @@
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
             buttonText: {
-                today:    'Hoy',
-                month:    'Mes',
-                week:     'Semana',
-                day:      'Día',
-                list:     'Lista'
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día',
+                list: 'Lista'
             },
             select: function (info) {
                 // Formatear fechas para los inputs datetime-local
@@ -598,7 +610,6 @@
         });
     }
 </script>
-
 
 
 </body>

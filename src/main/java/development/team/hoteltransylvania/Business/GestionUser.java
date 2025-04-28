@@ -290,7 +290,7 @@ import java.util.logging.Logger;
                         employee = new Employee();
                         employee.setId(rs.getInt("id"));
                         employee.setName(rs.getString("nombre"));
-                        employee.setPosition(rs.getInt("rol_id") == 1 ? "Empleado" : "OtroRol");
+                        employee.setPosition(String.valueOf(rs.getInt("rol_id")));
                         employee.setEmail(rs.getString("correo"));
 
                     } else {

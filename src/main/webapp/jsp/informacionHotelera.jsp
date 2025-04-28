@@ -1,5 +1,6 @@
 <%@ page import="development.team.hoteltransylvania.Business.GestionInformationHotel" %>
 <%@ page import="development.team.hoteltransylvania.Model.InformationHotel" %>
+<%@ page import="development.team.hoteltransylvania.Model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -11,6 +12,17 @@
 </head>
 
 <%
+  HttpSession sessionObj = request.getSession(false);
+  if (sessionObj == null || sessionObj.getAttribute("usuario") == null) {
+    response.sendRedirect("index.jsp"); //Mensaje: Inicia sesión primero
+    return;
+  }
+  User usuario = (User) sessionObj.getAttribute("usuario");
+  if(usuario.getEmployee().getPosition().equalsIgnoreCase("2")){
+    response.sendRedirect("inicio.jsp"); //Mensaje: No tienes privilegios
+    return;
+  }
+
   InformationHotel hotelInfo = GestionInformationHotel.getInformationHotel();
 %>
 

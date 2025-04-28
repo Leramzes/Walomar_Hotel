@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionRoom" %>
 <%@ page import="java.util.stream.Collectors" %>
+<%@ page import="development.team.hoteltransylvania.Model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -10,6 +11,14 @@
     <title>Inicio</title>
 </head>
 <%
+    HttpSession sessionObj = request.getSession(false);
+    if (sessionObj == null || sessionObj.getAttribute("usuario") == null) {
+        response.sendRedirect("index.jsp"); //Mensaje: Inicia sesión primero
+        return;
+    }
+    User usuario = (User) sessionObj.getAttribute("usuario");
+    int rolUser = Integer.parseInt(usuario.getEmployee().getPosition());
+
     List<Room> rooms = GestionRoom.getAllRooms();
     int quantityRooms = rooms.size();
     int quantityRoomsFree = rooms.stream().filter(stado -> stado.getStatusRoom().getValue()==1).collect(Collectors.toUnmodifiableList()).size();
@@ -71,8 +80,17 @@
 
 <!-- Sección de estadísticas y habitaciones ocupadas -->
 <div class="row custom-row-statistics-rooms">
+
+    <%
+        String modClassAdmin1 = "col-lg-7 col-md-7 col-sm-12";
+        String modClassAdmin2 = "col-lg-5 col-md-5 col-sm-12";
+        if(rolUser==2){
+            modClassAdmin1="d-none";
+            modClassAdmin2="col-lg-12 col-md-12 col-sm-12";
+        }
+    %>
     <!-- Tarjeta de Estadísticas -->
-    <div class="col-lg-7 col-md-7 col-sm-12">
+    <div class="<%=modClassAdmin1%>">
         <div class="card mt-4">
             <div class="card-header text-white d-flex align-items-center">
                 <p class="mb-0"><i class="fa-solid fa-chart-area me-2"></i> Estadísticas</p>
@@ -97,7 +115,7 @@
     </div>
 
     <!-- Tarjeta de Lista de Habitaciones Ocupadas -->
-    <div class="col-lg-5 col-md-5 col-sm-12">
+    <div class="<%=modClassAdmin2%>">
         <div class="card mt-4">
             <div class="card-header text-white d-flex align-items-center" style="background: #0e2238;">
                 <p class="mb-0"><i class="fa-regular fa-clock me-2"></i> Lista de Habitaciones Ocupadas</p>
