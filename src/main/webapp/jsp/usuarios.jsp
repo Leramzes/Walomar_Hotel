@@ -64,7 +64,6 @@
                     <option value="Activo">Activos</option>
                     <option value="Inactivo">Inactivos</option>
                 </select>
-
             </div>
         </div>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">

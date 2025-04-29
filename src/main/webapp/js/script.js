@@ -270,6 +270,7 @@ function buscarCliente() {
     });
 }*/
 window.Search = function (wordKey, stateKey, tableSearch, quantitySearch, controller, page = 1, size = 10) {
+    console.log($(wordKey));
     var nameFilter = $(wordKey).val().trim();
     var stateFilter = $(stateKey).val().trim();
     console.log("Filtros enviados:", {filter: nameFilter, estate: stateFilter, page, size});
