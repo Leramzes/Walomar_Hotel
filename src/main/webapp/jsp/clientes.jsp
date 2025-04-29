@@ -60,7 +60,7 @@
           <form>
             <div class="mb-3">
               <label for="tipoDocumento">Tipo de Documento</label>
-              <select class="form-select" id="tipoDocumento" name="typedocument" required>
+              <select class="form-select" id="tipoDocumento" name="typedocument" required onchange="mostrarOcultarBoton()">
                 <option value="DNI">DNI</option>
                 <option value="Pasaporte">PASAPORTE</option>
                 <option value="RUC">RUC</option>
@@ -70,7 +70,7 @@
               <label for="documento">Documento</label>
               <div class="d-flex">
                 <input type="text" class="form-control me-2" id="documento" name="document" required>
-                <button type="button" class="btn btn-success" onclick="buscarDNI()">Buscar</button>
+                <button type="button" class="btn btn-success" id="btnBuscar" onclick="buscarDNI()">Buscar</button>
               </div>
             </div>
           </form>
@@ -79,8 +79,8 @@
             <input type="hidden" id="inputAgregarCliente">
             <input type="hidden" value="add" name="actionclient">
 
-            <input type="hidden" id="tipoDocumentoHidden" name="typedocumentHidden">
-            <input type="hidden" id="numberDocumentoHidden" name="numberdocumentHidden">
+            <input type="hidden" id="tipoDocumentoHidden" name="typedocumentHidden" required>
+            <input type="hidden" id="numberDocumentoHidden" name="numberdocumentHidden" required>
             <div class="mb-3">
               <label for="nombre">Nombre Completo</label>
               <input type="text" class="form-control" id="nombre" name="nombre" readonly>

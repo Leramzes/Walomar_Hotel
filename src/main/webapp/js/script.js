@@ -570,3 +570,17 @@ function buscarDNI() {
         }
     });
 }
+
+function mostrarOcultarBoton() {
+    const tipo = document.getElementById("tipoDocumento").value;
+    const boton = document.getElementById("btnBuscar");
+    const inputNombre = document.getElementById("nombre");
+
+    if (tipo === "Pasaporte") {
+        boton.style.display = "none";
+        inputNombre.removeAttribute("readonly");
+    } else {
+        boton.style.display = "inline-block";
+        inputNombre.setAttribute("readonly", true);
+    }
+}

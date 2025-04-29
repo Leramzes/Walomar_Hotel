@@ -41,7 +41,8 @@ public class ClientsController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("actionclient");
-
+        resp.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
         switch (action) {
             case "add":
                 String clientName = req.getParameter("nombre");
@@ -53,13 +54,28 @@ public class ClientsController extends HttpServlet {
                 boolean isDuplicated = GestionClient.getAllClients()
                         .stream()
                         .anyMatch(c -> c.getNumberDocument().equals(document));
+
+                if(clientName == null || clientName.equals("Error al consultar documento")) {
+                    out.println("<script type=\"text/javascript\">");
+                    out.println("alert('Número de documento incorrecto');");
+                    out.println("history.back();");
+                    out.println("</script>");
+                }
+                if(typeDocument.isEmpty() || document.isEmpty()) {
+                    out.println("<script type=\"text/javascript\">");
+                    out.println("alert('Debe ingresar el documento del cliente');");
+                    out.println("history.back();");
+                    out.println("</script>");
+                }
                 if (isDuplicated) {
-                    //aqui hacer que mande una alerta cuando detecte duplicado
+                    out.println("<script type=\"text/javascript\">");
+                    out.println("alert('El cliente con DNI: "+document+" ya se encuentra registrado.');");
+                    out.println("history.back();");
+                    out.println("</script>");
                 }else{
                     GestionClient.registerClient(new Client(clientName,telephone,clientEmail, TypeDocument.valueOf(typeDocument),document));
                     resp.sendRedirect("menu.jsp?view=clientes");
                 }
-
                 break;
             case "delete":
                 int idClient = Integer.parseInt(req.getParameter("idClient"));
