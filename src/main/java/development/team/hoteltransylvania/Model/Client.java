@@ -3,17 +3,28 @@ package development.team.hoteltransylvania.Model;
 public class Client {
     private int id;
     private String name;
+    private String apPaterno;
+    private String apMaterno;
+    private String razonSocial;
+    private String nacionalidad;
+    private String direccion;
     private String telephone;
     private String email;
     private TypeDocument typeDocument;
     private String numberDocument;
 
-    public Client(String name, String telephone, String email, TypeDocument typeDocument, String numberDocument) {
+    public Client(String name, String telephone, String email, TypeDocument typeDocument, String numberDocument, String apPaterno, String apMaterno,
+                  String razonSocial, String direccion, String nacionalidad) {
         this.name = name;
         this.telephone = telephone;
         this.email = email;
         this.typeDocument = typeDocument;
         this.numberDocument = numberDocument;
+        this.apPaterno = apPaterno;
+        this.apMaterno = apMaterno;
+        this.razonSocial = razonSocial;
+        this.direccion = direccion;
+        this.nacionalidad = nacionalidad;
     }
 
     public Client(int id, String name, String telephone, String email, TypeDocument typeDocument, String numberDocument) {
@@ -26,6 +37,38 @@ public class Client {
     }
 
     public Client() {
+    }
+
+    public String getApPaterno() {
+        return apPaterno;
+    }
+
+    public void setApPaterno(String apPaterno) {
+        this.apPaterno = apPaterno;
+    }
+
+    public String getApMaterno() {
+        return apMaterno;
+    }
+
+    public void setApMaterno(String apMaterno) {
+        this.apMaterno = apMaterno;
+    }
+
+    public String getRazonSocial() {
+        return razonSocial;
+    }
+
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public int getId() {

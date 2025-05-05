@@ -46,14 +46,33 @@ public class ClientsController extends HttpServlet {
         switch (action) {
             case "add":
                 String clientName = req.getParameter("nombre");
+                clientName = (clientName == null || clientName.trim().isEmpty()) ? "-" : clientName;
+                String ap_pater = req.getParameter("ap_pater");
+                ap_pater = (ap_pater == null || ap_pater.trim().isEmpty()) ? "-" : ap_pater;
+                String ap_mater = req.getParameter("ap_mater");
+                ap_mater = (ap_mater == null || ap_mater.trim().isEmpty()) ? "-" : ap_mater;
+                String raz_social = req.getParameter("raz_social");
+                raz_social = (raz_social == null || raz_social.trim().isEmpty()) ? "-" : raz_social;
+                String nacionalidad = (req.getParameter("nacionalidad") == null || req.getParameter("nacionalidad").trim().isEmpty())
+                        ? "Perú" : req.getParameter("nacionalidad");
+                String direccion = req.getParameter("direccion");
                 String clientEmail = req.getParameter("clientemail");
                 String typeDocument = req.getParameter("typedocumentHidden");
                 String document = req.getParameter("numberdocumentHidden");
+                if ("Pasaporte".equalsIgnoreCase(typeDocument)) {
+                    String pasaporteIngresado = req.getParameter("documentoPas");
+                    if (pasaporteIngresado != null && !pasaporteIngresado.trim().isEmpty()) {
+                        document = pasaporteIngresado.trim(); // Usamos el pasaporte solo si tiene valor
+                    }
+                }
+                String finalDocument = document;
+
                 String telephone = req.getParameter("telephone");
+
                 //search number document replicated
                 boolean isDuplicated = GestionClient.getAllClients()
                         .stream()
-                        .anyMatch(c -> c.getNumberDocument().equals(document));
+                        .anyMatch(c -> c.getNumberDocument().equals(finalDocument));
 
                 if(clientName == null || clientName.equals("Error al consultar documento")) {
                     out.println("<script type=\"text/javascript\">");
@@ -69,11 +88,12 @@ public class ClientsController extends HttpServlet {
                 }
                 if (isDuplicated) {
                     out.println("<script type=\"text/javascript\">");
-                    out.println("alert('El cliente con DNI: "+document+" ya se encuentra registrado.');");
+                    out.println("alert('El cliente con documento: "+document+" ya se encuentra registrado.');");
                     out.println("history.back();");
                     out.println("</script>");
                 }else{
-                    GestionClient.registerClient(new Client(clientName,telephone,clientEmail, TypeDocument.valueOf(typeDocument),document));
+                    GestionClient.registerClient(new Client(clientName,telephone,clientEmail, TypeDocument.valueOf(typeDocument),document, ap_pater,ap_mater,
+                            raz_social, direccion, nacionalidad));
                     resp.sendRedirect("menu.jsp?view=clientes");
                 }
                 break;

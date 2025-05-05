@@ -527,8 +527,11 @@ document.getElementById('documento').addEventListener('keydown', function (e) {
         }
     }
 });
+
 function buscarDNI() {
     var documento = $("#documento").val();
+    var ap_pater = $("#ap_pater").val();
+    var ap_mater = $("#ap_mater").val();
     var tipo_documento = $("#tipoDocumento").val();
     var documento = $("#documento").val();
     $.ajax({
@@ -542,22 +545,28 @@ function buscarDNI() {
             if (tipo_documento === "DNI") {
                 if (data.nombres) {
                     let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
-                    $("#nombre").val(nombreCompleto);
+                    $("#nombre").val(data.nombres);
+                    $("#ap_pater").val(data.apellidoPaterno);
+                    $("#ap_mater").val(data.apellidoMaterno);
                     $("#numberDocumentoHidden").val(documento);
                     $("#tipoDocumentoHidden").val(tipo_documento);
                 } else {
                     $("#nombre").val("No encontrado");
+                    $("#ap_pater").val("-");
+                    $("#ap_mater").val("-");
                 }
             } else if (tipo_documento === "RUC") {
-                if (data.nombre) {
-                    $("#nombre").val(data.nombre);
+                if (data.razonSocial) {
+                    $("#raz_social").val(data.razonSocial);
+                    $("#direccion").val(data.direccion);
                     $("#numberDocumentoHidden").val(documento);
                     $("#tipoDocumentoHidden").val(tipo_documento);
                 } else {
-                    $("#nombre").val("No encontrado");
+                    $("#raz_social").val("No encontrado");
+                    $("#direccion").val("-");
                 }
             } else {
-                $("#nombre").val("No encontrado");
+                $("#raz_social").val("No encontrado");
             }
         },
         error: function (xhr) {
@@ -566,6 +575,10 @@ function buscarDNI() {
                 errorMsg = xhr.responseJSON.error;
             }
             $("#nombre").val(errorMsg);
+            $("#ap_pater").val("-");
+            $("#ap_mater").val("-");
+            $("#raz_social").val(errorMsg);
+            $("#direccion").val("-");
             $("#numberDocumentoHidden").val("");
             $("#tipoDocumentoHidden").val("");
         }
@@ -575,13 +588,57 @@ function buscarDNI() {
 function mostrarOcultarBoton() {
     const tipo = document.getElementById("tipoDocumento").value;
     const boton = document.getElementById("btnBuscar");
-    const inputNombre = document.getElementById("nombre");
+    const inputNombre = document.getElementById("div_nombre");
+    const inputApPatern = document.getElementById("div_ap_pater");
+    const inputApMatern = document.getElementById("div_ap_mater");
+    const inputRazon = document.getElementById("div_raz_social");
+    const inputDireccion = document.getElementById("div_direccion");
+    const inputNacion = document.getElementById("div_nacionalidad");
+    const documentPrincipal = document.getElementById("documentPrincipal");
+    const div_docPas = document.getElementById("div_docPas");
+    let tipoDocumento = $("#tipoDocumento").val();
 
     if (tipo === "Pasaporte") {
         boton.style.display = "none";
-        inputNombre.removeAttribute("readonly");
-    } else {
+        inputDireccion.style.display = "block";
+        document.getElementById("nombre").removeAttribute("readonly");
+        document.getElementById("ap_pater").removeAttribute("readonly");
+        document.getElementById("ap_mater").removeAttribute("readonly");
+        inputNombre.classList.remove("d-none")
+        documentPrincipal.classList.add("d-none");
+        div_docPas.classList.remove("d-none");
+        inputApPatern.classList.remove("d-none")
+        inputApMatern.classList.remove("d-none")
+        inputNacion.classList.remove("d-none")
+        inputRazon.classList.add("d-none");
+        $("#tipoDocumentoHidden").val(tipoDocumento);
+    } else if (tipo === "DNI") {
         boton.style.display = "inline-block";
-        inputNombre.setAttribute("readonly", true);
+        document.getElementById("nombre").setAttribute("readonly", true);
+        inputNombre.classList.remove("d-none")
+        inputApPatern.classList.remove("d-none")
+        inputApMatern.classList.remove("d-none")
+        inputRazon.classList.add("d-none");
+        inputNacion.classList.add("d-none");
+        documentPrincipal.classList.remove("d-none");
+        div_docPas.classList.add("d-none");
+    } else if (tipo === "RUC") {
+        boton.style.display = "inline-block";
+        inputNombre.classList.add("d-none")
+        inputApPatern.classList.add("d-none");
+        inputApMatern.classList.add("d-none");
+        inputRazon.classList.remove("d-none")
+        inputNacion.classList.add("d-none");
+        document.getElementById("direccion").setAttribute("readonly", true);
+        documentPrincipal.classList.remove("d-none");
+        div_docPas.classList.add("d-none");
     }
 }
+
+// Ejecutar cuando el modal se abre
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("modalAgregarCliente");
+    modal.addEventListener("shown.bs.modal", function () {
+        mostrarOcultarBoton();
+    });
+});

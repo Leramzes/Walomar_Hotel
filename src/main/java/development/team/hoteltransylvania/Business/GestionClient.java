@@ -77,7 +77,8 @@ public class GestionClient {
         return result;
     }
     public static boolean registerClient(Client client) {
-        String sql = "INSERT INTO clientes (nombre, email, numero_documento, tipo_documento, telefono) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO clientes (nombre, email, numero_documento, tipo_documento, telefono, ap_paterno, ap_materno, razon_social, direccion) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         boolean result = false;
 
         try (Connection cnn = dataSource.getConnection();
@@ -88,6 +89,10 @@ public class GestionClient {
             ps.setString(3, client.getNumberDocument());
             ps.setString(4, client.getTypeDocument().toString());
             ps.setString(5,client.getTelephone());
+            ps.setString(6,client.getApPaterno());
+            ps.setString(7,client.getApMaterno());
+            ps.setString(8,client.getRazonSocial());
+            ps.setString(9,client.getDireccion());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {

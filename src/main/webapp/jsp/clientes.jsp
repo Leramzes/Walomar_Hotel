@@ -66,7 +66,7 @@
                 <option value="RUC">RUC</option>
               </select>
             </div>
-            <div class="mb-3">
+            <div class="mb-3" id="documentPrincipal">
               <label for="documento">Documento</label>
               <div class="d-flex">
                 <input type="text" class="form-control me-2" id="documento" name="document" required>
@@ -81,9 +81,33 @@
 
             <input type="hidden" id="tipoDocumentoHidden" name="typedocumentHidden" required>
             <input type="hidden" id="numberDocumentoHidden" name="numberdocumentHidden" required>
-            <div class="mb-3">
-              <label for="nombre">Nombre Completo</label>
+            <div class="mb-3 d-none" id="div_docPas">
+              <label for="nombre">Documento pas</label>
+              <input type="text" class="form-control" id="documentoPas" name="documentoPas">
+            </div>
+            <div class="mb-3" id="div_nombre">
+              <label for="nombre">Nombres</label>
               <input type="text" class="form-control" id="nombre" name="nombre" readonly>
+            </div>
+            <div class="mb-3" id="div_ap_pater">
+              <label for="nombre">Apellido Paterno</label>
+              <input type="text" class="form-control" id="ap_pater" name="ap_pater" readonly>
+            </div>
+            <div class="mb-3" id="div_ap_mater">
+              <label for="nombre">Apellido Materno</label>
+              <input type="text" class="form-control" id="ap_mater" name="ap_mater" readonly>
+            </div>
+            <div class="mb-3 d-none" id="div_raz_social">
+              <label for="nombre">Razón Social</label>
+              <input type="text" class="form-control" id="raz_social" name="raz_social" readonly>
+            </div>
+            <div class="mb-3 d-none" id="div_nacionalidad">
+              <label for="nombre">Nacionalidad</label>
+              <input type="text" class="form-control" id="nacionalidad" name="nacionalidad">
+            </div>
+            <div class="mb-3" id="div_direccion">
+              <label for="nombre">Dirección</label>
+              <input type="text" class="form-control" id="direccion" name="direccion">
             </div>
             <div class="mb-3">
               <label for="correo">Correo</label>

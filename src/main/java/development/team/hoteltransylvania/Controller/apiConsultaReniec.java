@@ -27,15 +27,16 @@ public class apiConsultaReniec extends HttpServlet {
         try {
             String url="";
             if(tipo_documento.equalsIgnoreCase("DNI")){
-                url= "https://api.apis.net.pe/v1/dni?numero=" + numDoc;
+                url = "https://api.apis.net.pe/v2/reniec/dni?numero=" + numDoc;
             }else if(tipo_documento.equalsIgnoreCase("RUC")){
-                url= "https://api.apis.net.pe/v1/ruc?numero=" + numDoc;
+                url = "https://api.apis.net.pe/v2/sunat/ruc/full?numero=" + numDoc;
             }
 
 
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer apis-token-14450.89dFFK5wtOjb14SJuyXGFU65rWPJHkal");
 
             int responseCode = con.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
