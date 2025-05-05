@@ -42,9 +42,129 @@
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
         <i class="fas fa-plus"></i> Agregar nuevo
       </button>
-      <button class="btn btn-success">
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exportModal">
         <i class="fa-solid fa-file-export"></i> Exportar
       </button>
+    </div>
+  </div>
+
+  <!-- Modal para el boton de exportar -->
+  <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exportModalLabel">Exportar Datos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Tabla con los datos -->
+          <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+            <table class="table table-bordered">
+              <thead class="table-warning sticky-top">
+              <tr>
+                <th>N°</th>
+                <th>Nombre Completo</th>
+                <th>Tipo de Documento</th>
+                <th>Documento</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+              </tr>
+              </thead>
+              <tbody id="tableData">
+              <!-- Los datos de la tabla irán aquí dinámicamente -->
+              <tr>
+                <td>1</td>
+                <td>Juan Pérez</td>
+                <td>DNI</td>
+                <td>12345678</td>
+                <td>juanperez@example.com</td>
+                <td>999999999</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>María Gómez</td>
+                <td>Pasaporte</td>
+                <td>98765432</td>
+                <td>mariagomez@example.com</td>
+                <td>988888888</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Juan Pérez</td>
+                <td>DNI</td>
+                <td>12345678</td>
+                <td>juanperez@example.com</td>
+                <td>999999999</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>María Gómez</td>
+                <td>Pasaporte</td>
+                <td>98765432</td>
+                <td>mariagomez@example.com</td>
+                <td>988888888</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Juan Pérez</td>
+                <td>DNI</td>
+                <td>12345678</td>
+                <td>juanperez@example.com</td>
+                <td>999999999</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>María Gómez</td>
+                <td>Pasaporte</td>
+                <td>98765432</td>
+                <td>mariagomez@example.com</td>
+                <td>988888888</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>Juan Pérez</td>
+                <td>DNI</td>
+                <td>12345678</td>
+                <td>juanperez@example.com</td>
+                <td>999999999</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>María Gómez</td>
+                <td>Pasaporte</td>
+                <td>98765432</td>
+                <td>mariagomez@example.com</td>
+                <td>988888888</td>
+              </tr>
+              <!-- Agregar más filas según los datos -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Opciones de descarga -->
+          <div class="mt-3">
+            <!-- Descargar los últimos -->
+            <div class="form-check d-flex align-items-center">
+              <input class="form-check-input" type="radio" name="downloadOption" id="downloadLast" value="last" onclick="toggleRadioInput()">
+              <label class="form-check-label ms-2 me-3" for="downloadLast">
+                Descargar los últimos
+              </label>
+              <input type="number" id="numLast" class="form-control" placeholder="Cantidad" style="width: 100px;" disabled>
+            </div>
+            <!-- Descargar todos -->
+            <div class="form-check d-flex align-items-center mt-2">
+              <input class="form-check-input" type="radio" name="downloadOption" id="downloadAll" value="all" onclick="toggleRadioInput()">
+              <label class="form-check-label ms-2" for="downloadAll">
+                Descargar todos
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="exportButton">Exportar/Descargar</button>
+        </div>
+      </div>
     </div>
   </div>
 

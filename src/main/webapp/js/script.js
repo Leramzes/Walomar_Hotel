@@ -642,3 +642,40 @@ document.addEventListener("DOMContentLoaded", function () {
         mostrarOcultarBoton();
     });
 });
+
+<!-- Script para manejar la lógica de habilitar/deshabilitar el input -->
+function toggleRadioInput() {
+    const isLastSelected = document.getElementById("downloadLast").checked;
+    document.getElementById("numLast").disabled = !isLastSelected;
+}
+
+// Lógica para manejar el botón de exportar
+document.getElementById("exportButton").addEventListener("click", function() {
+    const option = document.querySelector('input[name="downloadOption"]:checked');
+    const numLast = document.getElementById("numLast").value;
+
+    if (!option) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Debe seleccionar una opción de descarga',
+            text: 'Por favor, selecciona una opción de descarga.',
+            timer: 3000,
+            showConfirmButton: false,
+            position: 'center',
+            toast: true
+        });
+        return;
+    }
+
+    if (option.value === "last") {
+        if (!numLast || parseInt(numLast) <= 0) {
+            alert("Ingrese un número válido para los últimos registros.");
+            return;
+        }
+        console.log(`Descargar los últimos ${numLast} datos`);
+        // Aquí iría la lógica para filtrar y exportar los últimos datos
+    } else if (option.value === "all") {
+        console.log("Descargar todos los datos");
+        // Aquí iría la lógica para exportar todos los datos
+    }
+});
