@@ -8,8 +8,8 @@ import javax.sql.DataSource;
 
 public class DataBaseUtil {
     // Variables de configuración
-    private static final String DB_HOST = "136.248.74.29";
-    private static final String DB_PORT = "5432";
+    private static final String DB_HOST = "localhost";
+    private static final String DB_PORT = "5433";
     private static final String DB_NAME = "bd_hotel"; // Ajusta si tu BD tiene otro nombre
     private static final String DB_USERNAME = "hotel";
     private static final String DB_PASSWORD = "123456";
