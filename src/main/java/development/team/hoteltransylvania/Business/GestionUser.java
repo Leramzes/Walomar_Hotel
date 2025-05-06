@@ -151,7 +151,6 @@ import java.util.logging.Logger;
 
             return usuario;
         }
-
         public static boolean deleteuser(int userId) {
             String checkSql = "SELECT COUNT(*) FROM usuarios WHERE id = ?";
             String deleteSql = "DELETE FROM usuarios WHERE id = ?";
@@ -225,7 +224,6 @@ import java.util.logging.Logger;
                 return StatusUser.DEFAULT; // Un estado por defecto en caso de error
             }
         }
-
         public static boolean validarCredenciales(String username, String contrasena) {
             String sql = "SELECT password FROM usuarios WHERE username = ?";
 
@@ -244,7 +242,6 @@ import java.util.logging.Logger;
             }
             return false;
         }
-
         public static User obtenerUsuarioSesion(String username) {
             User user = null;
             String sql = "SELECT id, username, password, empleado_id, estado FROM usuarios WHERE username = ?";
@@ -276,7 +273,6 @@ import java.util.logging.Logger;
 
             return user;
         }
-
         public static Employee obtenerEmpleadoPorId(int empleadoId) {
             String sql = "SELECT id, nombre, rol_id, correo FROM empleados WHERE id = ?";
             Employee employee = null;
@@ -303,7 +299,6 @@ import java.util.logging.Logger;
 
             return employee;
         }
-
         public static List<User> getAllUsers() {
             String sql = "SELECT id, username, empleado_id, estado FROM usuarios";
             List<User> lista = new ArrayList<>();
@@ -328,7 +323,6 @@ import java.util.logging.Logger;
             }
             return lista;
         }
-
         public static boolean existeUsuario(String username) {
             String sql = "SELECT COUNT(*) FROM usuarios WHERE username = ?";
             boolean existe = false;
@@ -349,7 +343,6 @@ import java.util.logging.Logger;
 
             return existe;
         }
-
         public static void updateStatus(int usuarioId, String estado) {
             String sql = "UPDATE usuarios SET estado = ? WHERE id = ?";
 

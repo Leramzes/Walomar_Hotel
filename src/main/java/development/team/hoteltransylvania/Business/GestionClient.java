@@ -44,6 +44,36 @@ public class GestionClient {
 
         return allClients;
     }
+    public static List<Client> getAllClientsPaginated(int page, int pageSize) {
+        String sql = "SELECT * FROM clientes "+
+                "LIMIT ? OFFSET ?";
+        List<Client> allClients = new ArrayList<>();
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id_cliente = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                String email = rs.getString("email");
+                String numDocu = rs.getString("numero_documento");
+                String tipoDoc = rs.getString("tipo_documento");
+                String telefono = rs.getString("telefono");
+
+                allClients.add(new Client(id_cliente,nombre,telefono,email, TypeDocument.valueOf(tipoDoc),numDocu));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving clients: " + e.getMessage());
+        }
+
+        return allClients;
+    }
     public static boolean deleteClient(int clientId) {
         String checkSql = "SELECT COUNT(*) FROM clientes WHERE id = ?";
         String deleteSql = "DELETE FROM clientes WHERE id = ?";

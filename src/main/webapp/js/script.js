@@ -615,6 +615,8 @@ function mostrarOcultarBoton() {
     } else if (tipo === "DNI") {
         boton.style.display = "inline-block";
         document.getElementById("nombre").setAttribute("readonly", true);
+        document.getElementById("ap_pater").setAttribute("readonly", true);
+        document.getElementById("ap_mater").setAttribute("readonly", true);
         inputNombre.classList.remove("d-none")
         inputApPatern.classList.remove("d-none")
         inputApMatern.classList.remove("d-none")

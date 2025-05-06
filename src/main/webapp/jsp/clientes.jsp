@@ -13,7 +13,17 @@
 </head>
 
 <%
-  List<Client> listClients = GestionClient.getAllClients();
+  int pagina = 1;
+  int pageSize = 10;
+
+  String pageParam = request.getParameter("page");
+  if (pageParam != null) {
+    pagina = Integer.parseInt(pageParam);
+  }
+
+  List<Client> listClients = GestionClient.getAllClientsPaginated(pagina, pageSize);
+  int totalClients = GestionClient.getAllClients().size();
+  int totalPages = (int) Math.ceil((double) totalClients / pageSize);
 %>
 
 
@@ -202,7 +212,7 @@
             <input type="hidden" id="tipoDocumentoHidden" name="typedocumentHidden" required>
             <input type="hidden" id="numberDocumentoHidden" name="numberdocumentHidden" required>
             <div class="mb-3 d-none" id="div_docPas">
-              <label for="nombre">Documento pas</label>
+              <label for="nombre">Documento</label>
               <input type="text" class="form-control" id="documentoPas" name="documentoPas">
             </div>
             <div class="mb-3" id="div_nombre">
@@ -351,10 +361,22 @@
 
     <div class="d-flex justify-content-end align-items-center">
       <nav aria-label="Page navigation example">
-        <ul class="pagination mb-0">
-          <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+        <ul class="pagination mb-0" id="pagination">
+          <li class="page-item <% if (pagina == 1) { %>disabled<% } %>">
+            <a class="page-link" aria-label="Anterior" href="menu.jsp?view=usuarios&page=<%= pagina - 1 %>">Anterior</a>
+          </li>
+
+          <% for (int i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <% if (i == pagina) { %>active<% } %>">
+            <a class="page-link" aria-label="Actual" href="menu.jsp?view=usuarios&page=<%= i %>"><%= i %>
+            </a>
+          </li>
+          <% } %>
+
+          <li class="page-item <% if (pagina == totalPages) { %>disabled<% } %>">
+            <a class="page-link" aria-label="Siguiente"
+               href="menu.jsp?view=usuarios&page=<%= pagina + 1 %>">Siguiente</a>
+          </li>
         </ul>
       </nav>
     </div>
