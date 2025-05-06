@@ -85,11 +85,29 @@
                         <input type="hidden" id="inputAgregarUsuario">
                         <input type="hidden" name="accion" value="Registrar">
                         <div class="mb-3">
+                            <label for="dni">DNI</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                <input type="text" class="form-control" id="DNI" name="DNI"
+                                       placeholder="Ingrese el DNI" required pattern="\d{8}"
+                                       maxlength="8" inputmode="numeric" title="Debe ingresar 8 dígitos numéricos">
+                                <button class="btn btn-primary" type="button">Buscar</button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <label for="nombre">Nombre</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                                 <input type="text" class="form-control" id="nombre" name="nombre"
                                        placeholder="Nombre Completo" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion">Dirección</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <input type="text" class="form-control" id="direccion" name="direccion"
+                                       placeholder="Ingrese su dirección completa" required maxlength="100">
                             </div>
                         </div>
                         <div class="mb-3">

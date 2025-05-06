@@ -13,7 +13,8 @@ public class Client {
     private TypeDocument typeDocument;
     private String numberDocument;
 
-    public Client(String name, String telephone, String email, TypeDocument typeDocument, String numberDocument, String apPaterno, String apMaterno,
+    public Client(String name, String telephone, String email, TypeDocument typeDocument,
+                  String numberDocument, String apPaterno, String apMaterno,
                   String razonSocial, String direccion, String nacionalidad) {
         this.name = name;
         this.telephone = telephone;
@@ -27,13 +28,25 @@ public class Client {
         this.nacionalidad = nacionalidad;
     }
 
-    public Client(int id, String name, String telephone, String email, TypeDocument typeDocument, String numberDocument) {
+    public Client(int id, String name, String telephone, String email, TypeDocument typeDocument,
+                  String numberDocument) {
         this.id = id;
         this.name = name;
         this.telephone = telephone;
         this.email = email;
         this.typeDocument = typeDocument;
         this.numberDocument = numberDocument;
+    }
+    public Client(int id, String name, String apMaterno, String apPaterno, String telephone, String email, TypeDocument typeDocument,
+                  String numberDocument) {
+        this.id = id;
+        this.name = name;
+        this.telephone = telephone;
+        this.email = email;
+        this.typeDocument = typeDocument;
+        this.numberDocument = numberDocument;
+        this.apPaterno = apPaterno;
+        this.apMaterno = apMaterno;
     }
 
     public Client() {

@@ -60,12 +60,15 @@ public class GestionClient {
             while (rs.next()) {
                 int id_cliente = rs.getInt("id");
                 String nombre = rs.getString("nombre");
+                String ap_paterno = rs.getString("ap_paterno");
+                String ap_materno = rs.getString("ap_materno");
                 String email = rs.getString("email");
                 String numDocu = rs.getString("numero_documento");
                 String tipoDoc = rs.getString("tipo_documento");
                 String telefono = rs.getString("telefono");
 
-                allClients.add(new Client(id_cliente,nombre,telefono,email, TypeDocument.valueOf(tipoDoc),numDocu));
+                allClients.add(new Client(id_cliente,nombre, ap_materno, ap_paterno, telefono,email,
+                        TypeDocument.valueOf(tipoDoc), numDocu));
             }
 
         } catch (SQLException e) {
