@@ -61,6 +61,7 @@ public class UsersController extends HttpServlet {
                 String name = req.getParameter("nombre");
                 String email = req.getParameter("email");
                 String username1 = req.getParameter("username");
+                String num_doc = req.getParameter("numberdocumentHidden");
                 String password1 = "123456";
                 int idRol = Integer.parseInt(req.getParameter("rol"));
 
@@ -70,18 +71,19 @@ public class UsersController extends HttpServlet {
                     //AGREGAR A USUARIOS
                     user.setUsername(username1);
                     user.setPassword(password1);
-                        //AGREGAR A EMPLEADOS
-                        employee.setName(name);
-                            if (idRol == 1) {
-                                employee.setPosition("Administrador");
-                            } else if (idRol == 2) {
-                                employee.setPosition("Recepcionista");}
-                            else {
-                                employee.setPosition("rolEmpleado");
-                            }
-                        employee.setEmail(email);
-                        IdEmployee = employeedao.registerEmployee(employee, idRol);
-                        employee.setId(IdEmployee);
+                    //AGREGAR A EMPLEADOS
+                    employee.setName(name);
+                    if (idRol == 1) {
+                        employee.setPosition("Administrador");
+                    } else if (idRol == 2) {
+                        employee.setPosition("Recepcionista");
+                    } else {
+                        employee.setPosition("rolEmpleado");
+                    }
+                    employee.setEmail(email);
+                    employee.setNum_doc(num_doc);
+                    IdEmployee = employeedao.registerEmployee(employee, idRol);
+                    employee.setId(IdEmployee);
 
                     user.setEmployee(employee);
                     user.setStatusUser(StatusUser.valueOf("Activo"));
@@ -100,24 +102,24 @@ public class UsersController extends HttpServlet {
                 String user = req.getParameter("userEdit");
                 int rol = Integer.parseInt(req.getParameter("rolEditar"));
                 String status = req.getParameter("estatusEdit");
-                    //ACTUALIZAR DATOS DE USUARIO
-                    upUser.setUsername(user);
-                        //ACTUALIZAR EMPLEADOS
-                        int empleadoId = upUser.getEmployee().getId();
-                        Employee upEmployee = userdao.obtenerEmpleadoPorId(empleadoId);
-                        upEmployee.setName(nombreEditar);
-                        if (rol == 1) {
-                            upEmployee.setPosition("Administrador");
-                        } else if (rol == 2) {
-                            upEmployee.setPosition("Recepcionista");}
-                        else {
-                            upEmployee.setPosition("rolEmpleado");
-                        }
-                        upEmployee.setEmail(correoEditar);
-                        employeedao.updateEmployee(upEmployee, rol);
+                //ACTUALIZAR DATOS DE USUARIO
+                upUser.setUsername(user);
+                //ACTUALIZAR EMPLEADOS
+                int empleadoId = upUser.getEmployee().getId();
+                Employee upEmployee = userdao.obtenerEmpleadoPorId(empleadoId);
+                upEmployee.setName(nombreEditar);
+                if (rol == 1) {
+                    upEmployee.setPosition("Administrador");
+                } else if (rol == 2) {
+                    upEmployee.setPosition("Recepcionista");
+                } else {
+                    upEmployee.setPosition("rolEmpleado");
+                }
+                upEmployee.setEmail(correoEditar);
+                employeedao.updateEmployee(upEmployee, rol);
 
-                    upUser.setEmployee(upEmployee);
-                    upUser.setStatusUser(StatusUser.valueOf(status));
+                upUser.setEmployee(upEmployee);
+                upUser.setStatusUser(StatusUser.valueOf(status));
                 userdao.updateUser(upUser);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
@@ -125,25 +127,25 @@ public class UsersController extends HttpServlet {
                 int idUsuario = Integer.parseInt(req.getParameter("idUser"));
                 User userReset = userdao.getUserById(idUsuario);
                 userdao.updateUserPassword(userReset, "123456");
-                System.out.println("Contraseña restablecida: ID USER: "+ idUsuario);
+                System.out.println("Contraseña restablecida: ID USER: " + idUsuario);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
             case "delete":
                 int idUser = Integer.parseInt(req.getParameter("idUser"));
                 userdao.updateStatus(idUser, "Inactivo");
-                System.out.println("Usuario inactivado: ID: "+idUser);
+                System.out.println("Usuario inactivado: ID: " + idUser);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
             case "activate":
                 int idU = Integer.parseInt(req.getParameter("idUser"));
                 userdao.updateStatus(idU, "Activo");
-                System.out.println("Usuario activado: ID: "+idU);
+                System.out.println("Usuario activado: ID: " + idU);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
             case "updatePassword": //CAMBIAR CONTRASEÑA A NUEVA
                 String newPassword = req.getParameter("newpassword");
                 HttpSession sessionActual = req.getSession();
-                User userLogin =  (User) sessionActual.getAttribute("usuario");
+                User userLogin = (User) sessionActual.getAttribute("usuario");
                 userLogin = userdao.updateUserPassword(userLogin, newPassword);
                 sessionActual.setAttribute("usuario", userLogin);
                 resp.sendRedirect("menu.jsp");

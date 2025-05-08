@@ -331,7 +331,7 @@
                 <thead class="table-warning">
                 <tr>
                     <th>N°</th>
-                    <th>Nombre</th>
+                    <th>Nombre Completo</th>
                     <th>Tipo de Documento</th>
                     <th>Documento</th>
                     <th>Correo</th>
@@ -347,7 +347,7 @@
                 <tr>
                     <td><%=count%>
                     </td>
-                    <td><%=client.getName() + " " +client.getApPaterno()%>
+                    <td><%=client.getName() + " " +client.getApPaterno() + " " +client.getApMaterno()%>
                     </td>
                     <td><%=client.getTypeDocument()%>
                     </td>

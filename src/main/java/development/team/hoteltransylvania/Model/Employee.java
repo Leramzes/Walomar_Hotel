@@ -5,15 +5,25 @@ public class Employee {
     private String name;
     private String position;
     private String email;
+    private String num_doc;
 
-    public Employee(int id, String name, String position, String email) {
+    public Employee(int id, String name, String position, String email, String num_doc) {
         this.id = id;
         this.name = name;
         this.position = position;
         this.email = email;
+        this.num_doc = num_doc;
     }
 
     public Employee() {
+    }
+
+    public String getNum_doc() {
+        return num_doc;
+    }
+
+    public void setNum_doc(String num_doc) {
+        this.num_doc = num_doc;
     }
 
     public int getId() {

@@ -26,7 +26,7 @@ public class apiConsultaReniec extends HttpServlet {
         String numDoc = req.getParameter("numDoc");
         try {
             String url="";
-            if(tipo_documento.equalsIgnoreCase("DNI")){
+            if(tipo_documento.equalsIgnoreCase("DNI") || tipo_documento.equalsIgnoreCase("DNI-user")){
                 url = "https://api.apis.net.pe/v2/reniec/dni?numero=" + numDoc;
             }else if(tipo_documento.equalsIgnoreCase("RUC")){
                 url = "https://api.apis.net.pe/v2/sunat/ruc/full?numero=" + numDoc;

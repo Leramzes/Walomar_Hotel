@@ -542,9 +542,16 @@ function buscarDNI() {
         },
         success: function (result) {
             let data = JSON.parse(result);
-            if (tipo_documento === "DNI") {
+             if (tipo_documento === "DNI-user"){
+                 if (data.nombres) {
+                     let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
+                     $("#nombre").val(nombreCompleto);
+                     $("#numberDocumentoHidden").val(documento);
+                 } else {
+                     $("#nombre").val("No encontrado");
+                 }
+             } else if (tipo_documento === "DNI"){
                 if (data.nombres) {
-                    let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
                     $("#nombre").val(data.nombres);
                     $("#ap_pater").val(data.apellidoPaterno);
                     $("#ap_mater").val(data.apellidoMaterno);

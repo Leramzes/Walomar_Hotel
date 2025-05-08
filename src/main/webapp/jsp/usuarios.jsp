@@ -31,7 +31,7 @@
         return;
     }
     User usuario = (User) sessionObj.getAttribute("usuario");
-    if(usuario.getEmployee().getPosition().equalsIgnoreCase("2")){
+    if (usuario.getEmployee().getPosition().equalsIgnoreCase("2")) {
         response.sendRedirect("inicio.jsp"); //Mensaje: No tienes privilegios
         return;
     }
@@ -81,33 +81,34 @@
                 </div>
                 <div class="modal-body">
 
+                    <form>
+                        <div class="mb-3">
+                            <label>DNI</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                <input type="hidden" name="tipoDocumento" id="tipoDocumento" value="DNI-user">
+                                <input type="text" class="form-control" id="documento" name="documento"
+                                       placeholder="Ingrese el DNI" required pattern="\d{8}"
+                                       maxlength="8" inputmode="numeric" title="Debe ingresar 8 dígitos numéricos">
+                                <button type="button" class="btn btn-success" id="btnBuscar" onclick="buscarDNI()">
+                                    Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+
                     <form id="formUsuario" action="user" method="post">
                         <input type="hidden" id="inputAgregarUsuario">
                         <input type="hidden" name="accion" value="Registrar">
-                        <div class="mb-3">
-                            <label for="dni">DNI</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                <input type="text" class="form-control" id="DNI" name="DNI"
-                                       placeholder="Ingrese el DNI" required pattern="\d{8}"
-                                       maxlength="8" inputmode="numeric" title="Debe ingresar 8 dígitos numéricos">
-                                <button class="btn btn-primary" type="button">Buscar</button>
-                            </div>
-                        </div>
+                        <input type="hidden" id="numberDocumentoHidden" name="numberdocumentHidden" required>
+
                         <div class="mb-3">
                             <label for="nombre">Nombre</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                                 <input type="text" class="form-control" id="nombre" name="nombre"
-                                       placeholder="Nombre Completo" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="direccion">Dirección</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                                <input type="text" class="form-control" id="direccion" name="direccion"
-                                       placeholder="Ingrese su dirección completa" required maxlength="100">
+                                       placeholder="Nombre Completo" required readonly>
                             </div>
                         </div>
                         <div class="mb-3">
