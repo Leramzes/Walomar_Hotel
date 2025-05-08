@@ -203,7 +203,9 @@
                         <div class="mb-3" id="documentPrincipal">
                             <label for="documento">Documento</label>
                             <div class="d-flex">
-                                <input type="text" class="form-control me-2" id="documento" name="document" required>
+                                <input type="text" class="form-control me-2" id="documento" name="document"
+                                       required maxlength="8" inputmode="numeric"
+                                       pattern="\d{8}" oninput="this.value = this.value.replace(/\D/g, '').slice(0,8);">
                                 <button type="button" class="btn btn-success" id="btnBuscar" onclick="buscarDNI()">
                                     Buscar
                                 </button>
@@ -247,8 +249,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="correo">Correo</label>
-                            <input type="email" class="form-control" id="correo" name="clientemail"
-                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                            <input type="text" class="form-control" id="correo" name="clientemail"
+                                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
                         </div>
                         <div class="mb-3">
                             <label for="telefono">Teléfono</label>
@@ -383,19 +385,19 @@
             <nav aria-label="Page navigation example">
                 <ul class="pagination mb-0" id="pagination">
                     <li class="page-item <% if (pagina == 1) { %>disabled<% } %>">
-                        <a class="page-link" aria-label="Anterior" href="menu.jsp?view=usuarios&page=<%= pagina - 1 %>">Anterior</a>
+                        <a class="page-link" aria-label="Anterior" href="menu.jsp?view=clientes&page=<%= pagina - 1 %>">Anterior</a>
                     </li>
 
                     <% for (int i = 1; i <= totalPages; i++) { %>
                     <li class="page-item <% if (i == pagina) { %>active<% } %>">
-                        <a class="page-link" aria-label="Actual" href="menu.jsp?view=usuarios&page=<%= i %>"><%= i %>
+                        <a class="page-link" aria-label="Actual" href="menu.jsp?view=clientes&page=<%= i %>"><%= i %>
                         </a>
                     </li>
                     <% } %>
 
                     <li class="page-item <% if (pagina == totalPages) { %>disabled<% } %>">
                         <a class="page-link" aria-label="Siguiente"
-                           href="menu.jsp?view=usuarios&page=<%= pagina + 1 %>">Siguiente</a>
+                           href="menu.jsp?view=clientes&page=<%= pagina + 1 %>">Siguiente</a>
                     </li>
                 </ul>
             </nav>

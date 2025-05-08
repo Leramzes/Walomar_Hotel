@@ -611,6 +611,8 @@ function mostrarOcultarBoton() {
         document.getElementById("nombre").removeAttribute("readonly");
         document.getElementById("ap_pater").removeAttribute("readonly");
         document.getElementById("ap_mater").removeAttribute("readonly");
+        document.getElementById("documentoPas").required = true;
+        document.getElementById("documento").required = false;
         inputNombre.classList.remove("d-none")
         documentPrincipal.classList.add("d-none");
         div_docPas.classList.remove("d-none");
@@ -620,6 +622,14 @@ function mostrarOcultarBoton() {
         inputRazon.classList.add("d-none");
         $("#tipoDocumentoHidden").val(tipoDocumento);
     } else if (tipo === "DNI") {
+        const documentoInput = document.getElementById("documento");
+        // Configurar input para RUC
+        documentoInput.setAttribute("maxlength", "8");
+        documentoInput.setAttribute("pattern", "\\d{8}");
+        documentoInput.setAttribute("oninput", "this.value = this.value.replace(/\\D/g, '').slice(0,8)");
+
+        document.getElementById("documentoPas").required = false;
+        document.getElementById("documento").required = true;
         boton.style.display = "inline-block";
         document.getElementById("nombre").setAttribute("readonly", true);
         document.getElementById("ap_pater").setAttribute("readonly", true);
@@ -632,6 +642,14 @@ function mostrarOcultarBoton() {
         documentPrincipal.classList.remove("d-none");
         div_docPas.classList.add("d-none");
     } else if (tipo === "RUC") {
+        const documentoInput = document.getElementById("documento");
+        // Configurar input para DNI
+        documentoInput.setAttribute("maxlength", "11");
+        documentoInput.setAttribute("pattern", "\\d{11}");
+        documentoInput.setAttribute("oninput", "this.value = this.value.replace(/\\D/g, '').slice(0,11)");
+
+        document.getElementById("documentoPas").required = false;
+        document.getElementById("documento").required = true;
         boton.style.display = "inline-block";
         inputNombre.classList.add("d-none")
         inputApPatern.classList.add("d-none");
@@ -688,3 +706,5 @@ document.getElementById("exportButton").addEventListener("click", function() {
         // Aquí iría la lógica para exportar todos los datos
     }
 });
+
+

@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.*;
 
 @WebServlet(name = "clientcontrol", urlPatterns = {"/clientcontrol"})
 public class ClientsController extends HttpServlet {
