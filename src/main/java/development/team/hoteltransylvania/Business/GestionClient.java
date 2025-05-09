@@ -30,12 +30,16 @@ public class GestionClient {
             while (rs.next()) {
                 int id_cliente = rs.getInt("id");
                 String nombre = rs.getString("nombre");
+                String ap_paterno = rs.getString("ap_paterno");
+                String ap_materno = rs.getString("ap_materno");
                 String email = rs.getString("email");
                 String numDocu = rs.getString("numero_documento");
                 String tipoDoc = rs.getString("tipo_documento");
                 String telefono = rs.getString("telefono");
+                String razon = rs.getString("razon_social");
 
-                allClients.add(new Client(id_cliente,nombre,telefono,email, TypeDocument.valueOf(tipoDoc),numDocu));
+                allClients.add(new Client(id_cliente,nombre, ap_materno, ap_paterno, telefono,email,
+                        TypeDocument.valueOf(tipoDoc), numDocu,razon));
             }
 
         } catch (SQLException e) {
@@ -66,9 +70,10 @@ public class GestionClient {
                 String numDocu = rs.getString("numero_documento");
                 String tipoDoc = rs.getString("tipo_documento");
                 String telefono = rs.getString("telefono");
+                String razon = rs.getString("razon_social");
 
                 allClients.add(new Client(id_cliente,nombre, ap_materno, ap_paterno, telefono,email,
-                        TypeDocument.valueOf(tipoDoc), numDocu));
+                        TypeDocument.valueOf(tipoDoc), numDocu,razon));
             }
 
         } catch (SQLException e) {
@@ -200,11 +205,15 @@ public class GestionClient {
     }
     public static List<Client> filterClients(String nombre) {
         if (nombre == null || nombre.isEmpty()) {
-            return getAllClients(); // Devuelve todos los productos si no hay búsqueda.
+            return getAllClients(); // Devuelve todos los clientes si no hay búsqueda.
         }
 
         return getAllClients().stream()
-                .filter(client -> client.getName().toLowerCase().contains(nombre.toLowerCase()))
+                .filter(client -> {
+                    String nombreCompleto = (client.getName() + " " + client.getApPaterno() + " " + client.getApMaterno()).toLowerCase().trim();
+                    String razonSocial = client.getRazonSocial() != null ? client.getRazonSocial().toLowerCase() : "";
+                    return nombreCompleto.contains(nombre.toLowerCase()) || razonSocial.contains(nombre.toLowerCase());
+                })
                 .collect(Collectors.toList());
     }
     public static Client getClient(String numeroDocumento) {

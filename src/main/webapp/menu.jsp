@@ -611,6 +611,35 @@
     }
 </script>
 
+<script>
+    document.addEventListener('submit', function (e) {
+        const form = e.target;
 
+        // Verifica si el formulario que se está enviando es el que queremos validar
+        if (form && form.id === 'formCliente') {
+            const correoInput = form.querySelector('#correo');
+            const correo = correoInput.value.trim();
+
+            // Regex que obliga a tener punto después del @
+            const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+
+            if (!regexCorreo.test(correo)) {
+
+                e.preventDefault(); // Detiene el envío
+
+                // Muestra la alerta con SweetAlert2
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Correo inválido',
+                    text: 'Ej: ejemplo@dominio.com"',
+                    timer: 3000,
+                    showConfirmButton: false,
+                    position: 'center',
+                    toast: true
+                });
+            }
+        }
+    });
+</script>
 </body>
 </html>

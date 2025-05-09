@@ -26,7 +26,9 @@ public class FilterClientController extends HttpServlet {
             for (Client client : clients) {
                 out.println("<tr>");
                 out.println("    <td>" + count + "</td>");
-                out.println("    <td>" + client.getName() + " " +client.getApPaterno() + " " +client.getApMaterno() + "</td>");
+                out.println("    <td>" +
+                        ("-".equals(client.getName()) ? client.getRazonSocial() : client.getName() + " " + client.getApPaterno() + " " + client.getApMaterno()) +
+                        "</td>");
                 out.println("    <td>" + client.getTypeDocument() + "</td>");
                 out.println("    <td>" + client.getNumberDocument() + "</td>");
                 out.println("    <td>" + client.getEmail() + "</td>");
@@ -38,11 +40,6 @@ public class FilterClientController extends HttpServlet {
                 out.println("                onclick='editarClient(" + client.getId() + ")'>");
                 out.println("            ✏️");
                 out.println("        </button>");
-                out.println("        <form action='clientcontrol' method='post'>");
-                out.println("            <input type='hidden' name='idClient' value='" + client.getId() + "'>");
-                out.println("            <input type='hidden' name='actionclient' value='delete'>");
-                out.println("            <button class='btn btn-danger btn-sm'>❌</button>");
-                out.println("        </form>");
                 out.println("    </td>");
                 out.println("</tr>");
                 count++;

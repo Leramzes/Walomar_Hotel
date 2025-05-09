@@ -291,7 +291,7 @@ window.Search = function (wordKey, stateKey, tableSearch, quantitySearch, contro
             var totalRecords = match ? parseInt(match[1]) : 0;
 
             // Actualizar el input con la cantidad de registros
-            $(quantitySearch).val($("tbody tr").length);
+            $(quantitySearch).val($(tableSearch).find("tbody tr").length);
 
             // Actualizar la paginación
             updatePagination(totalRecords, page, size, wordKey, stateKey, tableSearch, quantitySearch, controller);
@@ -621,6 +621,7 @@ function mostrarOcultarBoton() {
         inputNacion.classList.remove("d-none")
         inputRazon.classList.add("d-none");
         $("#tipoDocumentoHidden").val(tipoDocumento);
+        document.getElementById("direccion").removeAttribute("readonly");
     } else if (tipo === "DNI") {
         const documentoInput = document.getElementById("documento");
         // Configurar input para RUC
@@ -641,6 +642,7 @@ function mostrarOcultarBoton() {
         inputNacion.classList.add("d-none");
         documentPrincipal.classList.remove("d-none");
         div_docPas.classList.add("d-none");
+        document.getElementById("direccion").removeAttribute("readonly");
     } else if (tipo === "RUC") {
         const documentoInput = document.getElementById("documento");
         // Configurar input para DNI

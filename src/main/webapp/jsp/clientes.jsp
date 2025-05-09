@@ -249,11 +249,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="correo">Correo</label>
-                            <input type="email" class="form-control" id="correo" name="clientemail"
+                            <input type="text" class="form-control" id="correo" name="clientemail"
                                    required
-                                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$"
+                                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                    title="Debe ingresar un correo válido como ejemplo@dominio.com"
-                                   oninvalid="this.setCustomValidity('Ingrese un correo electrónico válido. Ejemplo: ejemplo@ejemplo.com')"
+                                   oninvalid="this.setCustomValidity('Ingrese un correo electrónico válido. Ejemplo: ejemplo@dominio.com')"
                                    oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
@@ -305,9 +305,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="telefonoEditar">Teléfono</label>
-                            <input type="text" class="form-control" id="telefono" name="telephone"
+                            <input type="text" class="form-control me-2" id="telefonoEditar" name="telefonoEditar"
                                    required maxlength="9" inputmode="numeric"
-                                   pattern="\d{9}" title="Ingrese exactamente 9 dígitos numéricos">
+                                   pattern="\d{9}"
+                                   oninput="this.value = this.value.replace(/\D/g, '').slice(0,9); this.setCustomValidity('')"
+                                   oninvalid="this.setCustomValidity('Debe ingresar exactamente 9 dígitos numéricos')">
                         </div>
                         <button type="submit" class="btn btn-success">Guardar</button>
                     </form>
@@ -320,7 +322,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
       <span>Mostrando
         <input type="number" id="sizeClients" min="1" max="999" value="<%=listClients.size()%>"
-               class="form-control d-inline-block" style="width: 3rem;">registros
+               class="form-control d-inline-block" style="width: 3rem;"> registros
       </span>
             <div class="input-group" style="max-width: 250px;">
                 <div class="d-none">
@@ -357,7 +359,10 @@
                 <tr>
                     <td><%=count%>
                     </td>
-                    <td><%=client.getName() + " " +client.getApPaterno() + " " +client.getApMaterno()%>
+                    <td>
+                        <%= "-".equals(client.getName())
+                                ? client.getRazonSocial()
+                                : client.getName() + " " + client.getApPaterno() + " " + client.getApMaterno() %>
                     </td>
                     <td><%=client.getTypeDocument()%>
                     </td>

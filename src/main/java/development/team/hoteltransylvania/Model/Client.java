@@ -38,7 +38,7 @@ public class Client {
         this.numberDocument = numberDocument;
     }
     public Client(int id, String name, String apMaterno, String apPaterno, String telephone, String email, TypeDocument typeDocument,
-                  String numberDocument) {
+                  String numberDocument, String razonSocial) {
         this.id = id;
         this.name = name;
         this.telephone = telephone;
@@ -47,6 +47,7 @@ public class Client {
         this.numberDocument = numberDocument;
         this.apPaterno = apPaterno;
         this.apMaterno = apMaterno;
+        this.razonSocial = razonSocial;
     }
 
     public Client() {
