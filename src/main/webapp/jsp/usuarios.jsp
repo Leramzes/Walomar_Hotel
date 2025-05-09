@@ -87,9 +87,9 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                 <input type="hidden" name="tipoDocumento" id="tipoDocumento" value="DNI-user">
-                                <input type="text" class="form-control" id="documento" name="documento"
-                                       placeholder="Ingrese el DNI" required pattern="\d{8}"
-                                       maxlength="8" inputmode="numeric" title="Debe ingresar 8 dígitos numéricos">
+                                <input type="text" class="form-control" id="documento" name="document"
+                                       required maxlength="8" inputmode="numeric" placeholder="Ingrese el DNI"
+                                       pattern="\d{8}" oninput="this.value = this.value.replace(/\D/g, '').slice(0,8);">
                                 <button type="button" class="btn btn-success" id="btnBuscar" onclick="buscarDNI()">
                                     Buscar
                                 </button>
@@ -135,7 +135,7 @@
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                                 <input type="text" id="username" name="username" class="form-control"
-                                       placeholder="Nombre Usuario" required>
+                                       placeholder="Nombre Usuario" required readonly>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -163,7 +163,7 @@
                         <input type="hidden" name="idemployee" id="inputEditarUsuario">
                         <div class="mb-3">
                             <label for="nombreEditar">Nombre</label>
-                            <input type="text" class="form-control" id="nombreEditar" name="nombreEdit" required>
+                            <input type="text" class="form-control" id="nombreEditar" name="nombreEdit" required readonly>
                         </div>
                         <div class="mb-3">
                             <label for="correoEditar">Correo</label>

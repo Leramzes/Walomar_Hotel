@@ -14,7 +14,7 @@
         return;
     }
     User usuario = (User) sessionObj.getAttribute("usuario");
-    boolean mostrarModal = BCrypt.checkpw("123456", usuario.getPassword());
+    boolean mostrarModal = BCrypt.checkpw(usuario.getUsername(), usuario.getPassword());
     int rolUser = Integer.parseInt(usuario.getEmployee().getPosition());
 
 %>
@@ -50,7 +50,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Cambiar Contraseña</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                <button type="button" class="btn-close" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
                 <p>Tu contraseña actual es la predeterminada. Por seguridad, cámbiala ahora.</p>
@@ -616,7 +616,8 @@
         const form = e.target;
 
         // Verifica si el formulario que se está enviando es uno de los que quieres validar
-        if (form && (form.id === 'formCliente' || form.id === 'formEditarCliente')) {
+        if (form && (form.id === 'formCliente' || form.id === 'formEditarCliente' || form.id === 'formUsuario'
+            || form.id === 'formEditarUsuario')) {
             let correoInput;
 
             // Selecciona el campo de correo correspondiente según el formulario
@@ -624,6 +625,10 @@
                 correoInput = form.querySelector('#correo'); // Para el formulario de 'formCliente'
             } else if (form.id === 'formEditarCliente') {
                 correoInput = form.querySelector('#correoEditar'); // Para el formulario de 'formEditarCliente'
+            } else if (form.id === 'formUsuario') {
+                correoInput = form.querySelector('#correo'); // Para el formulario de 'formUsuario'
+            } else if (form.id === 'formEditarUsuario') {
+                correoInput = form.querySelector('#correoEditar'); // Para el formulario de 'formEditarUsuario'
             }
 
             if (correoInput) {

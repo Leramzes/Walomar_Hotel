@@ -547,6 +547,7 @@ function buscarDNI() {
                      let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
                      $("#nombre").val(nombreCompleto);
                      $("#numberDocumentoHidden").val(documento);
+                     $("#username").val(documento);
                  } else {
                      $("#nombre").val("No encontrado");
                  }

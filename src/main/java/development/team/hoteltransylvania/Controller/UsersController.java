@@ -62,7 +62,7 @@ public class UsersController extends HttpServlet {
                 String email = req.getParameter("email");
                 String username1 = req.getParameter("username");
                 String num_doc = req.getParameter("numberdocumentHidden");
-                String password1 = "123456";
+                String password1 = num_doc;
                 int idRol = Integer.parseInt(req.getParameter("rol"));
 
                 if (userdao.existeUsuario(username1)) {
