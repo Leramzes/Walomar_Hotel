@@ -615,28 +615,34 @@
     document.addEventListener('submit', function (e) {
         const form = e.target;
 
-        // Verifica si el formulario que se está enviando es el que queremos validar
-        if (form && form.id === 'formCliente') {
-            const correoInput = form.querySelector('#correo');
-            const correo = correoInput.value.trim();
+        // Verifica si el formulario que se está enviando es uno de los que quieres validar
+        if (form && (form.id === 'formCliente' || form.id === 'formEditarCliente')) {
+            let correoInput;
 
-            // Regex que obliga a tener punto después del @
-            const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+            // Selecciona el campo de correo correspondiente según el formulario
+            if (form.id === 'formCliente') {
+                correoInput = form.querySelector('#correo'); // Para el formulario de 'formCliente'
+            } else if (form.id === 'formEditarCliente') {
+                correoInput = form.querySelector('#correoEditar'); // Para el formulario de 'formEditarCliente'
+            }
 
-            if (!regexCorreo.test(correo)) {
+            if (correoInput) {
+                const correo = correoInput.value.trim();
+                const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
 
-                e.preventDefault(); // Detiene el envío
+                if (!regexCorreo.test(correo)) {
+                    e.preventDefault(); // Detiene el envío del formulario
 
-                // Muestra la alerta con SweetAlert2
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Correo inválido',
-                    text: 'Ej: ejemplo@dominio.com"',
-                    timer: 3000,
-                    showConfirmButton: false,
-                    position: 'center',
-                    toast: true
-                });
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Correo inválido',
+                        text: 'Ejemplo válido: ejemplo@dominio.com',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'center',
+                        toast: true
+                    });
+                }
             }
         }
     });
