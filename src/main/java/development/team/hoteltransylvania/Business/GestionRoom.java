@@ -285,8 +285,6 @@ public class GestionRoom {
                                 (estadoLower.isEmpty() || room.getStatusRoom().getName().equalsIgnoreCase(estadoLower))
                 ).count();
     }
-
-
     public static int getTotalRooms() {
         String sql = "SELECT COUNT(*) FROM habitaciones";
         try (Connection cnn = dataSource.getConnection();
@@ -368,8 +366,6 @@ public class GestionRoom {
 
         return room;
     }
-
-
     public static int quantityFloors(){
         String sql = "SELECT COUNT(*) FROM pisos WHERE estatus = 'Activo'";
         int count = 0;
@@ -388,7 +384,6 @@ public class GestionRoom {
         }
         return count;
     }
-
     public static List<Floor> quantityFloorsEnabled(){
         String sql = "SELECT * FROM pisos WHERE estatus = 'Activo'";
         List<Floor> floors = new ArrayList<>();

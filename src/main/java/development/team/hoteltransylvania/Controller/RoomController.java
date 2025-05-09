@@ -50,7 +50,7 @@ public class RoomController extends HttpServlet {
                 GestionRoom.registerRoom(new Room(name,type, StatusRoom.libre,price,floor));
                 resp.sendRedirect("menu.jsp?view=habitaciones");
                 break;
-            case "delete":
+            case "room_mantenimiento":
                 int roomid = Integer.parseInt(req.getParameter("idroom"));
                 GestionRoom.deleteRoom(roomid);
                 resp.sendRedirect("menu.jsp?view=habitaciones");

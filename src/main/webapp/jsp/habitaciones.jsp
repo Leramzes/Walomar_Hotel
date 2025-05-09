@@ -222,11 +222,11 @@
                     onclick="editarRoom(<%= room.getId() %>)">
               ✏️
             </button>
-            <form action="roomcontroller" method="post">
+            <%--<form action="roomcontroller" method="post">
               <input type="hidden" name="idroom" value="<%= room.getId() %>">
-              <input type="hidden" name="actionRoom" value="delete">
+              <input type="hidden" name="actionRoom" value="room_mantenimiento">
               <button class="btn btn-danger btn-sm">❌</button>
-            </form>
+            </form>--%>
           </td>
         </tr>
         <% } %>
