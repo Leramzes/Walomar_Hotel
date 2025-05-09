@@ -45,12 +45,11 @@
 
 <body>
 <!-- Modal para cambiar contraseña -->
-<div class="modal fade" id="modalCambiarPassword" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCambiarPassword" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Cambiar Contraseña</h5>
-                <button type="button" class="btn-close" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
                 <p>Tu contraseña actual es la predeterminada. Por seguridad, cámbiala ahora.</p>
@@ -288,7 +287,11 @@
     document.addEventListener("DOMContentLoaded", function () {
         // Mostrar modal de cambio de contraseña si es necesario
         <% if (mostrarModal) { %>
-        const modalPassword = new bootstrap.Modal(document.getElementById("modalCambiarPassword"));
+        const modalPasswordElement = document.getElementById("modalCambiarPassword");
+        const modalPassword = new bootstrap.Modal(modalPasswordElement, {
+            backdrop: 'static', // No cerrar al hacer clic fuera
+            keyboard: false     // No cerrar con la tecla ESC
+        });
         modalPassword.show();
         <% } %>
 
@@ -303,8 +306,8 @@
                 errorMensaje.style.display = "block";
             } else {
                 errorMensaje.style.display = "none";
-                // Mostrar alerta de contraseña actualizada
-                event.preventDefault(); // Evitar el envío del formulario para mostrar la alerta
+                event.preventDefault(); // Evitar envío inmediato
+
                 Swal.fire({
                     title: 'Contraseña Actualizada',
                     text: 'Tu contraseña ha sido actualizada exitosamente.',
@@ -314,7 +317,7 @@
                     allowEscapeKey: false
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        document.getElementById("formCambiarPassword").submit(); // Enviar el formulario después de la alerta
+                        document.getElementById("formCambiarPassword").submit();
                     }
                 });
             }
@@ -387,7 +390,7 @@
                 e.preventDefault();
                 Swal.fire({
                     title: '¿Estás seguro?',
-                    text: "Se reiniciará la contraseña del usuario a: 123456",
+                    text: "Se reiniciará la contraseña del usuario a su username",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#0d6efd',

@@ -126,7 +126,7 @@ public class UsersController extends HttpServlet {
             case "restartPass": //CUANDO SE LE DA AL BOTON DE ADMINISTRACION RESTABLECER A PREDETERMINADO
                 int idUsuario = Integer.parseInt(req.getParameter("idUser"));
                 User userReset = userdao.getUserById(idUsuario);
-                userdao.updateUserPassword(userReset, "123456");
+                userdao.updateUserPassword(userReset, userReset.getUsername());
                 System.out.println("Contraseña restablecida: ID USER: " + idUsuario);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
@@ -143,7 +143,7 @@ public class UsersController extends HttpServlet {
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
             case "updatePassword": //CAMBIAR CONTRASEÑA A NUEVA
-                String newPassword = req.getParameter("newpassword");
+                String newPassword = req.getParameter("newPassword");
                 HttpSession sessionActual = req.getSession();
                 User userLogin = (User) sessionActual.getAttribute("usuario");
                 userLogin = userdao.updateUserPassword(userLogin, newPassword);
