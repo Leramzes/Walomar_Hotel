@@ -51,7 +51,8 @@ public class ClientsController extends HttpServlet {
                 String ap_mater = req.getParameter("ap_mater");
                 ap_mater = (ap_mater == null || ap_mater.trim().isEmpty()) ? "-" : ap_mater;
                 String raz_social = req.getParameter("raz_social");
-                raz_social = (raz_social == null || raz_social.trim().isEmpty()) ? "-" : raz_social;
+                raz_social = (raz_social == null || raz_social.trim().isEmpty() ||
+                        raz_social.equalsIgnoreCase("Error al consultar documento")) ? "-" : raz_social;
                 String nacionalidad = (req.getParameter("nacionalidad") == null || req.getParameter("nacionalidad").trim().isEmpty())
                         ? "Perú" : req.getParameter("nacionalidad");
                 String direccion = req.getParameter("direccion");

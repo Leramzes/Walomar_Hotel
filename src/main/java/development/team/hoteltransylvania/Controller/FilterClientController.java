@@ -26,7 +26,7 @@ public class FilterClientController extends HttpServlet {
             for (Client client : clients) {
                 out.println("<tr>");
                 out.println("    <td>" + count + "</td>");
-                out.println("    <td>" + client.getName() + "</td>");
+                out.println("    <td>" + client.getName() + " " +client.getApPaterno() + " " +client.getApMaterno() + "</td>");
                 out.println("    <td>" + client.getTypeDocument() + "</td>");
                 out.println("    <td>" + client.getNumberDocument() + "</td>");
                 out.println("    <td>" + client.getEmail() + "</td>");

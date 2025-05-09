@@ -249,13 +249,20 @@
                         </div>
                         <div class="mb-3">
                             <label for="correo">Correo</label>
-                            <input type="text" class="form-control" id="correo" name="clientemail"
-                                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
+                            <input type="email" class="form-control" id="correo" name="clientemail"
+                                   required
+                                   pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$"
+                                   title="Debe ingresar un correo válido como ejemplo@dominio.com"
+                                   oninvalid="this.setCustomValidity('Ingrese un correo electrónico válido. Ejemplo: ejemplo@ejemplo.com')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
                             <label for="telefono">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefono" name="telephone" pattern="[0-9]{9}"
-                                   maxlength="9" required>
+                            <input type="text" class="form-control me-2" id="telefono" name="telephone"
+                                   required maxlength="9" inputmode="numeric"
+                                   pattern="\d{9}"
+                                   oninput="this.value = this.value.replace(/\D/g, '').slice(0,9); this.setCustomValidity('')"
+                                   oninvalid="this.setCustomValidity('Debe ingresar exactamente 9 dígitos numéricos')">
                         </div>
                         <button type="submit" class="btn btn-success">Guardar</button>
                     </form>
@@ -298,8 +305,9 @@
                         </div>
                         <div class="mb-3">
                             <label for="telefonoEditar">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefonoEditar" name="telefonoEditar"
-                                   pattern="[0-9]{9}" maxlength="9" required>
+                            <input type="text" class="form-control" id="telefono" name="telephone"
+                                   required maxlength="9" inputmode="numeric"
+                                   pattern="\d{9}" title="Ingrese exactamente 9 dígitos numéricos">
                         </div>
                         <button type="submit" class="btn btn-success">Guardar</button>
                     </form>
