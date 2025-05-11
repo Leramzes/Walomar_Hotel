@@ -66,6 +66,16 @@
                     <div id="errorMensaje" class="alert alert-danger mt-3" role="alert" style="display: none;">
                         Las contraseñas no coinciden.
                     </div>
+                    <div id="errorSeguridad" class="alert alert-danger mt-3" role="alert" style="display: none;">
+                        <strong>Por favor, crea una contraseña segura que cumpla con los siguientes requisitos:</strong>
+                        <ul class="mt-2 mb-0">
+                            <li>Mínimo 8 caracteres</li>
+                            <li>Al menos una letra mayúscula</li>
+                            <li>Al menos una letra minúscula</li>
+                            <li>Al menos un número</li>
+                            <li>Al menos un carácter especial (por ejemplo: @, #, $, !, etc.)</li>
+                        </ul>
+                    </div>
                     <button type="submit" class="btn btn-success">Actualizar Contraseña</button>
                 </form>
             </div>
@@ -300,26 +310,37 @@
             const nuevaPassword = document.getElementById("nuevaPassword").value;
             const confirmarPassword = document.getElementById("confirmarPassword").value;
             const errorMensaje = document.getElementById("errorMensaje");
+            const errorSeguridad = document.getElementById("errorSeguridad");
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-            if (nuevaPassword !== confirmarPassword) {
+            if (!regex.test(nuevaPassword)) {
                 event.preventDefault();
-                errorMensaje.style.display = "block";
-            } else {
-                errorMensaje.style.display = "none";
-                event.preventDefault(); // Evitar envío inmediato
+                errorSeguridad.style.display = "block";
+                errorMensaje.style.display = "none"; // Oculta el otro error si estaba activo
+                return;
+            }else{
+                if (nuevaPassword !== confirmarPassword) {
+                    event.preventDefault();
+                    errorMensaje.style.display = "block";
+                    errorSeguridad.style.display = "none"; // Oculta el otro error si estaba activo
+                } else {
+                    errorMensaje.style.display = "none";
+                    errorSeguridad.style.display = "none";
+                    event.preventDefault(); // Evitar envío inmediato
 
-                Swal.fire({
-                    title: 'Contraseña Actualizada',
-                    text: 'Tu contraseña ha sido actualizada exitosamente.',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById("formCambiarPassword").submit();
-                    }
-                });
+                    Swal.fire({
+                        title: 'Contraseña Actualizada',
+                        text: 'Tu contraseña ha sido actualizada exitosamente.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById("formCambiarPassword").submit();
+                        }
+                    });
+                }
             }
         });
     });
