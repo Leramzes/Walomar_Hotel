@@ -615,6 +615,7 @@
 </script>
 
 <script>
+    //validacion correo
     document.addEventListener('submit', function (e) {
         const form = e.target;
 

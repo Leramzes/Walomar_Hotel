@@ -6,6 +6,8 @@
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="development.team.hoteltransylvania.Model.User" %>
 <%@ page import="development.team.hoteltransylvania.Model.Floor" %>
+<%@ page import="development.team.hoteltransylvania.Model.TypeRoom" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionTypeRoom" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -52,6 +54,7 @@
   int totalRooms = GestionRoom.getTotalRooms();
   int totalPages = (int) Math.ceil((double) totalRooms / pageSize);
   List<Floor> floors = GestionRoom.quantityFloorsEnabled();
+  List<TypeRoom> allTypes = GestionTypeRoom.getAllTypeRoomsActive();
 %>
 
 
@@ -104,11 +107,9 @@
             <div class="mb-3">
               <label for="tipo">Tipo de Habitación</label>
               <select class="form-select" id="tipo" name="tipo" required>
-                <option value="3">Simple</option>
-                <option value="4">Doble</option>
-                <option value="5">Matrimonial</option>
-                <option value="6">Suite</option>
-                <option value="7">Presidencial</option>
+                <%for (TypeRoom typeRoom : allTypes){%>
+                  <option value="<%=typeRoom.getId()%>"><%=typeRoom.getName()%></option>
+                <%}%>
               </select>
             </div>
 
