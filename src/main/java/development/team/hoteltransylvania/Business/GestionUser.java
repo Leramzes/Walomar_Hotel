@@ -225,7 +225,7 @@ import java.util.logging.Logger;
             }
         }
         public static boolean validarCredenciales(String username, String contrasena) {
-            String sql = "SELECT password FROM usuarios WHERE username = ?";
+            String sql = "SELECT password, estado FROM usuarios WHERE username = ? AND estado = 'Activo'";
 
             try (Connection con = dataSource.getConnection();
                  PreparedStatement ps = con.prepareStatement(sql)) {

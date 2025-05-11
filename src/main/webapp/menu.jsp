@@ -407,7 +407,7 @@
             } else if (e.target.classList.contains('form-delete')) {
                 e.preventDefault();
                 Swal.fire({
-                    title: "¿Eliminar usuario?",
+                    title: "¿Desactivar al usuario?",
                     text: "El usuario será desactivado y no podrá acceder al sistema.",
                     icon: 'warning',
                     showCancelButton: true,
