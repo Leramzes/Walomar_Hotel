@@ -322,7 +322,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
       <span>Mostrando
         <input type="number" id="sizeClients" min="1" max="999" value="<%=listClients.size()%>"
-               class="form-control d-inline-block" style="width: 3rem;"> registros
+               class="form-control d-inline-block" style="width: 5rem;" readonly> registros
       </span>
             <div class="input-group" style="max-width: 250px;">
                 <div class="d-none">
