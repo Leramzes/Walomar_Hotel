@@ -5,6 +5,7 @@
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="development.team.hoteltransylvania.Model.User" %>
+<%@ page import="development.team.hoteltransylvania.Model.Floor" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -50,6 +51,7 @@
   List<Room> rooms = GestionRoom.getRoomsPaginated(pagina, pageSize);
   int totalRooms = GestionRoom.getTotalRooms();
   int totalPages = (int) Math.ceil((double) totalRooms / pageSize);
+  List<Floor> floors = GestionRoom.quantityFloorsEnabled();
 %>
 
 
@@ -93,9 +95,9 @@
             <div class="mb-3">
               <label for="piso">Nivel/Piso</label>
               <select class="form-select" id="piso" name="piso" required>
-                <option value="1">Nivel 1</option>
-                <option value="2">Nivel 2</option>
-                <option value="3">Nivel 3</option>
+                <%for(Floor floor : floors){%>
+                <option value="<%=floor.getId()%>"><%=floor.getName()%></option>
+                <%}%>
               </select>
             </div>
 

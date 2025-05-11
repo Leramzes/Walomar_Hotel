@@ -46,7 +46,6 @@ public class RoomController extends HttpServlet {
                 TypeRoom type = GestionRoom.getTypeRoomById(Integer.parseInt(req.getParameter("tipo")));
                 double price = Double.parseDouble(req.getParameter("precio"));
                 int floor = Integer.parseInt(req.getParameter("piso"));
-                System.out.println(name + " " + type + " " + price + " " + floor);
                 GestionRoom.registerRoom(new Room(name,type, StatusRoom.libre,price,floor));
                 resp.sendRedirect("menu.jsp?view=habitaciones");
                 break;
