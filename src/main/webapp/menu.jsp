@@ -16,6 +16,9 @@
     User usuario = (User) sessionObj.getAttribute("usuario");
     boolean mostrarModal = BCrypt.checkpw(usuario.getUsername(), usuario.getPassword());
     int rolUser = Integer.parseInt(usuario.getEmployee().getPosition());
+    String fullName = usuario.getEmployee().getName();
+    String[] parts = fullName.trim().split("\\s+"); // divide por espacios múltiples
+    String firstTwoWords = parts[0];
 
 %>
 
@@ -101,7 +104,7 @@
         <div class="sidebar-header">
             <a href="#" class="sidebar-link">
                 <i class="fa-solid fa-user me-2"></i>
-                <span><%=usuario.getEmployee().getName()%></span>
+                <span><%=firstTwoWords%></span>
             </a>
         </div>
 

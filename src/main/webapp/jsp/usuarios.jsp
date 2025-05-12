@@ -240,25 +240,25 @@
                     <td class="d-flex justify-content-center gap-1">
                         <button class="btn btn-warning btn-sm" id="btn-editar"
                                 data-bs-toggle="modal"
-                                data-bs-target="#modalEditarUsuario"
+                                data-bs-target="#modalEditarUsuario" title="Editar Usuario"
                                 onclick="editarUser(<%=employee.getId_employee()%>)">✏️
                         </button>
                         <form class="form-restart" action="user" method="post">
                             <input type="hidden" name="idUser" value="<%=employee.getId_user()%>">
                             <input type="hidden" name="accion" value="restartPass">
-                            <button type="submit" class="btn btn-secondary btn-sm">🔑</button>
+                            <button type="submit" title="Resetear Clave" class="btn btn-secondary btn-sm">🔑</button>
                         </form>
                         <% if (employee.getEstado_user().equals("Activo")) { %>
                         <form class="form-delete" action="user" method="post">
                             <input type="hidden" name="idUser" value="<%=employee.getId_user()%>">
                             <input type="hidden" name="accion" value="delete">
-                            <button type="submit" class="btn btn-danger btn-sm">❌</button>
+                            <button type="submit" title="Desactivar Usuario" class="btn btn-danger btn-sm">❌</button>
                         </form>
                         <% } else { %>
                         <form class="form-activate" action="user" method="post">
                             <input type="hidden" name="idUser" value="<%=employee.getId_user()%>">
                             <input type="hidden" name="accion" value="activate">
-                            <button type="submit" class="btn btn-success btn-sm">✅</button>
+                            <button type="submit" title="Activar Usuario" class="btn btn-success btn-sm">✅</button>
                         </form>
                         <% } %>
                     </td>
