@@ -379,9 +379,9 @@
                     <td class="d-flex justify-content-center gap-1">
                         <button class="btn btn-warning btn-sm" id="btn-editar"
                                 data-bs-toggle="modal"
-                                data-bs-target="#modalEditarCliente"
+                                data-bs-target="#modalEditarCliente"  title="Editar Cliente"
                                 onclick="editarClient(<%=client.getId()%>)">
-                            ✏️
+                            ✏️ Editar
                         </button>
                         <%--<form action="clientcontrol" method="post">
                           <input type="hidden" name="idClient" value="<%=client.getId()%>">
