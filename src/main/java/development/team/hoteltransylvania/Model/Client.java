@@ -28,7 +28,7 @@ public class Client {
         this.nacionalidad = nacionalidad;
     }
 
-    public Client(int id, String name, String telephone, String email, TypeDocument typeDocument,
+    public Client(int id, String name, String telephone, String apPaterno, String apMaterno, String razonSocial, String email, TypeDocument typeDocument,
                   String numberDocument) {
         this.id = id;
         this.name = name;
@@ -36,6 +36,9 @@ public class Client {
         this.email = email;
         this.typeDocument = typeDocument;
         this.numberDocument = numberDocument;
+        this.apPaterno = apPaterno;
+        this.apMaterno = apMaterno;
+        this.razonSocial = razonSocial;
     }
     public Client(int id, String name, String apMaterno, String apPaterno, String telephone, String email, TypeDocument typeDocument,
                   String numberDocument, String razonSocial) {

@@ -110,7 +110,8 @@ public class ClientsController extends HttpServlet {
                 String typeDoc = req.getParameter("tipoDocumentoEditar");
                 String documentedit = req.getParameter("documentoEditar");
                 String telephoneedit = req.getParameter("telefonoEditar");
-                client.setName(name);client.setEmail(email);client.setTypeDocument(TypeDocument.valueOf(typeDoc)); client.setNumberDocument(documentedit);
+                client.setName(name);client.setEmail(email);
+                client.setTypeDocument(TypeDocument.valueOf(typeDoc)); client.setNumberDocument(documentedit);
                 client.setTelephone(telephoneedit);
                 GestionClient.updateClient(client);
                 resp.sendRedirect("menu.jsp?view=clientes");

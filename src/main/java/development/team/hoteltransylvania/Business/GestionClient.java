@@ -156,13 +156,16 @@ public class GestionClient {
             if (rs.next()) {
                 int id_cliente = rs.getInt("id");
                 String nombre = rs.getString("nombre");
+                String ap_paterno = rs.getString("ap_paterno");
+                String ap_materno = rs.getString("ap_materno");
+                String razon = rs.getString("razon_social");
                 String email = rs.getString("email");
                 String numDocu = rs.getString("numero_documento");
                 String tipoDoc = rs.getString("tipo_documento");
                 String telefono = rs.getString("telefono");
 
 
-                client = new Client(id_cliente,nombre,telefono,email, TypeDocument.valueOf(tipoDoc),numDocu);
+                client = new Client(id_cliente,nombre,telefono, ap_paterno, ap_materno, razon, email, TypeDocument.valueOf(tipoDoc),numDocu);
             }
         } catch (SQLException e) {
             LOGGER.severe("Error retrieving client with ID " + client + ": " + e.getMessage());

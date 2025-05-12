@@ -147,7 +147,11 @@ function editarClient(id) {
         .then(response => response.json())  // Convertimos la respuesta a JSON
         .then(data => {
             // Llenar los campos del formulario con los datos obtenidos
-            document.getElementById("nombreEditar").value = data.name;
+            if (data.name === "-") {
+                document.getElementById("nombreEditar").value = data.razonSocial;
+            } else {
+                document.getElementById("nombreEditar").value = data.name + " " + data.apPaterno + " " + data.apMaterno;
+            }
             document.getElementById("tipoDocumentoEditar").value = data.typeDocument;
             document.getElementById("documentoEditar").value = data.numberDocument;
             document.getElementById("correoEditar").value = data.email;

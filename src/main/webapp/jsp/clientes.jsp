@@ -225,15 +225,18 @@
                         </div>
                         <div class="mb-3" id="div_nombre">
                             <label for="nombre">Nombres</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" readonly>
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                   oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')" readonly>
                         </div>
                         <div class="mb-3" id="div_ap_pater">
                             <label for="nombre">Apellido Paterno</label>
-                            <input type="text" class="form-control" id="ap_pater" name="ap_pater" readonly>
+                            <input type="text" class="form-control" id="ap_pater" name="ap_pater"
+                                   oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')" readonly>
                         </div>
                         <div class="mb-3" id="div_ap_mater">
                             <label for="nombre">Apellido Materno</label>
-                            <input type="text" class="form-control" id="ap_mater" name="ap_mater" readonly>
+                            <input type="text" class="form-control" id="ap_mater" name="ap_mater"
+                                   oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')" readonly>
                         </div>
                         <div class="mb-3 d-none" id="div_raz_social">
                             <label for="nombre">Razón Social</label>
@@ -241,7 +244,8 @@
                         </div>
                         <div class="mb-3 d-none" id="div_nacionalidad">
                             <label for="nombre">Nacionalidad</label>
-                            <input type="text" class="form-control" id="nacionalidad" name="nacionalidad">
+                            <input type="text" class="form-control" id="nacionalidad" name="nacionalidad"
+                                   oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                         </div>
                         <div class="mb-3" id="div_direccion">
                             <label for="nombre">Dirección</label>
@@ -332,7 +336,7 @@
                         <option value="Inactivo">Inactivos</option>
                     </select>
                 </div>
-                <input type="text" class="form-control" id="nameClientSearch" placeholder="Buscar"
+                <input type="text" class="form-control" id="nameClientSearch" placeholder="Buscar por nombre"
                        onkeyup="Search('#nameClientSearch','#estadoSelect','#tablaClients','#sizeClients','filterClientServlet',1,10)">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
