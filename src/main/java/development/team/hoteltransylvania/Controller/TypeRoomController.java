@@ -39,8 +39,14 @@ public class TypeRoomController extends HttpServlet {
         switch (action) {
             case "add":
                 String nombre = req.getParameter("nombreType");
-                GestionTypeRoom.registerTypeRoom(new TypeRoom(1,nombre,"Activo"));
-                resp.sendRedirect("menu.jsp?view=habitacionesTipo");
+                boolean isRegistred = GestionTypeRoom.registerTypeRoom(new TypeRoom(1,nombre,"Activo"));
+                if (!isRegistred) {
+                    // Si no se pudo registrar (porque ya existe), redirige con parámetro
+                    resp.sendRedirect("menu.jsp?view=habitacionesTipo&error2=tiporoomexistente");
+                } else {
+                    // Si se registra bien, redirige normalmente
+                    resp.sendRedirect("menu.jsp?view=habitacionesTipo");
+                }
                 break;
             case "update":
                 int id = Integer.parseInt(req.getParameter("idTypeRoom"));

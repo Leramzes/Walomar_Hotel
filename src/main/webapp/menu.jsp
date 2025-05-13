@@ -564,7 +564,7 @@
             }
         });
 
-        // Alerta para registrar pisos
+        // Alerta para registrar pisos, tipos de habitacion y habitaciones
         document.getElementById('contenido').addEventListener('submit', function (e) {
             if (e.target.id === 'formPiso') {
                 e.preventDefault();
@@ -616,6 +616,51 @@
                     });
                 }
             }
+
+        });
+        document.getElementById('contenido').addEventListener('submit', function (e) {
+            if (e.target.id === 'formTipo') {
+                e.preventDefault();
+
+                const nombre = document.getElementById("nombre").value.trim();
+
+                const params = new URLSearchParams(window.location.search);
+                if (params.get("error2") === "tiporoomexistente") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El tipo de habitacion ya existe.',
+                    });
+                } else {
+                    // Validación del nombre
+                    if (nombre === "") {
+                        Swal.fire({
+                            icon: 'Error',
+                            title: 'Debe ingresar un nombre para el Tipo de Habitación.',
+                            text: 'Debe ingresar un nombre para el Tipo de Habitación.',
+                        });
+                        return; // cortar aquí para que no continúe
+                    }
+
+                    Swal.fire({
+                        title: '¿Registrar Nuevo Tipo de Habitación?',
+                        text: "Se agregará un nuevo tipo de habitación al sistema.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#198754',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Sí, registrar',
+                        cancelButtonText: 'Cancelar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            e.target.submit();
+                        }
+                    });
+                }
+            }
+
         });
     });
 
@@ -769,6 +814,13 @@
             icon: 'error',
             title: 'Error',
             text: 'El nombre del piso ya existe.',
+        });
+    }
+    if (params.get("error2") === "tiporoomexistente") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El tipo de habitacion ya existe.',
         });
     }
 </script>

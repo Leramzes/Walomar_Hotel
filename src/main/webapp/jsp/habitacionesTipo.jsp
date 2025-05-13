@@ -127,7 +127,7 @@
       </span>
 
       <div class="input-group" style="max-width: 250px;">
-        <input type="text" class="form-control" id="nameTRSearch" placeholder="Buscar"
+        <input type="text" class="form-control" id="nameTRSearch" placeholder="Buscar por nombre"
                onkeyup="Search('#nameTRSearch', '#estadoSelect','#tablaHabitacionesTipos','#sizeTypeRooms','filterTypeRoomServlet',1,10)">
         <span class="input-group-text"><i class="fas fa-search"></i></span>
       </div>

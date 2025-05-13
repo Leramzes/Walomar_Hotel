@@ -17,15 +17,13 @@ public class GestionTypeRoom {
     private static final Logger LOGGER = LoggerConfifg.getLogger(GestionTypeRoom.class);
 
     public static boolean registerTypeRoom(TypeRoom typeRoom) {
-        boolean result = false;
-
-        if (!enumValueExists(typeRoom.getName())) {
-            if (!addEnumValue(typeRoom.getName())) {
-                return false; // Si no pudo agregar el nuevo ENUM, no continúa
-            }
+        if (typeRoomExists(typeRoom.getName())) {
+            LOGGER.warning("Type Room name " + typeRoom.getName() + " already exists.");
+            return false;
         }
 
-        String sql = "INSERT INTO tipo_habitacion (nombre, estatus) VALUES (?::tipo_habitacion_enum, ?)";
+        String sql = "INSERT INTO tipo_habitacion (nombre, estatus) VALUES (?, ?)";
+        boolean result = false;
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql)) {
@@ -46,15 +44,13 @@ public class GestionTypeRoom {
     }
 
     public static boolean updateTypeRoom(TypeRoom TypeRoomUpdate) {
-        boolean result = false;
-
-        if (!enumValueExists(TypeRoomUpdate.getName())) {
-            if (!addEnumValue(TypeRoomUpdate.getName())) {
-                return false; // Si no pudo agregar el nuevo ENUM, no continúa
-            }
+        if (typeRoomExists(TypeRoomUpdate.getName())) {
+            LOGGER.warning("Cannot update. Type Room name " + TypeRoomUpdate.getName() + " already exists.");
+            return false;
         }
 
         String sql = "UPDATE tipo_habitacion SET nombre = ? WHERE id = ?";
+        boolean result = false;
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql)) {
@@ -76,42 +72,21 @@ public class GestionTypeRoom {
         return result;
     }
 
-    /**
-     * Método para verificar si un valor ya existe en el ENUM de PostgreSQL.
-     */
-    private static boolean enumValueExists(String typeRoomName) {
-        String sql = "SELECT 1 FROM pg_enum WHERE enumtypid = ("
-                + "SELECT oid FROM pg_type WHERE typname = 'tipo_habitacion_enum') "
-                + "AND enumlabel = ?";
+
+    // Método para verificar si el tipo de habitación ya existe en la tabla
+    private static boolean typeRoomExists(String typeRoomName) {
+        String sql = "SELECT 1 FROM tipo_habitacion WHERE nombre = ?";
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql)) {
             ps.setString(1, typeRoomName);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next(); // Si encuentra un resultado, el ENUM ya existe
+                return rs.next(); // Si encuentra un resultado, el tipo de habitación ya existe
             }
         } catch (SQLException e) {
-            LOGGER.severe("Error checking ENUM value: " + e.getMessage());
+            LOGGER.severe("Error checking if TypeRoom exists in the table: " + e.getMessage());
         }
         return false;
-    }
-
-    /**
-     * Método para agregar un nuevo valor al ENUM en PostgreSQL.
-     */
-    private static boolean addEnumValue(String newValue) {
-        String enumType = "tipo_habitacion_enum"; // Reemplaza con el nombre real de tu ENUM
-        String sql = "ALTER TYPE " + enumType + " ADD VALUE '" + newValue + "'";
-
-        try (Connection cnn = dataSource.getConnection();
-            Statement stmt = cnn.createStatement()) { // Usamos Statement porque PreparedStatement no soporta ALTER TYPE
-            stmt.executeUpdate(sql);
-            LOGGER.info("Added new ENUM value: " + newValue);
-            return true;
-        } catch (SQLException e) {
-            LOGGER.severe("Error adding ENUM value: " + e.getMessage());
-            return false;
-        }
     }
 
     public static boolean deleteTypeRoom(int TypeRoomId) {
