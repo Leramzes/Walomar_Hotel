@@ -106,6 +106,7 @@
                     <!--Form Editar-->
                     <form id="formEditarPiso" action="floorcontroller" method="post">
                         <input type="hidden" name="idFloor" id="inputEditarPiso">
+                        <input type="hidden" value="update" name="actionFloor">
                         <div class="mb-3">
                             <label for="nombreEditar">Nombre</label>
                             <input type="text" class="form-control" id="nombreEditar" name="nombreEditar" required>

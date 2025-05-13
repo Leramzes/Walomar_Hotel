@@ -823,6 +823,13 @@
             text: 'El tipo de habitacion ya existe.',
         });
     }
+    if (params.get("error") === "nombrepisoexistente") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El nombre del piso ya existe.',
+        });
+    }
 </script>
 </body>
 </html>

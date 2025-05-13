@@ -53,8 +53,15 @@ public class FloorController extends HttpServlet {
             case "update":
                 int id = Integer.parseInt(req.getParameter("idFloor"));
                 String nombreUpdate = req.getParameter("nombreEditar");
-                GestionFloor.updateFloor(new Floor(id,nombreUpdate,"Activo"));
-                resp.sendRedirect("menu.jsp?view=pisos");
+                boolean isExisteName = GestionFloor.updateFloor(new Floor(id,nombreUpdate,"Activo"));
+
+                if (!isExisteName) {
+                    // Si no se pudo registrar (porque ya existe), redirige con parámetro
+                    resp.sendRedirect("menu.jsp?view=pisos&error=nombrepisoexistente");
+                } else {
+                    // Si se registra bien, redirige normalmente
+                    resp.sendRedirect("menu.jsp?view=pisos");
+                }
                 break;
             case "inactivate":
                 int idFloor = Integer.parseInt(req.getParameter("idFloor"));

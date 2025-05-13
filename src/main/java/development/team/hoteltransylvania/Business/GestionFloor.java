@@ -50,15 +50,14 @@ public class GestionFloor {
             return false;
         }
 
-        String sql = "UPDATE pisos SET nombre = ?, estatus = ? WHERE id = ?";
+        String sql = "UPDATE pisos SET nombre = ? WHERE id = ?";
         boolean result = false;
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql)) {
 
             ps.setString(1, floorUpdate.getName());
-            ps.setString(2, floorUpdate.getStatus());
-            ps.setInt(3, floorUpdate.getId());
+            ps.setInt(2, floorUpdate.getId());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
