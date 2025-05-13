@@ -437,7 +437,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#dc3545',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Sí, eliminar',
+                    confirmButtonText: 'Sí, desactivar',
                     cancelButtonText: 'Cancelar',
                     allowOutsideClick: false,
                     allowEscapeKey: false
@@ -471,6 +471,39 @@
         document.getElementById('contenido').addEventListener('submit', function (e) {
             if (e.target.id === 'formUsuario') {
                 e.preventDefault();
+
+                const nombre = document.getElementById("nombre").value.trim();
+                const rol = document.getElementById("rol").value;
+                const dni = document.getElementById("numberDocumentoHidden").value.trim();
+
+                // Validación del nombre
+                if (nombre === "Error al consultar documento" || nombre === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Documento inválido',
+                        text: 'Debe buscar un número de documento válido antes de registrar.',
+                    });
+                    return; // cortar aquí para que no continúe
+                }
+                // Validación del rol
+                if (rol === "Seleccionar Rol" || rol === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Rol no seleccionado',
+                        text: 'Debe seleccionar un rol válido.',
+                    });
+                    return;
+                }
+                // Validación del dni
+                if (!dni || dni.trim() === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'DNI inválido',
+                        text: 'Debe ingresar un DNI válido.',
+                    });
+                    return;
+                }
+
                 Swal.fire({
                     title: '¿Registrar usuario?',
                     text: "Se agregará un nuevo usuario al sistema.",

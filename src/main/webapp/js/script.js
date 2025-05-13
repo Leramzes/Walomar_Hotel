@@ -554,6 +554,7 @@ function buscarDNI() {
                      $("#username").val(documento);
                  } else {
                      $("#nombre").val("No encontrado");
+                     $("#username").val("-");
                  }
              } else if (tipo_documento === "DNI"){
                 if (data.nombres) {
@@ -587,6 +588,7 @@ function buscarDNI() {
                 errorMsg = xhr.responseJSON.error;
             }
             $("#nombre").val(errorMsg);
+            $("#username").val("-");
             $("#ap_pater").val("-");
             $("#ap_mater").val("-");
             $("#raz_social").val(errorMsg);

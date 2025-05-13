@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static java.lang.System.out;
+
 @WebServlet(name = "user", urlPatterns = {"/user"})
 public class UsersController extends HttpServlet {
 
@@ -37,7 +39,7 @@ public class UsersController extends HttpServlet {
         if ("get".equals(action)) {
             String idEmpleado = req.getParameter("idEmployee");
             usEmpDTO = employeedao.getEmployeeById(Integer.parseInt(idEmpleado));
-            System.out.println(usEmpDTO.toString());
+            out.println(usEmpDTO.toString());
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
@@ -66,7 +68,7 @@ public class UsersController extends HttpServlet {
                 int idRol = Integer.parseInt(req.getParameter("rol"));
 
                 if (userdao.existeUsuario(username1)) {
-                    System.out.println("El email ya está registrado.");
+                    out.println("El email ya está registrado.");
                 } else {
                     //AGREGAR A USUARIOS
                     user.setUsername(username1);
@@ -89,7 +91,7 @@ public class UsersController extends HttpServlet {
                     user.setStatusUser(StatusUser.valueOf("Activo"));
                     IdUsuario = userdao.registerUser(user);
 
-                    System.out.printf("Se ha registrado el User con ID: " + IdUsuario);
+                    out.printf("Se ha registrado el User con ID: " + IdUsuario);
                 }
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 return;
@@ -127,19 +129,19 @@ public class UsersController extends HttpServlet {
                 int idUsuario = Integer.parseInt(req.getParameter("idUser"));
                 User userReset = userdao.getUserById(idUsuario);
                 userdao.updateUserPassword(userReset, userReset.getUsername());
-                System.out.println("Contraseña restablecida: ID USER: " + idUsuario);
+                out.println("Contraseña restablecida: ID USER: " + idUsuario);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
             case "delete":
                 int idUser = Integer.parseInt(req.getParameter("idUser"));
                 userdao.updateStatus(idUser, "Inactivo");
-                System.out.println("Usuario inactivado: ID: " + idUser);
+                out.println("Usuario inactivado: ID: " + idUser);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
             case "activate":
                 int idU = Integer.parseInt(req.getParameter("idUser"));
                 userdao.updateStatus(idU, "Activo");
-                System.out.println("Usuario activado: ID: " + idU);
+                out.println("Usuario activado: ID: " + idU);
                 resp.sendRedirect("menu.jsp?view=usuarios");
                 break;
             case "updatePassword": //CAMBIAR CONTRASEÑA A NUEVA
