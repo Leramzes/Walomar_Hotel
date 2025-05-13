@@ -57,7 +57,7 @@ public class FloorController extends HttpServlet {
 
                 if (!isExisteName) {
                     // Si no se pudo registrar (porque ya existe), redirige con parámetro
-                    resp.sendRedirect("menu.jsp?view=pisos&error=nombrepisoexistente");
+                    resp.sendRedirect("menu.jsp?view=pisos&error=pisoexistente");
                 } else {
                     // Si se registra bien, redirige normalmente
                     resp.sendRedirect("menu.jsp?view=pisos");

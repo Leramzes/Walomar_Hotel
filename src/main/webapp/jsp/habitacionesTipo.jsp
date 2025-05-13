@@ -107,6 +107,7 @@
         <div class="modal-body">
           <!--Form Editar-->
           <form id="formEditarTipo" action="typeroomcontroller" method="post">
+            <input type="hidden" value="update" name="actionTypeRoom">
             <input type="hidden" name="idTypeRoom" id="inputEditarTipoHabitacion">
             <div class="mb-3">
               <label for="nombreEditar">Nombre</label>
