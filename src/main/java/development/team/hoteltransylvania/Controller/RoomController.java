@@ -46,8 +46,15 @@ public class RoomController extends HttpServlet {
                 TypeRoom type = GestionRoom.getTypeRoomById(Integer.parseInt(req.getParameter("tipo")));
                 double price = Double.parseDouble(req.getParameter("precio"));
                 int floor = Integer.parseInt(req.getParameter("piso"));
-                GestionRoom.registerRoom(new Room(name,type, StatusRoom.libre,price,floor));
-                resp.sendRedirect("menu.jsp?view=habitaciones");
+                boolean isNumberExiste = GestionRoom.registerRoom(new Room(name,type, StatusRoom.libre,price,floor));
+                if (!isNumberExiste) {
+                    // Si no se pudo registrar (porque ya existe), redirige con parámetro
+                    resp.sendRedirect("menu.jsp?view=habitaciones&errorHab=existNumber");
+                } else {
+                    // Si se registra bien, redirige normalmente
+                    resp.sendRedirect("menu.jsp?view=habitaciones");
+                }
+
                 break;
             case "room_mantenimiento":
                 int roomid = Integer.parseInt(req.getParameter("idroom"));
@@ -66,9 +73,14 @@ public class RoomController extends HttpServlet {
                 room.setId(idroom); room.setNumber(nombredit); room.setTypeRoom(typedit); room.setPrice(precioedit);
                 room.setStatusRoom(StatusRoom.valueOf(statusedit));
 
-                GestionRoom.updateRoom(room);
-
-                resp.sendRedirect("menu.jsp?view=habitaciones");
+                boolean isNumberExisteUpdate = GestionRoom.updateRoom(room);
+                if (!isNumberExisteUpdate) {
+                    // Si no se pudo registrar (porque ya existe), redirige con parámetro
+                    resp.sendRedirect("menu.jsp?view=habitaciones&errorHab=existNumber");
+                } else {
+                    // Si se registra bien, redirige normalmente
+                    resp.sendRedirect("menu.jsp?view=habitaciones");
+                }
                 break;
         }
     }

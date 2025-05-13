@@ -830,6 +830,13 @@
             text: 'El nombre del piso ya existe.',
         });
     }
+    if (params.get("errorHab") === "existNumber") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El número de la habitación ya existe.',
+        });
+    }
 </script>
 </body>
 </html>
