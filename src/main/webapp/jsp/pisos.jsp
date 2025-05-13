@@ -121,11 +121,11 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
       <span>Mostrando
         <input type="number" min="1" max="999" id="sizeFloors" value="<%=listFloors.size()%>"
-               class="form-control d-inline-block" style="width: 3rem;">registros
+               class="form-control d-inline-block" style="width: 5rem;" readonly>registros
       </span>
 
             <div class="input-group" style="max-width: 250px;">
-                <input type="text" class="form-control" id="nameTRSearch" placeholder="Buscar"
+                <input type="text" class="form-control" id="nameTRSearch" placeholder="Buscar por nombre de piso"
                        onkeyup="Search('#nameTRSearch', '#estadoSelect','#tablaPisos','#sizeFloors','filterFloorServlet',1,10)">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>

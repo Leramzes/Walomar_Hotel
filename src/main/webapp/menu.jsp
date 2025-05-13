@@ -48,7 +48,8 @@
 
 <body>
 <!-- Modal para cambiar contraseña -->
-<div class="modal fade" id="modalCambiarPassword" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalCambiarPassword" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true"
+     data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -316,34 +317,28 @@
             const errorSeguridad = document.getElementById("errorSeguridad");
             const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-            if (!regex.test(nuevaPassword)) {
-                event.preventDefault();
-                errorSeguridad.style.display = "block";
-                errorMensaje.style.display = "none"; // Oculta el otro error si estaba activo
-                return;
-            }else{
-                if (nuevaPassword !== confirmarPassword) {
-                    event.preventDefault();
-                    errorMensaje.style.display = "block";
-                    errorSeguridad.style.display = "none"; // Oculta el otro error si estaba activo
-                } else {
-                    errorMensaje.style.display = "none";
-                    errorSeguridad.style.display = "none";
-                    event.preventDefault(); // Evitar envío inmediato
 
-                    Swal.fire({
-                        title: 'Contraseña Actualizada',
-                        text: 'Tu contraseña ha sido actualizada exitosamente.',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            document.getElementById("formCambiarPassword").submit();
-                        }
-                    });
-                }
+            if (nuevaPassword !== confirmarPassword) {
+                event.preventDefault();
+                errorMensaje.style.display = "block";
+                errorSeguridad.style.display = "none"; // Oculta el otro error si estaba activo
+            } else {
+                errorMensaje.style.display = "none";
+                errorSeguridad.style.display = "none";
+                event.preventDefault(); // Evitar envío inmediato
+
+                Swal.fire({
+                    title: 'Contraseña Actualizada',
+                    text: 'Tu contraseña ha sido actualizada exitosamente.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById("formCambiarPassword").submit();
+                    }
+                });
             }
         });
     });
@@ -568,6 +563,60 @@
                 });
             }
         });
+
+        // Alerta para registrar pisos
+        document.getElementById('contenido').addEventListener('submit', function (e) {
+            if (e.target.id === 'formPiso') {
+                e.preventDefault();
+
+                const nombre = document.getElementById("nombre").value.trim();
+
+                const params = new URLSearchParams(window.location.search);
+                if (params.get("error") === "pisoexistente") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El nombre del piso ya existe.',
+                    });
+                } else {
+                    // Validación del nombre
+                    if (nombre === "") {
+                        Swal.fire({
+                            icon: 'Error',
+                            title: 'Debe ingresar un nombre para el piso.',
+                            text: 'Debe ingresar un nombre para el piso.',
+                        });
+                        return; // cortar aquí para que no continúe
+                    }
+                    // Validación del rol
+                    if (nombre.length < 6) {
+                        Swal.fire({
+                            icon: 'Error',
+                            title: 'El nombre del piso es muy corto',
+                            text: 'El nombre del piso debe tener al menos 6 caracteres.',
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: '¿Registrar Nuevo Piso?',
+                        text: "Se agregará un nuevo piso al sistema.",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#198754',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Sí, registrar',
+                        cancelButtonText: 'Cancelar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            e.target.submit();
+                        }
+                    });
+                }
+            }
+        });
     });
 
 </script>
@@ -712,6 +761,16 @@
             }
         }
     });
+</script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") === "pisoexistente") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El nombre del piso ya existe.',
+        });
+    }
 </script>
 </body>
 </html>
