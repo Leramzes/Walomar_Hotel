@@ -313,33 +313,47 @@
         document.getElementById("formCambiarPassword").addEventListener("submit", function (event) {
             const nuevaPassword = document.getElementById("nuevaPassword").value;
             const confirmarPassword = document.getElementById("confirmarPassword").value;
-            const errorMensaje = document.getElementById("errorMensaje");
-            const errorSeguridad = document.getElementById("errorSeguridad");
+            const errorMensaje = document.getElementById("errorMensaje"); // Error si no coinciden
+            const errorSeguridad = document.getElementById("errorSeguridad"); // Error si no cumple con seguridad
             const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-
+            // Validar si coinciden
             if (nuevaPassword !== confirmarPassword) {
                 event.preventDefault();
                 errorMensaje.style.display = "block";
-                errorSeguridad.style.display = "none"; // Oculta el otro error si estaba activo
-            } else {
-                errorMensaje.style.display = "none";
                 errorSeguridad.style.display = "none";
-                event.preventDefault(); // Evitar envío inmediato
-
-                Swal.fire({
-                    title: 'Contraseña Actualizada',
-                    text: 'Tu contraseña ha sido actualizada exitosamente.',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById("formCambiarPassword").submit();
-                    }
-                });
+                return;
             }
+
+            // Validar si cumple con el regex
+            if (!regex.test(nuevaPassword)) {
+                event.preventDefault();
+                errorMensaje.style.display = "none";
+                errorSeguridad.style.display = "block";
+                return;
+            }
+
+            // Si todo está bien, ocultar errores y mostrar confirmación
+            errorMensaje.style.display = "none";
+            errorSeguridad.style.display = "none";
+            event.preventDefault();
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Se actualizará tu contraseña.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, actualizar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#6c757d',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("formCambiarPassword").submit();
+                }
+            });
         });
     });
 
