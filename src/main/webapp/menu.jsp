@@ -852,5 +852,12 @@
         });
     }
 </script>
+<script>
+    document.getElementById("toggleDescuento").addEventListener("click", function () {
+        const modalClave = new bootstrap.Modal(document.getElementById("modalClaveAdmin"));
+        modalClave.show();
+    });
+</script>
+
 </body>
 </html>

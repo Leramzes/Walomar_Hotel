@@ -546,18 +546,18 @@ function buscarDNI() {
         },
         success: function (result) {
             let data = JSON.parse(result);
-             if (tipo_documento === "DNI-user"){
-                 if (data.nombres) {
-                     let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " +
-                         data.apellidoMaterno;
-                     $("#nombre").val(nombreCompleto);
-                     $("#numberDocumentoHidden").val(documento);
-                     $("#username").val(documento);
-                 } else {
-                     $("#nombre").val("No encontrado");
-                     $("#username").val("-");
-                 }
-             } else if (tipo_documento === "DNI"){
+            if (tipo_documento === "DNI-user") {
+                if (data.nombres) {
+                    let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " +
+                        data.apellidoMaterno;
+                    $("#nombre").val(nombreCompleto);
+                    $("#numberDocumentoHidden").val(documento);
+                    $("#username").val(documento);
+                } else {
+                    $("#nombre").val("No encontrado");
+                    $("#username").val("-");
+                }
+            } else if (tipo_documento === "DNI") {
                 if (data.nombres) {
                     $("#nombre").val(data.nombres);
                     $("#ap_pater").val(data.apellidoPaterno);
@@ -687,7 +687,7 @@ function toggleRadioInput() {
 }
 
 // Lógica para manejar el botón de exportar
-document.getElementById("exportButton").addEventListener("click", function() {
+document.getElementById("exportButton").addEventListener("click", function () {
     const option = document.querySelector('input[name="downloadOption"]:checked');
     const numLast = document.getElementById("numLast").value;
 
@@ -716,5 +716,8 @@ document.getElementById("exportButton").addEventListener("click", function() {
         // Aquí iría la lógica para exportar todos los datos
     }
 });
-
+document.getElementById("toggleDescuento").addEventListener("click", function () {
+    const modalClave = new bootstrap.Modal(document.getElementById("modalClaveAdmin"));
+    modalClave.show();
+});
 

@@ -57,7 +57,7 @@
 <div class="card mt-4">
   <div class="card-header">
     <div class="d-flex justify-content-start">
-      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarReserva">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarReserva">
         <i class="fas fa-plus"></i> Agregar Reserva
       </button>
     </div>
@@ -81,11 +81,11 @@
                 <input type="text" class="form-control mb-3" id="numberDocument" placeholder="Buscar por Documento"
                        onkeyup="buscarCliente()" required>
                 <div id="datosCliente">
-                  <p style='color:red;' class='mt-2'>⚠️ Debes ingresar un número de documento</p>
+                  <p style='color:red;' class='mt-2'>⚠️ Debes ingresar el número de documento del cliente</p>
                   <div class="mb-3">
                     <label for="nombre">Nombre Completo</label>
                     <input type="hidden" class="form-control" id="idCLiente" name="idCLiente" required>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required readonly>
                   </div>
                   <div class="mb-3">
                     <label for="tipoDocumento">Tipo de Documento</label>
@@ -136,14 +136,21 @@
               <!-- Costo -->
               <div class="col-md-4">
                 <h5>Costo</h5>
+
                 <div class="mb-3">
-                  <label for="descuento">Descuento</label>
-                  <select class="form-select" id="descuento" name="descuento" required>
+                  <label for="descuento" class="form-label d-flex align-items-center justify-content-between">
+                    <span>Descuento</span>
+                    <button type="button" id="toggleDescuento" class="btn btn-outline-secondary btn-sm rounded-circle" title="Activar descuento">
+                      <i class="fas fa-lock"></i>
+                    </button>
+                  </label>
+                  <select class="form-select" id="descuento" name="descuento" required disabled>
                     <option value="0">0%</option>
                     <option value="5">5%</option>
                     <option value="10">10%</option>
                   </select>
                 </div>
+
                 <div class="mb-3">
                   <label for="cobroExtra">Cobro extra</label>
                   <input type="number" class="form-control" id="cobroExtra" name="cobroExtra" required>
@@ -174,6 +181,28 @@
   </div>
 
 </div>
+
+<!-- MODAL DE CLAVE -->
+<div class="modal fade" id="modalClaveAdmin" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formClaveAdmin">
+        <div class="modal-header">
+          <h5 class="modal-title">Clave de administrador</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="password" id="claveAdmin" class="form-control" placeholder="Ingrese clave" required>
+          <div id="errorClave" class="text-danger d-none mt-2">Clave incorrecta</div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Validar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <!-- Modal para ver Detalle -->
 <div class="modal fade" id="modalVerDetalle" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
