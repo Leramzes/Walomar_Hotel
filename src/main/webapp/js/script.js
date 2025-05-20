@@ -548,7 +548,8 @@ function buscarDNI() {
             let data = JSON.parse(result);
              if (tipo_documento === "DNI-user"){
                  if (data.nombres) {
-                     let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno;
+                     let nombreCompleto = data.nombres + " " + data.apellidoPaterno + " " +
+                         data.apellidoMaterno;
                      $("#nombre").val(nombreCompleto);
                      $("#numberDocumentoHidden").val(documento);
                      $("#username").val(documento);

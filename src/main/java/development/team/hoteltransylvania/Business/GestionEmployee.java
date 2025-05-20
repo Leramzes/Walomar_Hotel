@@ -18,7 +18,7 @@ public class GestionEmployee {
     private static final Logger LOGGER = LoggerConfifg.getLogger(GestionEmployee.class);
 
     public int registerEmployee(Employee employee, int idRol) {
-        String sql = "INSERT INTO empleados (nombre, rol_id, correo) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO empleados (nombre, rol_id, correo, num_documento) VALUES (?, ?, ?, ?)";
         int empleadoId = -1;
 
         try (Connection cnn = dataSource.getConnection();
@@ -27,6 +27,7 @@ public class GestionEmployee {
             ps.setString(1, employee.getName());
             ps.setInt(2, idRol);
             ps.setString(3, employee.getEmail());
+            ps.setString(4, employee.getNum_doc());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {

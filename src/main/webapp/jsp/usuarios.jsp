@@ -163,7 +163,8 @@
                         <input type="hidden" name="idemployee" id="inputEditarUsuario">
                         <div class="mb-3">
                             <label for="nombreEditar">Nombre</label>
-                            <input type="text" class="form-control" id="nombreEditar" name="nombreEdit" required readonly>
+                            <input type="text" class="form-control" id="nombreEditar" name="nombreEdit" required
+                                   readonly>
                         </div>
                         <div class="mb-3">
                             <label for="correoEditar">Correo</label>
