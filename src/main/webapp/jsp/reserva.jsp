@@ -140,7 +140,10 @@
                 <div class="mb-3">
                   <label for="descuento" class="form-label d-flex align-items-center justify-content-between">
                     <span>Descuento</span>
-                    <button type="button" id="toggleDescuento" class="btn btn-outline-secondary btn-sm rounded-circle" title="Activar descuento">
+                    <button type="button" id="toggleDescuento"
+                            class="btn btn-outline-secondary btn-sm rounded-circle"
+                            title="Activar descuento"
+                            onclick="toggleDescuento()">
                       <i class="fas fa-lock"></i>
                     </button>
                   </label>
@@ -182,8 +185,8 @@
 
 </div>
 
-<!-- MODAL DE CLAVE -->
-<div class="modal fade" id="modalClaveAdmin" tabindex="-1" aria-hidden="true">
+<!-- Modal de clave con clase personalizada para efecto borroso -->
+<div class="modal fade" id="modalClaveAdmin" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form id="formClaveAdmin">
