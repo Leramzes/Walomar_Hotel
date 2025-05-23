@@ -852,22 +852,5 @@
         });
     }
 </script>
-<script>
-    function toggleDescuento() {
-        console.log("hola");
-        const modalReservaEl = document.getElementById("modalAgregarReserva");
-        const modalClaveEl = document.getElementById("modalClaveAdmin");
-
-        const reservaModal = bootstrap.Modal.getInstance(modalReservaEl) || new bootstrap.Modal(modalReservaEl);
-        reservaModal.hide();
-
-        modalReservaEl.addEventListener('hidden.bs.modal', function () {
-            const claveModal = new bootstrap.Modal(modalClaveEl);
-            claveModal.show();
-        }, { once: true });
-    }
-</script>
-
-
 </body>
 </html>

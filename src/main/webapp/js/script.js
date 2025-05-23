@@ -686,46 +686,42 @@ function toggleRadioInput() {
     document.getElementById("numLast").disabled = !isLastSelected;
 }
 
-// Lógica para manejar el botón de exportar
-document.getElementById("exportButton").addEventListener("click", function () {
-    const option = document.querySelector('input[name="downloadOption"]:checked');
-    const numLast = document.getElementById("numLast").value;
-
-    if (!option) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Debe seleccionar una opción de descarga',
-            text: 'Por favor, selecciona una opción de descarga.',
-            timer: 3000,
-            showConfirmButton: false,
-            position: 'center',
-            toast: true
-        });
-        return;
+function abrirModalClave() {
+    const modalReservaElement = document.getElementById('modalAgregarReserva');
+    const modalReservaExistente = bootstrap.Modal.getInstance(modalReservaElement);
+    if (modalReservaExistente) {
+        modalReservaExistente.hide();
     }
 
-    if (option.value === "last") {
-        if (!numLast || parseInt(numLast) <= 0) {
-            alert("Ingrese un número válido para los últimos registros.");
-            return;
+    Swal.fire({
+        title: "Ingrese clave de administrador",
+        input: "password",
+        inputLabel: "Clave",
+        inputAttributes: {
+            autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Validar",
+        preConfirm: (clave) => {
+            if (clave !== "1234") {
+                Swal.showValidationMessage("Clave incorrecta");
+                return false;
+            }
+            return true;
         }
-        console.log(`Descargar los últimos ${numLast} datos`);
-        // Aquí iría la lógica para filtrar y exportar los últimos datos
-    } else if (option.value === "all") {
-        console.log("Descargar todos los datos");
-        // Aquí iría la lógica para exportar todos los datos
-    }
-});
-function toggleDescuento() {
-    console.log("hola");
-    const modalReservaEl = document.getElementById("modalAgregarReserva");
-    const modalClaveEl = document.getElementById("modalClaveAdmin");
+    }).then((result) => {
+        const nuevoModalReserva = new bootstrap.Modal(modalReservaElement);
+        nuevoModalReserva.show();
 
-    const reservaModal = bootstrap.Modal.getInstance(modalReservaEl) || new bootstrap.Modal(modalReservaEl);
-    reservaModal.hide();
+        const campoDescuento = document.getElementById("descuento");
+        const iconoDescuento = document.getElementById("iconoDescuento");
 
-    modalReservaEl.addEventListener('hidden.bs.modal', function () {
-        const claveModal = new bootstrap.Modal(modalClaveEl);
-        claveModal.show();
-    }, { once: true });
+        if (result.isConfirmed && result.value === true) {
+            campoDescuento.disabled = false;
+            iconoDescuento.className = "fas fa-unlock text-success"; // Candado abierto verde
+        } else {
+            campoDescuento.disabled = true;
+            iconoDescuento.className = "fas fa-lock text-danger"; // Candado cerrado rojo
+        }
+    });
 }
