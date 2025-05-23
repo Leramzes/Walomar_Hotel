@@ -18,6 +18,60 @@ public class GestionReservation {
     private static final DataSource dataSource = DataBaseUtil.getDataSource();
     private static final Logger LOGGER = LoggerConfifg.getLogger(GestionReservation.class);
 
+    public static TableReservationDTO getReservationById(int id) {
+        String sql = "SELECT\n" +
+                "    r.id,\n" +
+                "    cl.id AS id_cliente,\n" +
+                "    cl.nombre,\n" +
+                "    cl.tipo_documento,\n" +
+                "    cl.numero_documento,\n" +
+                "    h.id AS id_habitacion,\n" +
+                "    h.numero,\n" +
+                "    th.nombre AS tipo_habitacion,\n" +
+                "    r.fecha_inicio,\n" +
+                "    r.fecha_fin,\n" +
+                "    er.estado\n" +
+                "FROM reservas r\n" +
+                "    INNER JOIN estado_reserva er ON er.id = r.estado_id\n" +
+                "    INNER JOIN clientes cl ON r.cliente_id = cl.id\n" +
+                "    INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
+                "    INNER JOIN habitaciones h ON h.id = dh.habitacion_id\n" +
+                "    INNER JOIN tipo_habitacion th ON th.id = h.tipo_id\n" +
+                "WHERE r.id = ?\n" +
+                "ORDER BY r.id DESC";
+
+        TableReservationDTO reservation = null;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                reservation = new TableReservationDTO();
+                reservation.setIdReservation(rs.getInt("id"));
+                reservation.setIdClient(rs.getInt("id_cliente"));
+                reservation.setClientName(rs.getString("nombre"));
+                reservation.setDocumentType(rs.getString("tipo_documento"));
+                reservation.setDocumentNumber(rs.getString("numero_documento"));
+                reservation.setIdRoom(rs.getInt("id_habitacion"));
+                reservation.setNumberRoom(rs.getString("numero"));
+                reservation.setRoomType(rs.getString("tipo_habitacion"));
+                reservation.setCheckInDate(rs.getTimestamp("fecha_inicio"));
+                reservation.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                reservation.setReservationStatus(rs.getString("estado"));
+
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving Reservations: " + e.getMessage());
+        }
+
+        return reservation;
+    }
+
     public static List<TableReservationDTO> getReservationPaginated(int page, int pageSize) {
         String sql = "SELECT * FROM obtener_reservas_paginado(?,?)";
 
@@ -33,6 +87,7 @@ public class GestionReservation {
 
             while (rs.next()) {
                 TableReservationDTO dto = new TableReservationDTO();
+                dto.setIdReservation(rs.getInt("id_reserva"));
                 dto.setIdClient(rs.getInt("id_cliente"));
                 dto.setClientName(rs.getString("nombre"));
                 dto.setDocumentType(rs.getString("tipo_documento"));

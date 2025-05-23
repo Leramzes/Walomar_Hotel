@@ -6,7 +6,8 @@ import java.util.Map;
 public enum StatusRoom {
     libre(1, "libre"),
     ocupada(2, "ocupada"),
-    en_mantenimiento(3, "en mantenimiento");
+    en_mantenimiento(3, "en mantenimiento"),
+    pendiente(4, "pendiente");
 
     private final int value;
     private final String name;

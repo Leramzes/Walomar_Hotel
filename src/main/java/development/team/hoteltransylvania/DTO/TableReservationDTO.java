@@ -14,6 +14,9 @@ public class TableReservationDTO {
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
     private String reservationStatus;
+    private String email;
+    private String phone;
+    private String address;
 
     public TableReservationDTO() {
     }

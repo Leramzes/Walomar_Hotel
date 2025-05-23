@@ -2,3 +2,17 @@ feb. 23, 2025 12:17:45 A. M. development.team.hoteltransylvania.Business.Gestio
 GRAVE: Se obtuv la lista de productos.
 feb. 23, 2025 12:18:43 A. M. development.team.hoteltransylvania.Business.GestionProduct getAllProducts
 GRAVE: Se obtuv la lista de productos.
+may. 23, 2025 11:42:59 A. M. development.team.hoteltransylvania.Business.GestionRoom updateStatusRoom
+GRAVE: Error updating Room 101: ERROR: column "estado_id" is of type integer but expression is of type character varying
+  Hint: You will need to rewrite or cast the expression.
+  Position: 37
+may. 23, 2025 11:43:32 A. M. development.team.hoteltransylvania.Business.GestionRoom updateStatusRoom
+GRAVE: Error updating Room 23: ERROR: column "estado_id" is of type integer but expression is of type character varying
+  Hint: You will need to rewrite or cast the expression.
+  Position: 37
+may. 23, 2025 11:44:04 A. M. development.team.hoteltransylvania.Business.GestionRoom updateStatusRoom
+GRAVE: Error updating Room 23: ERROR: column "estado_id" is of type integer but expression is of type character varying
+  Hint: You will need to rewrite or cast the expression.
+  Position: 37
+may. 23, 2025 11:45:00 A. M. development.team.hoteltransylvania.Business.GestionRoom updateStatusRoom
+INFORMACIÓN: Room 23 updated successfully.

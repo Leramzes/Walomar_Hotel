@@ -257,14 +257,6 @@
                             <input type="text" class="form-control" id="documentoDetalle" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="nitDetalle">NIT</label>
-                            <input type="text" class="form-control" id="nitDetalle" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="facturarDetalle">Nombre a Facturar</label>
-                            <input type="text" class="form-control" id="facturarDetalle" readonly>
-                        </div>
-                        <div class="mb-3">
                             <label for="correoDetalle">Correo</label>
                             <input type="email" class="form-control" id="correoDetalle" readonly>
                         </div>
@@ -325,10 +317,6 @@
                         <div class="mb-3">
                             <label for="totalPagarDetalle">Total a Pagar</label>
                             <input type="number" class="form-control" id="totalPagarDetalle" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="observacionDetalle">Observaciones</label>
-                            <textarea id="observacionDetalle" class="form-control" rows="4" readonly></textarea>
                         </div>
                     </div>
                 </div>
@@ -553,7 +541,8 @@
                 </td>
                 <td class="align-middle text-center">
                     <div class="d-flex justify-content-center align-items-center gap-1">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle" title="Ver Detalle"
+                                onclick="detalleReserva(<%=reservations.getIdReservation()%>)">
                             👁️
                         </button>
                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal"

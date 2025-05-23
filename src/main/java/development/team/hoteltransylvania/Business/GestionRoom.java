@@ -71,6 +71,30 @@ public class GestionRoom {
 
         return result;
     }
+    public static boolean updateStatusRoom(int idRoom, int status) {
+        String sql = "UPDATE habitaciones SET estado_id = ? WHERE id = ?";
+
+        boolean result = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, status);
+            ps.setDouble(2, idRoom);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                LOGGER.info("Room " + idRoom + " updated successfully.");
+                result = true;
+            } else {
+                LOGGER.warning("Error updating Room. No Room found with ID: " + idRoom);
+            }
+        } catch (SQLException e) {
+            LOGGER.severe("Error updating Room " + idRoom + ": " + e.getMessage());
+        }
+
+        return result;
+    }
     public static boolean deleteRoom(int RoomId) {
         String checkSql = "SELECT COUNT(*) FROM habitaciones WHERE id = ?";
         String deleteSql = "DELETE FROM habitaciones WHERE id = ?";

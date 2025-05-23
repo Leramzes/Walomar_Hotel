@@ -70,6 +70,9 @@
                         case 3:
                             colorOfStatus = "warning";
                             break;
+                        case 4:
+                            colorOfStatus = "reserved";
+                            break;
                         default:
                             colorOfStatus = "available";
                     }
@@ -111,6 +114,9 @@
                             break;
                         case 3:
                             colorOfStatus = "warning";
+                            break;
+                        case 4:
+                            colorOfStatus = "reserved";
                             break;
                         default:
                             colorOfStatus = "available";

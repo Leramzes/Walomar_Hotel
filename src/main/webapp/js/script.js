@@ -160,6 +160,26 @@ function editarClient(id) {
         .catch(error => console.error("Error al obtener datos:", error));
 }
 
+function detalleReserva(id) {
+
+    fetch("reservatioController?action=get&idreserva=" + id)
+        .then(response => response.json())  // Convertimos la respuesta a JSON
+        .then(data => {
+
+            document.getElementById("nombreDetalle").value = data.clientName;
+            document.getElementById("tipoDocumentoDetalle").value = data.documentType;
+            document.getElementById("documentoDetalle").value = data.documentNumber;
+            /*document.getElementById("correoDetalle").value = data.documentType;
+            document.getElementById("telefonoDetalle").value = data.documentType;
+            document.getElementById("tipoDocumentoDetalle").value = data.documentType;
+            document.getElementById("tipoDocumentoDetalle").value = data.documentType;*/
+            /*document.getElementById("documentoEditar").value = data.numberDocument;
+            document.getElementById("correoEditar").value = data.email;
+            document.getElementById("telefonoEditar").value = data.telephone;*/
+        })
+        .catch(error => console.error("Error al obtener datos:", error));
+}
+
 function editarRoom(id) {
     document.getElementById("inputEditarHabitacion").value = id;
 

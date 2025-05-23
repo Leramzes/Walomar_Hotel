@@ -1,9 +1,11 @@
 package development.team.hoteltransylvania.Controller;
 
+import com.google.gson.Gson;
 import development.team.hoteltransylvania.Business.GestionClient;
 import development.team.hoteltransylvania.Business.GestionReservation;
 import development.team.hoteltransylvania.Business.GestionRoom;
 import development.team.hoteltransylvania.Business.GestionUser;
+import development.team.hoteltransylvania.DTO.TableReservationDTO;
 import development.team.hoteltransylvania.Model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -26,7 +29,20 @@ import java.time.temporal.ChronoUnit;
 public class ReservationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req, resp);
+        String action = req.getParameter("action");
+
+        if ("get".equals(action)) {
+            int idReserva = Integer.parseInt(req.getParameter("idreserva"));
+
+            TableReservationDTO reservation = GestionReservation.getReservationById(idReserva);
+
+
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+            PrintWriter out = resp.getWriter();
+            out.print(new Gson().toJson(reservation));
+            out.flush();
+        }
     }
 
     @Override
@@ -57,7 +73,8 @@ public class ReservationController extends HttpServlet {
         String tipoHabitacion = req.getParameter("tipoHabitacion");
         String habitacion = req.getParameter("habitacion");
         String fechaSalidaStr = (req.getParameter("fechaSalida"));
-        int descuento = Integer.parseInt(req.getParameter("descuento"));
+        String descuentoParam = req.getParameter("descuento");
+        int descuento = (descuentoParam == null || descuentoParam.isEmpty()) ? 0 : Integer.parseInt(descuentoParam);
         Double cobroExtra = Double.valueOf(req.getParameter("cobroExtra"));
         Double totalPagar = Double.valueOf(req.getParameter("totalPagar"));
         String observacion = req.getParameter("observacion");
@@ -104,6 +121,9 @@ public class ReservationController extends HttpServlet {
         System.out.println("se registro: "+reservationResgitered);
         resp.sendRedirect("menu.jsp?view=reserva");
         //aun falta pasr bien el employee
+
+        //cambio de estado de habitacion: cuando es reserva siempre será status 4 pendiente
+        GestionRoom.updateStatusRoom(room.getId(),4);
 
     }
 }
