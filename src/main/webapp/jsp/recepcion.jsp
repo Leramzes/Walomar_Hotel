@@ -36,7 +36,8 @@
     </li>
     <%for (Floor floor : floors) {%>
     <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#<%=floor.getId()%>-nivel"><%=floor.getName()%>
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#<%=floor.getId()%>-nivel">
+            <%=floor.getName()%>
         </button>
     </li>
     <%}%>
@@ -81,7 +82,8 @@
                     statusName = statusName.substring(0, 1).toUpperCase() + statusName.substring(1);
             %>
             <div class="col-md-3">
-                <button class="room-card <%= colorOfStatus %>" onclick="cargarPagina('jsp/procesarHabitacion.jsp')">
+                <button class="room-card <%= colorOfStatus %>"
+                        onclick="cargarPagina('jsp/procesarHabitacion.jsp?id=<%= room.getId() %>')">
                     <h5><%= room.getNumber() %>
                     </h5>
                     <span><%= room.getTypeRoom().getName().toUpperCase() %></span>

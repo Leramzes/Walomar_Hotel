@@ -1,3 +1,8 @@
+<%@ page import="development.team.hoteltransylvania.Model.Room" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionRoom" %>
+<%@ page import="java.util.List" %>
+<%@ page import="development.team.hoteltransylvania.Model.Client" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionClient" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,6 +26,13 @@
     </nav>
 </div>
 
+<%
+    int idParam = Integer.parseInt(request.getParameter("id"));
+    Room room = GestionRoom.getRoomById(idParam);
+
+    List<Client> clients = GestionClient.getAllClients();
+%>
+
 <!-- Sección de datos de la habitación -->
 <div class="row mt-4">
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -29,12 +41,19 @@
 
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6"><p><strong>Nombre:</strong> 696</p></div>
+                    <div class="col-md-6"><p><strong>Nombre:</strong> <%=room.getNumber()%>
+                    </p></div>
                     <div class="col-md-6"><p><strong>Tarifa:</strong> 24hr</p></div>
-                    <div class="col-md-6"><p><strong>Tipo:</strong> PRESIDENCIAL</p></div>
-                    <div class="col-md-6"><p><strong>Detalles:</strong> Habitación de lujo</p></div>
-                    <div class="col-md-6"><p><strong>Costo:</strong> S/.696</p></div>
-                    <div class="col-md-6"><p><strong>Estado:</strong> Disponible</p></div>
+                    <div class="col-md-6"><p><strong>Tipo:</strong> <%=room.getTypeRoom().getName().toUpperCase()%>
+                    </p></div>
+                    <div class="col-md-6"><p><strong>Detalles:</strong> ---- </p></div>
+                    <div class="col-md-6"><p><strong>Costo:</strong> S/ <%=room.getPrice()%>
+                    </p></div>
+                    <%
+                        String statusBd = room.getStatusRoom().getName();
+                        String estado = statusBd.substring(0, 1).toUpperCase() + statusBd.substring(1).toLowerCase();%>
+                    <div class="col-md-6"><p><strong>Estado:</strong> <%=estado%>
+                    </p></div>
                 </div>
             </div>
         </div>
@@ -51,30 +70,34 @@
                 <div class="row">
                     <div class="col-md-12 d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2">
                         <label for="busquedaCliente" class="form-label mb-0"><strong>Nombre:</strong></label>
-                        <select class="form-select w-100 w-sm-75" id="busquedaCliente" aria-label="Default select example">
+                        <select class="form-select w-100 w-sm-75" id="busquedaCliente"
+                                aria-label="Default select example">
                             <option selected>Buscar Cliente</option>
-                            <option value="#">Cliente 1</option>
-                            <option value="#">Cliente 2</option>
-                            <option value="#">Cliente 3</option>
+                            <%for(Client client : clients){%>
+                            <option value="<%=client.getId()%>"><%=client.getName() + " "+
+                                    client.getApPaterno()+" "+client.getApMaterno()%></option>
+                            <%}%>
                         </select>
-                        <button class="btn btn-primary mt-2 mt-sm-0" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
+                        <button class="btn btn-primary mt-2 mt-sm-0" <%--data-bs-toggle="modal"
+                                data-bs-target="#modalAgregarCliente"--%>
+                                onclick="cargarPagina('jsp/clientes.jsp')">
                             <i class="fa-solid fa-user-plus"></i>
                         </button>
                     </div>
 
                     <div class="col-md-6 mt-2">
                         <label for="tipoDocumento" class="form-label"><strong>Tipo de Documento:</strong></label>
-                        <input type="text" class="form-control" id="tipoDocumento">
+                        <input type="text" class="form-control" id="tipoDocumento" readonly>
                     </div>
 
                     <div class="col-md-6 mt-2">
                         <label for="documento" class="form-label"><strong>Documento:</strong></label>
-                        <input type="text" class="form-control" id="documento">
+                        <input type="text" class="form-control" id="documento" readonly>
                     </div>
 
                     <div class="col-md-12 mt-2">
                         <label for="correo" class="form-label"><strong>Correo:</strong></label>
-                        <input type="email" class="form-control" id="correo">
+                        <input type="email" class="form-control" id="correo" readonly>
                     </div>
 
                     <div class="form-check d-flex justify-content-center mt-2">
