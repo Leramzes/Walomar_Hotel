@@ -3,6 +3,7 @@
 <%@ page import="development.team.hoteltransylvania.Business.GestionRoom" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="development.team.hoteltransylvania.Model.Floor" %>
+<%@ page import="java.util.Comparator" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -14,7 +15,9 @@
 </head>
 <%
     List<Room> rooms = GestionRoom.getAllRoomsReservation(); // Cambiar por habitaciones habilitadas segun piso
-    List<Floor> floors = GestionRoom.quantityFloorsEnabled();
+    List<Floor> floors = GestionRoom.quantityFloorsEnabled().stream()
+            .sorted(Comparator.comparing(Floor::getId))
+            .toList();
 %>
 <body>
 <!-- Encabezado -->
@@ -128,7 +131,7 @@
                     statusName = statusName.substring(0, 1).toUpperCase() + statusName.substring(1);
             %>
             <div class="col-md-3">
-                <button class="room-card <%= colorOfStatus %>" onclick="cargarPagina('jsp/procesarHabitacion.jsp')">
+                <button class="room-card <%= colorOfStatus %>" onclick="cargarPagina('jsp/procesarHabitacion.jsp?id=<%= room.getId() %>')">
                     <h5><%= room.getNumber() %>
                     </h5>
                     <span><%= room.getTypeRoom().getName().toUpperCase() %></span>
