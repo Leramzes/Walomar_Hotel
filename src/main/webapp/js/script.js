@@ -271,6 +271,19 @@ function buscarCliente() {
         }
     });
 }
+function buscarClienteRecepcion() {
+    var numberFilter = $("#busquedaCliente").val();
+    $.ajax({
+        url: "filterClientRecp",
+        data: {filter: numberFilter},
+        success: function (result) {
+            // Mostrar el contenedor si estaba oculto
+            $("#dataClientRecepcion").css("display", "block");
+            // Insertar la tabla filtrada
+            $("#dataClientRecepcion").html(result);
+        }
+    });
+}
 
 /*function Search(wordKey, tableSearch, quantitySearch, controller) {
     var nameFilter = $(wordKey).val().trim();
@@ -705,7 +718,36 @@ function toggleRadioInput() {
     const isLastSelected = document.getElementById("downloadLast").checked;
     document.getElementById("numLast").disabled = !isLastSelected;
 }
+function actDscRecepcion(){
+    Swal.fire({
+        title: "Ingrese clave de administrador",
+        input: "password",
+        inputLabel: "Clave",
+        inputAttributes: {
+            autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Validar",
+        preConfirm: (clave) => {
+            if (clave !== "1234") {
+                Swal.showValidationMessage("Clave incorrecta");
+                return false;
+            }
+            return true;
+        }
+    }).then((result) => {
+        const campoDescuento = document.getElementById("descuentoRecp");
+        const iconoDescuento = document.getElementById("iconoDescuento");
 
+        if (result.isConfirmed && result.value === true) {
+            campoDescuento.disabled = false;
+            iconoDescuento.className = "fas fa-unlock text-success"; // Candado abierto verde
+        } else {
+            campoDescuento.disabled = true;
+            iconoDescuento.className = "fas fa-lock text-danger"; // Candado cerrado rojo
+        }
+    });
+}
 function abrirModalClave() {
     const modalReservaElement = document.getElementById('modalAgregarReserva');
     const modalReservaExistente = bootstrap.Modal.getInstance(modalReservaElement);

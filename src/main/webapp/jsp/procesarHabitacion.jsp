@@ -68,49 +68,61 @@
             <div class="card-header bg-light"><strong>Datos del Cliente</strong></div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12 d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2">
-                        <label for="busquedaCliente" class="form-label mb-0"><strong>Nombre:</strong></label>
-                        <select class="form-select w-100 w-sm-75" id="busquedaCliente"
+                    <div class="col-md-12 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+                        <label for="busquedaCliente" class="form-label mb-0"><strong>Documento:</strong></label>
+                        <%--<select class="form-select w-100 w-sm-75" id="busquedaCliente"
                                 aria-label="Default select example">
                             <option selected>Buscar Cliente</option>
                             <%for(Client client : clients){%>
                             <option value="<%=client.getId()%>"><%=client.getName() + " "+
                                     client.getApPaterno()+" "+client.getApMaterno()%></option>
                             <%}%>
-                        </select>
-                        <button class="btn btn-primary mt-2 mt-sm-0" <%--data-bs-toggle="modal"
+                        </select>--%>
+                        <input type="text" class="form-control" id="busquedaCliente"
+                               placeholder="Buscar por Documento"
+                               onkeyup="buscarClienteRecepcion()" required autofocus>
+                        <button class="btn btn-primary" <%--data-bs-toggle="modal"
                                 data-bs-target="#modalAgregarCliente"--%>
                                 onclick="cargarPagina('jsp/clientes.jsp')">
                             <i class="fa-solid fa-user-plus"></i>
                         </button>
                     </div>
 
-                    <div class="col-md-6 mt-2">
-                        <label for="tipoDocumento" class="form-label"><strong>Tipo de Documento:</strong></label>
-                        <input type="text" class="form-control" id="tipoDocumento" readonly>
+                    <div id="dataClientRecepcion" style="display: none">
+                        <div class="row">
+                            <div class="col-md-6 mt-2">
+                                <label for="tipoDocumento" class="form-label"><strong>Tipo de
+                                    Documento:</strong></label>
+                                <input type="text" class="form-control" id="tipoDocumento" readonly>
+                            </div>
+
+                            <div class="col-md-6 mt-2">
+                                <label for="documento" class="form-label"><strong>Documento:</strong></label>
+                                <input type="text" class="form-control" id="documento" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <label for="name" class="form-label"><strong>Nombre Completo:</strong></label>
+                            <input type="text" class="form-control" id="name" readonly>
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <label for="correo" class="form-label"><strong>Correo:</strong></label>
+                            <input type="email" class="form-control" id="correo" readonly>
+                        </div>
+
+                        <div class="form-check d-flex justify-content-center mt-2">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="enviarCorreo">
+                            <label class="form-check-label" for="enviarCorreo">
+                                <strong>Enviar estado de cuenta por <span class="text-primary">correo</span>.</strong>
+                            </label>
+                        </div>
+
+                        <div class="col-md-12 mt-2">
+                            <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
+                            <input type="text" class="form-control" id="telefono">
+                        </div>
                     </div>
 
-                    <div class="col-md-6 mt-2">
-                        <label for="documento" class="form-label"><strong>Documento:</strong></label>
-                        <input type="text" class="form-control" id="documento" readonly>
-                    </div>
-
-                    <div class="col-md-12 mt-2">
-                        <label for="correo" class="form-label"><strong>Correo:</strong></label>
-                        <input type="email" class="form-control" id="correo" readonly>
-                    </div>
-
-                    <div class="form-check d-flex justify-content-center mt-2">
-                        <input class="form-check-input me-2" type="checkbox" value="" id="enviarCorreo">
-                        <label class="form-check-label" for="enviarCorreo">
-                            <strong>Enviar estado de cuenta por <span class="text-primary">correo</span>.</strong>
-                        </label>
-                    </div>
-
-                    <div class="col-md-12 mt-2">
-                        <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
-                        <input type="text" class="form-control" id="telefono">
-                    </div>
                 </div>
             </div>
         </div>
@@ -122,37 +134,39 @@
             <div class="card-header bg-light"><strong>Datos del Alojamiento</strong></div>
             <div class="card-body">
                 <div class="row">
+                    <%
+                        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+                        // Formateador para datetime-local
+                        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+                        String fechaHoraActual = now.format(formatter);
+                    %>
                     <div class="col-md-6 mt-2">
                         <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de Entrada:</strong></label>
-                        <input type="datetime-local" class="form-control" id="fechaEntrada">
+                        <input type="datetime-local" class="form-control" id="fechaEntrada" name="fechaEntrada"
+                               value="<%= fechaHoraActual %>">
                     </div>
 
                     <div class="col-md-6 mt-2">
                         <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
-                        <input type="datetime-local" class="form-control" id="fechaSalida">
+                        <input type="datetime-local" class="form-control" id="fechaSalida" min="<%= fechaHoraActual %>">
                     </div>
 
                     <div class="col-md-6 mt-2">
                         <div class="d-flex justify-content-between align-items-center">
                             <label for="descuento" class="form-label m-0"><strong>Descuento:</strong></label>
-                            <div class="d-flex">
-                                <div class="form-check me-3">
-                                    <input class="form-check-input" type="radio" name="descuentoTipo"
-                                           id="descuentoPorcentual">
-                                    <label class="form-check-label" for="descuentoPorcentual">%</label>
-                                </div>
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="descuentoTipo"
-                                           id="descuentoMonetario">
-                                    <label class="form-check-label" for="descuentoMonetario">S/.</label>
-                                </div>
-                            </div>
+                            <button type="button" id="toggleDescuento"
+                                    class="btn btn-outline-secondary btn-sm rounded-circle"
+                                    title="Activar descuento"
+                                    onclick="actDscRecepcion()">
+                                <i id="iconoDescuento" class="fas fa-lock text-danger"></i>
+                            </button>
                         </div>
-
                         <div class="input-group mt-2">
-                            <input type="text" id="descuento" name="descuento"
-                                   class="form-control form-control-lg bg-light fs-6">
+                            <select class="form-select" id="descuentoRecp" name="descuento" required disabled>
+                                <option value="0">0</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                            </select>
                             <label for="descuento" class="input-group-text"><i class="fa-solid fa-percent"></i></label>
                         </div>
                     </div>
@@ -160,17 +174,19 @@
 
                     <div class="col-md-6 mt-2">
                         <label for="cobroExtra" class="form-label"><strong>Cobro Extra:</strong></label>
-                        <input type="text" class="form-control" id="cobroExtra">
+                        <input type="number" class="form-control" id="cobroExtra" min="0"
+                               value="0" required>
                     </div>
 
                     <div class="col-md-6 mt-2">
                         <label for="adelanto" class="form-label"><strong>Adelanto:</strong></label>
-                        <input type="text" class="form-control" id="adelanto">
+                        <input type="number" class="form-control" id="adelanto" min="0"
+                               value="0" required>
                     </div>
 
                     <div class="col-md-6 mt-2">
                         <label for="totalPagar" class="form-label"><strong>Total a Pagar:</strong></label>
-                        <input type="text" class="form-control" id="totalPagar">
+                        <input type="text" class="form-control" id="totalPagar" readonly>
                     </div>
 
                     <div class="col-md-12 mt-2">
