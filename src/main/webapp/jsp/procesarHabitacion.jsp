@@ -60,205 +60,226 @@
     </div>
 </div>
 
-<!-- Sección de datos del cliente y hospedaje -->
-<div class="row mt-4">
-    <!-- Sección de datos del cliente -->
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="card">
-            <div class="card-header bg-light"><strong>Datos del Cliente</strong></div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
-                        <label for="busquedaCliente" class="form-label mb-0"><strong>Documento:</strong></label>
-                        <%--<select class="form-select w-100 w-sm-75" id="busquedaCliente"
-                                aria-label="Default select example">
-                            <option selected>Buscar Cliente</option>
-                            <%for(Client client : clients){%>
-                            <option value="<%=client.getId()%>"><%=client.getName() + " "+
-                                    client.getApPaterno()+" "+client.getApMaterno()%></option>
-                            <%}%>
-                        </select>--%>
-                        <input type="text" class="form-control" id="busquedaCliente"
-                               placeholder="Buscar por Documento"
-                               onkeyup="buscarClienteRecepcion()" required autofocus>
-                        <button class="btn btn-primary" <%--data-bs-toggle="modal"
+<form action="recepController" method="post">
+    <!-- Sección de datos del cliente y hospedaje -->
+    <div class="row mt-4">
+        <!-- Sección de datos del cliente -->
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-header bg-light"><strong>Datos del Cliente</strong></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+                            <label for="busquedaCliente" class="form-label mb-0"><strong>Documento:</strong></label>
+                            <input type="text" class="form-control" id="busquedaCliente"
+                                   placeholder="Buscar por Documento"
+                                   onkeyup="buscarClienteRecepcion()" required autofocus>
+                            <button class="btn btn-primary" <%--data-bs-toggle="modal"
                                 data-bs-target="#modalAgregarCliente"--%>
-                                onclick="cargarPagina('jsp/clientes.jsp')">
-                            <i class="fa-solid fa-user-plus"></i>
-                        </button>
-                    </div>
-
-                    <div id="dataClientRecepcion" style="display: none">
-                        <div class="row">
-                            <div class="col-md-6 mt-2">
-                                <label for="tipoDocumento" class="form-label"><strong>Tipo de
-                                    Documento:</strong></label>
-                                <input type="text" class="form-control" id="tipoDocumento" readonly>
-                            </div>
-
-                            <div class="col-md-6 mt-2">
-                                <label for="documento" class="form-label"><strong>Documento:</strong></label>
-                                <input type="text" class="form-control" id="documento" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-12 mt-2">
-                            <label for="name" class="form-label"><strong>Nombre Completo:</strong></label>
-                            <input type="text" class="form-control" id="name" readonly>
-                        </div>
-                        <div class="col-md-12 mt-2">
-                            <label for="correo" class="form-label"><strong>Correo:</strong></label>
-                            <input type="email" class="form-control" id="correo" readonly>
-                        </div>
-
-                        <div class="form-check d-flex justify-content-center mt-2">
-                            <input class="form-check-input me-2" type="checkbox" value="" id="enviarCorreo">
-                            <label class="form-check-label" for="enviarCorreo">
-                                <strong>Enviar estado de cuenta por <span class="text-primary">correo</span>.</strong>
-                            </label>
-                        </div>
-
-                        <div class="col-md-12 mt-2">
-                            <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
-                            <input type="text" class="form-control" id="telefono">
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sección de datos del hospedaje -->
-    <div class="col-lg-6 col-md-6 col-sm-12 mt-4 mt-md-0">
-        <div class="card">
-            <div class="card-header bg-light"><strong>Datos del Alojamiento</strong></div>
-            <div class="card-body">
-                <div class="row">
-                    <%
-                        java.time.LocalDateTime now = java.time.LocalDateTime.now();
-                        // Formateador para datetime-local
-                        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-                        String fechaHoraActual = now.format(formatter);
-                    %>
-                    <div class="col-md-6 mt-2">
-                        <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de Entrada:</strong></label>
-                        <input type="datetime-local" class="form-control" id="fechaEntrada" name="fechaEntrada"
-                               value="<%= fechaHoraActual %>">
-                    </div>
-
-                    <div class="col-md-6 mt-2">
-                        <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
-                        <input type="datetime-local" class="form-control" id="fechaSalida" min="<%= fechaHoraActual %>">
-                    </div>
-
-                    <div class="col-md-6 mt-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for="descuento" class="form-label m-0"><strong>Descuento:</strong></label>
-                            <button type="button" id="toggleDescuento"
-                                    class="btn btn-outline-secondary btn-sm rounded-circle"
-                                    title="Activar descuento"
-                                    onclick="actDscRecepcion()">
-                                <i id="iconoDescuento" class="fas fa-lock text-danger"></i>
+                                    onclick="cargarPagina('jsp/clientes.jsp')">
+                                <i class="fa-solid fa-user-plus"></i>
                             </button>
                         </div>
-                        <div class="input-group mt-2">
-                            <select class="form-select" id="descuentoRecp" name="descuento" required disabled>
-                                <option value="0">0</option>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                            </select>
-                            <label for="descuento" class="input-group-text"><i class="fa-solid fa-percent"></i></label>
+
+                        <div id="dataClientRecepcion" <%--style="display: none"--%>>
+                            <div class="row">
+                                <div class="col-md-6 mt-2">
+                                    <label for="tipoDocumento" class="form-label"><strong>Tipo de
+                                        Documento:</strong></label>
+                                    <input type="text" class="form-control" id="tipoDocumento" readonly>
+                                </div>
+
+                                <div class="col-md-6 mt-2">
+                                    <label for="documento" class="form-label"><strong>Documento:</strong></label>
+                                    <input type="text" class="form-control" id="documento" name="documento" readonly>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12 mt-2">
+                                <label for="name" class="form-label"><strong>Nombre Completo:</strong></label>
+                                <input type="text" class="form-control" id="name" readonly>
+                            </div>
+                            <div class="col-md-12 mt-2">
+                                <label for="correo" class="form-label"><strong>Correo:</strong></label>
+                                <input type="email" class="form-control" id="correo" readonly>
+                            </div>
+
+                            <div class="form-check d-flex justify-content-center mt-2">
+                                <input class="form-check-input me-2" type="checkbox" value="" id="enviarCorreo">
+                                <label class="form-check-label" for="enviarCorreo">
+                                    <strong>Enviar estado de cuenta por <span
+                                            class="text-primary">correo</span>.</strong>
+                                </label>
+                            </div>
+
+                            <div class="col-md-12 mt-2">
+                                <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
+                                <input type="text" class="form-control" id="telefono">
+                            </div>
                         </div>
-                    </div>
 
-
-                    <div class="col-md-6 mt-2">
-                        <label for="cobroExtra" class="form-label"><strong>Cobro Extra:</strong></label>
-                        <input type="number" class="form-control" id="cobroExtra" min="0"
-                               value="0" required>
-                    </div>
-
-                    <div class="col-md-6 mt-2">
-                        <label for="adelanto" class="form-label"><strong>Adelanto:</strong></label>
-                        <input type="number" class="form-control" id="adelanto" min="0"
-                               value="0" required>
-                    </div>
-
-                    <div class="col-md-6 mt-2">
-                        <label for="totalPagar" class="form-label"><strong>Total a Pagar:</strong></label>
-                        <input type="text" class="form-control" id="totalPagar" readonly>
-                    </div>
-
-                    <div class="col-md-12 mt-2">
-                        <label for="observaciones" class="form-label"><strong>Observaciones:</strong></label>
-                        <textarea class="form-control" id="observaciones" rows="3"></textarea>
-                    </div>
-
-                    <div class="col-md-12 mt-2 d-flex justify-content-between">
-                        <button type="button" class="btn btn-danger">Regresar</button>
-                        <button type="button" class="btn btn-success">Agregar Registro</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal para agregar Cliente -->
-    <div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="agregarCliente">Agregar Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="#">
-                        <input type="hidden" id="inputAgregarCliente">
-                        <input type="hidden" value="add" name="#">
-                        <div class="row">
-                            <div class="col-md-6 mt-2">
-                                <label for="tipoDocumentoModal" class="form-label"><strong>Tipo de
-                                    Documento:</strong></label>
-                                <select class="form-select" id="tipoDocumentoModal" aria-label="Default select example"
-                                        required>
-                                    <option selected>Buscar Cliente</option>
-                                    <option value="#">DNI</option>
-                                    <option value="#">Pasaporte</option>
-                                    <option value="#">RUC</option>
+        <!-- Sección de datos del hospedaje -->
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-4 mt-md-0">
+            <div class="card">
+                <div class="card-header bg-light"><strong>Datos del Alojamiento</strong></div>
+                <div class="card-body">
+                    <div class="row">
+                        <%
+                            java.time.LocalDateTime now = java.time.LocalDateTime.now();
+                            // Formateador para datetime-local
+                            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+                            String fechaHoraActual = now.format(formatter);
+                        %>
+                        <div class="col-md-6 mt-2">
+                            <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
+                                Entrada:</strong></label>
+                            <input type="datetime-local" class="form-control" id="fechaEntrada" name="fechaEntrada"
+                                   value="<%= fechaHoraActual %>">
+                        </div>
+
+                        <div class="col-md-6 mt-2">
+                            <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
+                            <input type="datetime-local" class="form-control" id="fechaSalida"
+                                   min="<%= fechaHoraActual %>">
+                        </div>
+
+                        <div class="col-md-6 mt-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label for="descuento" class="form-label m-0"><strong>Descuento:</strong></label>
+                                <button type="button" id="toggleDescuento"
+                                        class="btn btn-outline-secondary btn-sm rounded-circle"
+                                        title="Activar descuento"
+                                        onclick="actDscRecepcion()">
+                                    <i id="iconoDescuento" class="fas fa-lock text-danger"></i>
+                                </button>
+                            </div>
+                            <div class="input-group mt-2">
+                                <select class="form-select" id="descuentoRecp" name="descuento" required disabled>
+                                    <option value="0">0</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
                                 </select>
-                            </div>
-
-                            <div class="col-md-6 mt-2">
-                                <label for="documentoModal" class="form-label"><strong>Documento:</strong></label>
-                                <input type="text" class="form-control" id="documentoModal" required>
-                            </div>
-
-                            <div class="col-md-12 mt-2">
-                                <label for="nombre" class="form-label"><strong>Nombre:</strong> (Obligatorio)</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" required>
-                            </div>
-
-                            <div class="col-md-12 mt-2">
-                                <label for="correoModal" class="form-label"><strong>Correo:</strong></label>
-                                <input type="email" class="form-control" id="correoModal">
-                            </div>
-
-                            <div class="col-md-12 mt-2">
-                                <label for="telefonoModal" class="form-label"><strong>Teléfono:</strong></label>
-                                <input type="text" class="form-control" id="telefonoModal">
-                            </div>
-
-                            <div class="col-md-12 mt-2 text-end">
-                                <button type="submit" class="btn btn-success">Agregar</button>
+                                <label for="descuento" class="input-group-text"><i
+                                        class="fa-solid fa-percent"></i></label>
                             </div>
                         </div>
-                    </form>
+
+
+                        <div class="col-md-6 mt-2">
+                            <label for="cobroExtra" class="form-label"><strong>Cobro Extra:</strong></label>
+                            <input type="number" class="form-control" id="cobroExtra" min="0"
+                                   value="0" required>
+                        </div>
+
+                        <div class="col-md-6 mt-2">
+                            <label for="adelanto" class="form-label"><strong>Adelanto:</strong></label>
+                            <input type="number" class="form-control" id="adelanto" min="0"
+                                   value="0" required>
+                        </div>
+
+                        <div class="col-md-6 mt-2">
+                            <label for="totalPagar" class="form-label"><strong>Total a Pagar:</strong></label>
+                            <input type="text" class="form-control" id="totalPagar" readonly>
+                        </div>
+
+                        <div class="col-md-12 mt-2">
+                            <label for="observaciones" class="form-label"><strong>Observaciones:</strong></label>
+                            <textarea class="form-control" id="observaciones" rows="3"></textarea>
+                        </div>
+
+                        <div class="col-md-12 mt-2 d-flex justify-content-between">
+                            <%
+                                switch (room.getStatusRoom().getValue()) {
+                                    case 2:
+                            %>
+                            <button type="submit" class="btn btn-danger">Finalizar</button>
+                            <%
+                                    break;
+                                case 3:
+                            %>
+                            <button type="submit" class="btn btn-warning">Liberar Habitación</button>
+                            <%
+                                    break;
+                                case 4:
+                            %>
+                            <button type="submit" class="btn btn-danger">Cancelar Reserva</button>
+                            <button type="submit" class="btn btn-success">Ocupar Habitación</button>
+                        </div>
+                        <%
+                                break;
+                            default:
+                        %>
+                        <button type="submit" class="btn btn-primary">Ocupar Habitación</button>
+                        <%
+                                    break;
+                            }
+                        %>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <%--<!-- Modal para agregar Cliente -->
+        <div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="agregarCliente">Agregar Cliente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="#">
+                            <input type="hidden" id="inputAgregarCliente">
+                            <input type="hidden" value="add" name="#">
+                            <div class="row">
+                                <div class="col-md-6 mt-2">
+                                    <label for="tipoDocumentoModal" class="form-label"><strong>Tipo de
+                                        Documento:</strong></label>
+                                    <select class="form-select" id="tipoDocumentoModal" aria-label="Default select example"
+                                            required>
+                                        <option selected>Buscar Cliente</option>
+                                        <option value="#">DNI</option>
+                                        <option value="#">Pasaporte</option>
+                                        <option value="#">RUC</option>
+                                    </select>
+                                </div>
 
-</div>
+                                <div class="col-md-6 mt-2">
+                                    <label for="documentoModal" class="form-label"><strong>Documento:</strong></label>
+                                    <input type="text" class="form-control" id="documentoModal" required>
+                                </div>
+
+                                <div class="col-md-12 mt-2">
+                                    <label for="nombre" class="form-label"><strong>Nombre:</strong> (Obligatorio)</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                </div>
+
+                                <div class="col-md-12 mt-2">
+                                    <label for="correoModal" class="form-label"><strong>Correo:</strong></label>
+                                    <input type="email" class="form-control" id="correoModal">
+                                </div>
+
+                                <div class="col-md-12 mt-2">
+                                    <label for="telefonoModal" class="form-label"><strong>Teléfono:</strong></label>
+                                    <input type="text" class="form-control" id="telefonoModal">
+                                </div>
+
+                                <div class="col-md-12 mt-2 text-end">
+                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        --%>
+    </div>
+</form>
 
 </body>
 </html>
