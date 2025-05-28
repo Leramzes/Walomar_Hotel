@@ -31,6 +31,7 @@ public class filterClientRecepcion extends HttpServlet {
                 return;
             }
             // Construcción de HTML con los datos del cliente
+            out.println("<input type='hidden' name='idClienteProcesar' id='idClienteProcesar' value='"+client.getId()+"'>");
             out.println("<div class='row'>");
             out.println("<div class='col-md-6 mt-2'>");
             out.println("    <label for='tipoDocumento' class='form-label'><strong>Tipo de Documento:</strong></label>");
@@ -39,7 +40,7 @@ public class filterClientRecepcion extends HttpServlet {
 
             out.println("<div class='col-md-6 mt-2'>");
             out.println("    <label for='documento' class='form-label'><strong>Documento:</strong></label>");
-            out.println("    <input type='text' class='form-control' id='documento' value='" + client.getNumberDocument() + "' readonly>");
+            out.println("    <input type='text' class='form-control' id='documento' value='" + client.getNumberDocument() + "' name='documento' readonly>");
             out.println("</div>");
             out.println("</div>");
 
@@ -54,13 +55,6 @@ public class filterClientRecepcion extends HttpServlet {
             out.println("<div class='col-md-12 mt-2'>");
             out.println("    <label for='correo' class='form-label'><strong>Correo:</strong></label>");
             out.println("    <input type='email' class='form-control' id='correo' value='" + client.getEmail() + "' readonly>");
-            out.println("</div>");
-
-            out.println("<div class='form-check d-flex justify-content-center mt-2'>");
-            out.println("    <input class='form-check-input me-2' type='checkbox' value='' id='enviarCorreo'>");
-            out.println("    <label class='form-check-label' for='enviarCorreo'>");
-            out.println("        <strong>Enviar estado de cuenta por <span class='text-primary'>correo</span>.</strong>");
-            out.println("    </label>");
             out.println("</div>");
 
             out.println("<div class='col-md-12 mt-2'>");

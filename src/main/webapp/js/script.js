@@ -501,6 +501,30 @@ $(document).on("change keyup", "#descuento, #cobroExtra, #adelanto, #fechaEntrad
     updateTotal();
 });
 
+
+// Define la función updateTotal primero
+window.updateTotalRecepcion = function () {
+    let precio = parseFloat($("#habitacionRecep").attr("data-precio")) || 0;
+    let descuento = parseFloat($("#descuentoRecep").val()) || 0;
+    let cobroExtra = parseFloat($("#cobroExtraRecep").val()) || 0;
+    let adelanto = parseFloat($("#adelantoRecep").val()) || 0;
+
+    let dias = calcularDiasRecep(); // Obtener cantidad de días (mínimo 1)
+    let subtotal = precio * dias; // Precio total por los días
+
+    let total = subtotal - (subtotal * (descuento / 100)) + cobroExtra - adelanto;
+    total = total < 0 ? 0 : total;
+
+    document.querySelector("#totalPagarRecep").value = total.toFixed(2);
+
+};
+
+// Luego, cuando el DOM esté listo, asigna los eventos //ESTA ES LA FUNCION CLAVE
+$(document).on("change keyup", "#descuentoRecep, #cobroExtraRecep, #adelantoRecep, #fechaEntradaRecep, #fechaSalidaRecep", function () {
+    updateTotalRecepcion();
+});
+
+
 // Función para obtener habitaciones según el tipo seleccionado
 window.getRoomsByType = function (tipoHabitacion) {
     var tipoHabitacionId = $(tipoHabitacion).val().trim();
@@ -523,6 +547,16 @@ window.getRoomsByType = function (tipoHabitacion) {
     });
 };
 
+function calcularDiasRecep() {
+    let fechaEntrada = new Date(document.getElementById("fechaEntradaRecep").value);
+    let fechaSalida = new Date(document.getElementById("fechaSalidaRecep").value);
+
+    if (!isNaN(fechaEntrada) && !isNaN(fechaSalida)) {
+        let diferencia = Math.ceil((fechaSalida - fechaEntrada) / (1000 * 60 * 60 * 24)); // Diferencia en días
+        return diferencia >= 1 ? diferencia : 1; // Siempre al menos 1 día
+    }
+    return 1; // Valor por defecto
+}
 function calcularDias() {
     let fechaEntrada = new Date(document.getElementById("fechaEntrada").value);
     let fechaSalida = new Date(document.getElementById("fechaSalida").value);
@@ -736,15 +770,17 @@ function actDscRecepcion(){
             return true;
         }
     }).then((result) => {
-        const campoDescuento = document.getElementById("descuentoRecp");
+        const campoDescuento = document.getElementById("descuentoRecep");
         const iconoDescuento = document.getElementById("iconoDescuento");
 
         if (result.isConfirmed && result.value === true) {
             campoDescuento.disabled = false;
             iconoDescuento.className = "fas fa-unlock text-success"; // Candado abierto verde
+            updateTotalRecepcion();
         } else {
             campoDescuento.disabled = true;
             iconoDescuento.className = "fas fa-lock text-danger"; // Candado cerrado rojo
+            updateTotalRecepcion();
         }
     });
 }
@@ -787,3 +823,4 @@ function abrirModalClave() {
         }
     });
 }
+

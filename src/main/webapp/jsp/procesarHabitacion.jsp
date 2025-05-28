@@ -81,40 +81,34 @@
                             </button>
                         </div>
 
-                        <div id="dataClientRecepcion" <%--style="display: none"--%>>
+                        <div id="dataClientRecepcion" style="display: none">
+                            <input type="hidden" name="idClienteProcesar" id="idClienteProcesar">
                             <div class="row">
                                 <div class="col-md-6 mt-2">
                                     <label for="tipoDocumento" class="form-label"><strong>Tipo de
                                         Documento:</strong></label>
-                                    <input type="text" class="form-control" id="tipoDocumento" readonly>
+                                    <input type="text" class="form-control" id="tipoDocumento" name="tipoDocumentoProcesar" readonly>
                                 </div>
 
                                 <div class="col-md-6 mt-2">
                                     <label for="documento" class="form-label"><strong>Documento:</strong></label>
-                                    <input type="text" class="form-control" id="documento" name="documento" readonly>
+                                    <input type="text" class="form-control" id="documento" name="documentoProcesar" readonly>
                                 </div>
-
                             </div>
+
                             <div class="col-md-12 mt-2">
                                 <label for="name" class="form-label"><strong>Nombre Completo:</strong></label>
-                                <input type="text" class="form-control" id="name" readonly>
+                                <input type="text" class="form-control" id="name" name="nombreProcesar" readonly>
                             </div>
                             <div class="col-md-12 mt-2">
                                 <label for="correo" class="form-label"><strong>Correo:</strong></label>
-                                <input type="email" class="form-control" id="correo" readonly>
+                                <input type="email" class="form-control" id="correo" name="emailProcesar" readonly>
                             </div>
 
-                            <div class="form-check d-flex justify-content-center mt-2">
-                                <input class="form-check-input me-2" type="checkbox" value="" id="enviarCorreo">
-                                <label class="form-check-label" for="enviarCorreo">
-                                    <strong>Enviar estado de cuenta por <span
-                                            class="text-primary">correo</span>.</strong>
-                                </label>
-                            </div>
 
                             <div class="col-md-12 mt-2">
                                 <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
-                                <input type="text" class="form-control" id="telefono">
+                                <input type="text" class="form-control" id="telefono" name="telefonoProcesar">
                             </div>
                         </div>
 
@@ -138,16 +132,17 @@
                         <div class="col-md-6 mt-2">
                             <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
                                 Entrada:</strong></label>
-                            <input type="datetime-local" class="form-control" id="fechaEntrada" name="fechaEntrada"
-                                   value="<%= fechaHoraActual %>">
+                            <input type="datetime-local" class="form-control" id="fechaEntradaRecep" name="fechaEntradaRecep"
+                                   value="<%= fechaHoraActual %>" readonly>
                         </div>
 
                         <div class="col-md-6 mt-2">
                             <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
-                            <input type="datetime-local" class="form-control" id="fechaSalida"
-                                   min="<%= fechaHoraActual %>">
+                            <input type="datetime-local" class="form-control" id="fechaSalidaRecep" name="fechaSalidaRecep"
+                                   min="<%= fechaHoraActual %>" required>
                         </div>
-
+                        <!--Solo para pasar el precio-->
+                        <input type="hidden" data-precio="<%=room.getPrice()%>" name="habitacionRecep" id="habitacionRecep">
                         <div class="col-md-6 mt-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label for="descuento" class="form-label m-0"><strong>Descuento:</strong></label>
@@ -159,7 +154,7 @@
                                 </button>
                             </div>
                             <div class="input-group mt-2">
-                                <select class="form-select" id="descuentoRecp" name="descuento" required disabled>
+                                <select class="form-select" id="descuentoRecep" name="descuentoRecep" required disabled>
                                     <option value="0">0</option>
                                     <option value="5">5</option>
                                     <option value="10">10</option>
@@ -171,20 +166,20 @@
 
 
                         <div class="col-md-6 mt-2">
-                            <label for="cobroExtra" class="form-label"><strong>Cobro Extra:</strong></label>
-                            <input type="number" class="form-control" id="cobroExtra" min="0"
+                            <label for="cobroExtraRecep" class="form-label"><strong>Cobro Extra:</strong></label>
+                            <input type="number" class="form-control" id="cobroExtraRecep" name="cobroExtraRecep" min="0"
                                    value="0" required>
                         </div>
 
                         <div class="col-md-6 mt-2">
-                            <label for="adelanto" class="form-label"><strong>Adelanto:</strong></label>
-                            <input type="number" class="form-control" id="adelanto" min="0"
+                            <label for="adelantoRecep" class="form-label"><strong>Adelanto:</strong></label>
+                            <input type="number" class="form-control" id="adelantoRecep" name="adelantoRecep" min="0"
                                    value="0" required>
                         </div>
 
                         <div class="col-md-6 mt-2">
-                            <label for="totalPagar" class="form-label"><strong>Total a Pagar:</strong></label>
-                            <input type="text" class="form-control" id="totalPagar" readonly>
+                            <label for="totalPagarRecep" class="form-label"><strong>Total a Pagar:</strong></label>
+                            <input type="text" class="form-control" id="totalPagarRecep" name="totalPagarRecep" value="<%=room.getPrice()%>" readonly required>
                         </div>
 
                         <div class="col-md-12 mt-2">
