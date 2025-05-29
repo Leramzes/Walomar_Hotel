@@ -128,9 +128,7 @@ public class GestionReservation {
                 ps.setInt(6, reservation.getDsct());
                 ps.setDouble(7, reservation.getCobro_extra());
                 ps.setDouble(8, reservation.getAdelanto());
-                System.out.println("entrando al execute");
                 int rowsAffected = ps.executeUpdate();
-                System.out.println("saliendo del  execute");
                 System.out.println(rowsAffected);
                 if (rowsAffected > 0) {
                     try (ResultSet generatedKeys = ps.getGeneratedKeys()) {

@@ -30,6 +30,14 @@
     int idParam = Integer.parseInt(request.getParameter("id"));
     Room room = GestionRoom.getRoomById(idParam);
 
+    //primero validar si la habitacion esta libre
+    //mostrar simepre datos de la haiatcion en seccion informativa
+    // - si en caso esta libre dejar libres los campos ()
+    // -  si en caso esta ocuapada, verificar en que reserva esta asignada
+    //      * verificar en que momento vence la reserva (porsiacaso)
+    //      * obntener la reserva asignada y sacar datos de ahi para mostrar
+    // - si en caso esta en mantenimiento los campos deben estar bloqueados hasta que se vuelva a habilitar
+
     List<Client> clients = GestionClient.getAllClients();
 %>
 
@@ -143,6 +151,7 @@
                         </div>
                         <!--Solo para pasar el precio-->
                         <input type="hidden" data-precio="<%=room.getPrice()%>" name="habitacionRecep" id="habitacionRecep">
+                        <input type="hidden" name="roomSelect" value="<%=room.getId()%>">
                         <div class="col-md-6 mt-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label for="descuento" class="form-label m-0"><strong>Descuento:</strong></label>

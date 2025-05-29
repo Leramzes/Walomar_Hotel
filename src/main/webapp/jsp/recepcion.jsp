@@ -4,6 +4,8 @@
 <%@ page import="java.util.stream.Collectors" %>
 <%@ page import="development.team.hoteltransylvania.Model.Floor" %>
 <%@ page import="java.util.Comparator" %>
+<%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionReservation" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
