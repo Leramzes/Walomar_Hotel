@@ -31,7 +31,7 @@ public class RecepcionController extends HttpServlet {
         String accion = req.getParameter("accion");
         String habitacion = req.getParameter("roomSelect");//habitacion seleccionada
 
-        if (accion.equalsIgnoreCase("habilitar")) {
+        if ("habilitar".equalsIgnoreCase(accion)) {
             GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 1);
             resp.sendRedirect("menu.jsp?view=recepcion");
             return;

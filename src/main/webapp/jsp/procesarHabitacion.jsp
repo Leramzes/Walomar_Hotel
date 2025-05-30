@@ -3,6 +3,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="development.team.hoteltransylvania.Model.Client" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionClient" %>
+<%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionRecepcion" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -32,13 +34,24 @@
 
     int statusRoom = room.getStatusRoom().getValue();
     boolean camposBloqueados = false;
+    boolean mostrar = false;
+    TableReservationDTO reservaPendiente = null;
 
     switch (statusRoom){
         case 4:
+            //display del cliente se puede ver
+            mostrar = true;
+            //bloqueo de todos los campos
+            camposBloqueados = true;
+            //verificar en que reserva esta asignada
+            reservaPendiente = GestionRecepcion.getReservationPendiente(room.getNumber());
 
-            //campos completos bloqueaddos debido a que el cliente esta rgeistrado
             break;
         case 2:
+            //display del cliente se puede ver
+            mostrar = true;
+            //bloqueo de todos los campos
+            camposBloqueados = true;
             // -  si en caso esta ocuapada, verificar en que reserva esta asignada
             //      * verificar en que momento vence la reserva (porsiacaso)
             //      * obntener la reserva asignada y sacar datos de ahi para mostrar
@@ -111,13 +124,14 @@
                             </button>
                         </div>
 
-                        <div id="dataClientRecepcion" style="display: none">
+                        <div id="dataClientRecepcion" style="<%= mostrar ? "" : "display: none;" %>">
                             <input type="hidden" name="idClienteProcesar" id="idClienteProcesar">
                             <div class="row">
                                 <div class="col-md-6 mt-2">
                                     <label for="tipoDocumento" class="form-label"><strong>Tipo de
                                         Documento:</strong></label>
-                                    <input type="text" class="form-control" id="tipoDocumento" name="tipoDocumentoProcesar" readonly>
+                                    <input type="text" class="form-control" id="tipoDocumento" name="tipoDocumentoProcesar"
+                                           value="<%= reservaPendiente != null ? reservaPendiente.getDocumentType() : "" %>" readonly>
                                 </div>
 
                                 <div class="col-md-6 mt-2">

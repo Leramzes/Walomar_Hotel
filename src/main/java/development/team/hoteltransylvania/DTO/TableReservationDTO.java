@@ -22,6 +22,20 @@ public class TableReservationDTO {
     }
 
     public TableReservationDTO(int idReservation, int idClient, String clientName, String documentType, String documentNumber, int idRoom,
+                               Timestamp checkInDate, Timestamp checkOutDate, String email, String phone) {
+        this.idReservation = idReservation;
+        this.idClient = idClient;
+        this.clientName = clientName;
+        this.documentType = documentType;
+        this.documentNumber = documentNumber;
+        this.idRoom = idRoom;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public TableReservationDTO(int idReservation, int idClient, String clientName, String documentType, String documentNumber, int idRoom,
                                String numberRoom, String roomType, Timestamp checkInDate, Timestamp checkOutDate, String reservationStatus) {
         this.idReservation = idReservation;
         this.idClient = idClient;
@@ -60,6 +74,30 @@ public class TableReservationDTO {
 
     public int getIdReservation() {
         return idReservation;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setIdReservation(int idReservation) {
