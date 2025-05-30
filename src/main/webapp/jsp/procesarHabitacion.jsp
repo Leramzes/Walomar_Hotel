@@ -30,10 +30,32 @@
     int idParam = Integer.parseInt(request.getParameter("id"));
     Room room = GestionRoom.getRoomById(idParam);
 
+    int statusRoom = room.getStatusRoom().getValue();
+    boolean camposBloqueados = false;
+
+    switch (statusRoom){
+        case 4:
+
+            //campos completos bloqueaddos debido a que el cliente esta rgeistrado
+            break;
+        case 2:
+            // -  si en caso esta ocuapada, verificar en que reserva esta asignada
+            //      * verificar en que momento vence la reserva (porsiacaso)
+            //      * obntener la reserva asignada y sacar datos de ahi para mostrar
+            break;
+        case 3:
+            //campos bloqueados
+            camposBloqueados = true;
+            break;
+        default:
+            //campos libres
+            break;
+    }
+
     //primero validar si la habitacion esta libre
     //mostrar simepre datos de la haiatcion en seccion informativa
     // - si en caso esta libre dejar libres los campos ()
-    // -  si en caso esta ocuapada, verificar en que reserva esta asignada
+    // -  si en caso esta ocuapada o pendoiente, verificar en que reserva esta asignada
     //      * verificar en que momento vence la reserva (porsiacaso)
     //      * obntener la reserva asignada y sacar datos de ahi para mostrar
     // - si en caso esta en mantenimiento los campos deben estar bloqueados hasta que se vuelva a habilitar
@@ -81,10 +103,10 @@
                             <label for="busquedaCliente" class="form-label mb-0"><strong>Documento:</strong></label>
                             <input type="text" class="form-control" id="busquedaCliente"
                                    placeholder="Buscar por Documento"
-                                   onkeyup="buscarClienteRecepcion()" required autofocus>
-                            <button class="btn btn-primary" <%--data-bs-toggle="modal"
-                                data-bs-target="#modalAgregarCliente"--%>
-                                    onclick="cargarPagina('jsp/clientes.jsp')">
+                                   onkeyup="buscarClienteRecepcion()" required autofocus <%= camposBloqueados ? "disabled" : "" %>>
+                            <button class="btn btn-primary"
+                                    onclick="cargarPagina('jsp/clientes.jsp')"
+                                    <%= camposBloqueados ? "disabled" : "" %>>
                                 <i class="fa-solid fa-user-plus"></i>
                             </button>
                         </div>
@@ -141,13 +163,13 @@
                             <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
                                 Entrada:</strong></label>
                             <input type="datetime-local" class="form-control" id="fechaEntradaRecep" name="fechaEntradaRecep"
-                                   value="<%= fechaHoraActual %>" readonly>
+                                   value="<%= fechaHoraActual %>" readonly <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
                         <div class="col-md-6 mt-2">
                             <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
                             <input type="datetime-local" class="form-control" id="fechaSalidaRecep" name="fechaSalidaRecep"
-                                   min="<%= fechaHoraActual %>" required>
+                                   min="<%= fechaHoraActual %>" required <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
                         <!--Solo para pasar el precio-->
                         <input type="hidden" data-precio="<%=room.getPrice()%>" name="habitacionRecep" id="habitacionRecep">
@@ -158,7 +180,8 @@
                                 <button type="button" id="toggleDescuento"
                                         class="btn btn-outline-secondary btn-sm rounded-circle"
                                         title="Activar descuento"
-                                        onclick="actDscRecepcion()">
+                                        onclick="actDscRecepcion()"
+                                        <%= camposBloqueados ? "disabled" : "" %>>
                                     <i id="iconoDescuento" class="fas fa-lock text-danger"></i>
                                 </button>
                             </div>
@@ -177,23 +200,24 @@
                         <div class="col-md-6 mt-2">
                             <label for="cobroExtraRecep" class="form-label"><strong>Cobro Extra:</strong></label>
                             <input type="number" class="form-control" id="cobroExtraRecep" name="cobroExtraRecep" min="0"
-                                   value="0" required>
+                                   value="0" required <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
                         <div class="col-md-6 mt-2">
                             <label for="adelantoRecep" class="form-label"><strong>Adelanto:</strong></label>
                             <input type="number" class="form-control" id="adelantoRecep" name="adelantoRecep" min="0"
-                                   value="0" required>
+                                   value="0" required <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
                         <div class="col-md-6 mt-2">
                             <label for="totalPagarRecep" class="form-label"><strong>Total a Pagar:</strong></label>
-                            <input type="text" class="form-control" id="totalPagarRecep" name="totalPagarRecep" value="<%=room.getPrice()%>" readonly required>
+                            <input type="text" class="form-control" id="totalPagarRecep" name="totalPagarRecep" value="<%=room.getPrice()%>" readonly required
+                                <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
                         <div class="col-md-12 mt-2">
                             <label for="observaciones" class="form-label"><strong>Observaciones:</strong></label>
-                            <textarea class="form-control" id="observaciones" rows="3"></textarea>
+                            <textarea class="form-control" id="observaciones" rows="3" <%= camposBloqueados ? "disabled" : "" %>></textarea>
                         </div>
 
                         <div class="col-md-12 mt-2 d-flex justify-content-between">
@@ -206,7 +230,7 @@
                                     break;
                                 case 3:
                             %>
-                            <button type="submit" class="btn btn-warning">Liberar Habitación</button>
+                            <button type="submit" name="accion" value="habilitar" class="btn btn-warning">Habilitar Habitación</button>
                             <%
                                     break;
                                 case 4:

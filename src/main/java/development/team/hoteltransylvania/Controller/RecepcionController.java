@@ -28,10 +28,18 @@ public class RecepcionController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+        String accion = req.getParameter("accion");
+        String habitacion = req.getParameter("roomSelect");//habitacion seleccionada
+
+        if (accion.equalsIgnoreCase("habilitar")) {
+            GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 1);
+            resp.sendRedirect("menu.jsp?view=recepcion");
+            return;
+        }
+
         User user = (User) session.getAttribute("usuario");
         Employee employee1 = GestionUser.obtenerEmpleadoPorId(user.getId()); //empleado en sesion
         String idCLiente = req.getParameter("idClienteProcesar");//cliente
-        String habitacion = req.getParameter("roomSelect");//habitacion seleccionada
         String fecEntrada = req.getParameter("fechaEntradaRecep");//fecha de entrada (del sistema)
         String fecSalida = req.getParameter("fechaSalidaRecep");//fecga de salida (ingresada)
         String val4 = req.getParameter("descuentoRecep");//dsct
@@ -40,6 +48,9 @@ public class RecepcionController extends HttpServlet {
         Double adelanto = Double.parseDouble(req.getParameter("adelantoRecep"));//adelanto
         Double totalPagar = Double.parseDouble(req.getParameter("totalPagarRecep"));//total a pagar
         Client cliente = GestionClient.getClientById(Integer.parseInt(idCLiente));//obtener cliente
+
+
+
 
         Timestamp fechaEntrada = null;
         Timestamp  fechaSalida = null;
