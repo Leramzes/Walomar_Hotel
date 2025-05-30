@@ -135,15 +135,21 @@
                                         <option value="">Seleccione una habitación</option>
                                     </select>
                                 </div>
+                                <%
+                                    java.time.LocalDateTime now = java.time.LocalDateTime.now();
+                                    // Formateador para datetime-local
+                                    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+                                    String fechaHoraActual = now.format(formatter);
+                                %>
                                 <div class="mb-3">
                                     <label for="fechaEntrada">Fecha y Hora de Entrada</label>
                                     <input type="datetime-local" class="form-control" id="fechaEntrada"
-                                           name="fechaEntrada" required>
+                                           name="fechaEntrada" min="<%= fechaHoraActual %>" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="fechaSalida">Fecha y Hora de Salida</label>
                                     <input type="datetime-local" class="form-control" id="fechaSalida"
-                                           name="fechaSalida" required>
+                                           name="fechaSalida" min="<%= fechaHoraActual %>" required>
                                 </div>
                             </div>
 
