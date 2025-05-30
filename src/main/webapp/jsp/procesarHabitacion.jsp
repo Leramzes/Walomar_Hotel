@@ -52,6 +52,8 @@
             mostrar = true;
             //bloqueo de todos los campos
             camposBloqueados = true;
+            //verificar en que reserva esta asignada
+            reservaPendiente = GestionRecepcion.getReservationOcupada(room.getNumber());
             // -  si en caso esta ocuapada, verificar en que reserva esta asignada
             //      * verificar en que momento vence la reserva (porsiacaso)
             //      * obntener la reserva asignada y sacar datos de ahi para mostrar
@@ -136,23 +138,27 @@
 
                                 <div class="col-md-6 mt-2">
                                     <label for="documento" class="form-label"><strong>Documento:</strong></label>
-                                    <input type="text" class="form-control" id="documento" name="documentoProcesar" readonly>
+                                    <input type="text" class="form-control" id="documento" name="documentoProcesar"
+                                           value="<%= reservaPendiente != null ? reservaPendiente.getDocumentNumber() : "" %>" readonly>
                                 </div>
                             </div>
 
                             <div class="col-md-12 mt-2">
                                 <label for="name" class="form-label"><strong>Nombre Completo:</strong></label>
-                                <input type="text" class="form-control" id="name" name="nombreProcesar" readonly>
+                                <input type="text" class="form-control" id="name" name="nombreProcesar"
+                                       value="<%= reservaPendiente != null ? reservaPendiente.getClientName() : "" %>" readonly>
                             </div>
                             <div class="col-md-12 mt-2">
                                 <label for="correo" class="form-label"><strong>Correo:</strong></label>
-                                <input type="email" class="form-control" id="correo" name="emailProcesar" readonly>
+                                <input type="email" class="form-control" id="correo" name="emailProcesar"
+                                       value="<%= reservaPendiente != null ? reservaPendiente.getEmail() : "" %>" readonly>
                             </div>
 
 
                             <div class="col-md-12 mt-2">
                                 <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
-                                <input type="text" class="form-control" id="telefono" name="telefonoProcesar">
+                                <input type="text" class="form-control" id="telefono" name="telefonoProcesar"
+                                       value="<%= reservaPendiente != null ? reservaPendiente.getPhone() : "" %>" readonly>
                             </div>
                         </div>
 
@@ -183,7 +189,8 @@
                         <div class="col-md-6 mt-2">
                             <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
                             <input type="datetime-local" class="form-control" id="fechaSalidaRecep" name="fechaSalidaRecep"
-                                   min="<%= fechaHoraActual %>" required <%= camposBloqueados ? "disabled" : "" %>>
+                                   min="<%= fechaHoraActual %>" required <%= camposBloqueados ? "disabled" : "" %>
+                                   value="<%= reservaPendiente != null ? reservaPendiente.getCheckOutDate() : "" %>">
                         </div>
                         <!--Solo para pasar el precio-->
                         <input type="hidden" data-precio="<%=room.getPrice()%>" name="habitacionRecep" id="habitacionRecep">
