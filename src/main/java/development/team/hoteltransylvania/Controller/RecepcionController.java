@@ -65,6 +65,12 @@ public class RecepcionController extends HttpServlet {
             fechaEntrada = Timestamp.valueOf(fechaEntradaLocal);
             fechaSalida = Timestamp.valueOf(fechaSalidaLocal);
 
+            if (fechaEntradaLocal.isAfter(fechaSalidaLocal)) {
+                // Puedes redirigir a una página de error o mostrar un mensaje
+                resp.sendRedirect("menu.jsp?view=recepcion&error=fechas_invalidas"); //aqui manejar alerta
+                return; // Evita que continúe con el proceso
+            }
+
             // Calcular días correctamente
             cant_dias = (int) ChronoUnit.DAYS.between(fechaEntradaLocal.toLocalDate(), fechaSalidaLocal.toLocalDate());
         } else {
