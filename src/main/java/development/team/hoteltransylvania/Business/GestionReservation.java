@@ -72,6 +72,56 @@ public class GestionReservation {
         return reservation;
     }
 
+    public static List<TableReservationDTO> getRoomAsociateReservationPendiete(int id) {
+        String sql = "SELECT\n" +
+                "    r.id AS id_reserva,\n" +
+                "    cl.id AS id_cliente,\n" +
+                "    cl.nombre,\n" +
+                "    cl.tipo_documento,\n" +
+                "    cl.numero_documento,\n" +
+                "    h.id AS id_habitacion,\n" +
+                "    h.numero,\n" +
+                "    th.nombre AS tipo_habitacion,\n" +
+                "    r.fecha_inicio,\n" +
+                "    r.fecha_fin,\n" +
+                "    er.estado\n" +
+                "FROM reservas r\n" +
+                "    INNER JOIN estado_reserva er ON er.id = r.estado_id\n" +
+                "    INNER JOIN clientes cl ON cl.id = r.cliente_id\n" +
+                "    INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
+                "    INNER JOIN habitaciones h ON h.id = dh.habitacion_id\n" +
+                "    INNER JOIN tipo_habitacion th ON th.id = h.tipo_id\n" +
+                "WHERE h.id = ? \n" +
+                "  AND r.estado_id = 1 \n" +
+                "ORDER BY r.fecha_inicio ASC;";
+
+        List<TableReservationDTO> reservations = new ArrayList<>();
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                TableReservationDTO reservation = new TableReservationDTO();
+                reservation.setIdReservation(rs.getInt("id_reserva"));
+                reservation.setIdClient(rs.getInt("id_cliente"));
+                reservation.setCheckInDate(rs.getTimestamp("fecha_inicio"));
+                reservation.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                reservation.setReservationStatus(rs.getString("estado"));
+                // Puedes completar otros campos si los necesitas
+                reservations.add(reservation);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving Reservations: " + e.getMessage());
+        }
+
+        return reservations;
+    }
+
     public static List<TableReservationDTO> getReservationPaginated(int page, int pageSize) {
         String sql = "SELECT * FROM obtener_reservas_paginado(?,?)";
 

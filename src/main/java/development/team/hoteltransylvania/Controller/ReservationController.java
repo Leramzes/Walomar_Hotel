@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @WebServlet(name = "reservatioController", urlPatterns = {"/reservatioController"})
 public class ReservationController extends HttpServlet {
@@ -80,6 +81,8 @@ public class ReservationController extends HttpServlet {
         String observacion = req.getParameter("observacion");
 
         Client cliente = GestionClient.getClientById(Integer.parseInt(idCLiente));
+        List<TableReservationDTO> reservaAsociate = GestionReservation.
+                getRoomAsociateReservationPendiete(Integer.parseInt(habitacion)); //verificar reservas asociadas a la habitacion
 
 
         Timestamp  fechaEntrada = null;
@@ -97,8 +100,17 @@ public class ReservationController extends HttpServlet {
 
             if (fechaEntradaLocal.isAfter(fechaSalidaLocal)) {
                 // Puedes redirigir a una página de error o mostrar un mensaje
+                System.out.println("Error: La fecha de entrada es posterior a la de salida.");
                 resp.sendRedirect("menu.jsp?view=reserva&error=fechas_invalidas"); //aqui manejar alerta
                 return; // Evita que continúe con el proceso
+            }
+
+            boolean puedeReservar = validarReserva(fechaEntrada, fechaSalida, reservaAsociate);
+
+            if (!puedeReservar) {
+                System.out.println("Error: No se puede reservar porque hay un choque con otra reserva.");
+                resp.sendRedirect("menu.jsp?view=reserva&error=choque_fechas"); //aqui manejar alerta
+                return;
             }
 
             // Calcular días correctamente
@@ -130,6 +142,33 @@ public class ReservationController extends HttpServlet {
 
         //cambio de estado de habitacion: cuando es reserva siempre será status 4 pendiente
         GestionRoom.updateStatusRoom(room.getId(),4);
+    }
+    public static boolean validarReserva(
+            Timestamp fechaEntrada,
+            Timestamp fechaSalida,
+            List<TableReservationDTO> reservasExistentes) {
 
+        // 90 minutos en milisegundos
+        long margen = 90 * 60 * 1000;
+
+        for (TableReservationDTO reserva : reservasExistentes) {
+            Timestamp inicioExistente = reserva.getCheckInDate();
+            Timestamp finExistente = reserva.getCheckOutDate();
+
+            // Calculamos los tiempos con margen
+            long finExistenteMasMargen = finExistente.getTime() + margen;
+            long inicioExistenteMenosMargen = inicioExistente.getTime() - margen;
+
+            long nuevaEntrada = fechaEntrada.getTime();
+            long nuevaSalida = fechaSalida.getTime();
+
+            // Verificamos si no hay suficiente margen
+            boolean choque = !(nuevaSalida + margen <= inicioExistente.getTime() || finExistente.getTime() + margen <= nuevaEntrada);
+
+            if (choque) {
+                return false; // Hay choque
+            }
+        }
+        return true; // No hay choque con ninguna reserva
     }
 }

@@ -482,6 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Define la función updateTotal primero
 window.updateTotal = function () {
     let precio = parseFloat($("#habitacion option:selected").attr("data-precio")) || 0;
+    const  msj = $("#habitacion option:selected").attr("data-msj") || "";
     let descuento = parseFloat($("#descuento").val()) || 0;
     let cobroExtra = parseFloat($("#cobroExtra").val()) || 0;
     let adelanto = parseFloat($("#adelanto").val()) || 0;
@@ -493,7 +494,7 @@ window.updateTotal = function () {
     total = total < 0 ? 0 : total;
 
     document.querySelector("#totalPagar").value = total.toFixed(2);
-
+    document.querySelector("#msjRoom").innerHTML = msj.replace(/\\n/g, "<br>");
 };
 
 // Luego, cuando el DOM esté listo, asigna los eventos //ESTA ES LA FUNCION CLAVE

@@ -134,6 +134,13 @@
                                             onchange='updateTotal()'>
                                         <option value="">Seleccione una habitación</option>
                                     </select>
+                                    <div class="form-text text-danger small" id="msjRoom">
+                                        <%--<label for="msj" class="form-text text-danger small">
+                                            <strong>Reservas asociadas:</strong><br>
+                                            - Habitación reservada del 02/06/2025 al 03/06/2025<br>
+                                            - Habitación reservada del 10/06/2025 al 12/06/2025
+                                        </label>--%>
+                                    </div>
                                 </div>
                                 <%
                                     java.time.LocalDateTime now = java.time.LocalDateTime.now();
@@ -150,6 +157,11 @@
                                     <label for="fechaSalida">Fecha y Hora de Salida</label>
                                     <input type="datetime-local" class="form-control" id="fechaSalida"
                                            name="fechaSalida" min="<%= fechaHoraActual %>" required>
+                                </div>
+                                <div class="form-text text-danger small">
+                                    <label>
+                                        OJO 👀: Las reservas deben realizarse con al menos 1 hora y 30 minutos de diferencia respecto a otra existente.
+                                    </label>
                                 </div>
                             </div>
 

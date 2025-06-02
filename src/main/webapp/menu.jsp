@@ -851,6 +851,13 @@
             text: 'El número de la habitación ya existe.',
         });
     }
+    if (params.get("error") === "choque_fechas") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se puede reservar porque hay un choque con otra reserva.',
+        });
+    }
 </script>
 </body>
 </html>
