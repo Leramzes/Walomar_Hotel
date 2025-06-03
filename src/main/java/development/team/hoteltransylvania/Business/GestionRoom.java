@@ -429,7 +429,7 @@ public class GestionRoom {
     public static List<Room> getRoomByTypeRoom(int typeRoomId) {
         String sql = "SELECT * FROM habitaciones h " +
                 "INNER JOIN tipo_habitacion th ON h.tipo_id=th.id " +
-                "WHERE th.id = ? and h.estado_id in (1,4)";
+                "WHERE th.id = ?";
         List<Room> rooms = new ArrayList<>();
 
         try (Connection cnn = dataSource.getConnection();

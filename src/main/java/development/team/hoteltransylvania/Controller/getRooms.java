@@ -55,7 +55,8 @@ public class getRooms extends HttpServlet {
                         .replace("\"", "&quot;")     // escapa comillas dobles
                         .replace("'", "\\'")         // escapa comillas simples
                         .replace("\n", "\\n");
-                out.println("<option value='"+room.getId()+"' data-precio='"+room.getPrice()+"' data-msj='"+msjEscapado+"'>"+room.getNumber()+"</option>");
+                out.println("<option value='"+room.getId()+"' data-precio='"+room.getPrice()+"' " +
+                        "data-msj='"+msjEscapado+"' data-estatusroom='"+room.getStatusRoom().getValue()+"'>"+room.getNumber()+"</option>");
             }
             out.println("</select>");
 

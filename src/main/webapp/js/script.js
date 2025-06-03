@@ -482,6 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Define la función updateTotal primero
 window.updateTotal = function () {
     let precio = parseFloat($("#habitacion option:selected").attr("data-precio")) || 0;
+    let status = $("#habitacion option:selected").attr("data-estatusroom");
     const  msj = $("#habitacion option:selected").attr("data-msj") || "";
     let descuento = parseFloat($("#descuento").val()) || 0;
     let cobroExtra = parseFloat($("#cobroExtra").val()) || 0;
