@@ -56,9 +56,10 @@ public class RoomController extends HttpServlet {
                 }
 
                 break;
-            case "room_mantenimiento":
+            case "disponible":
                 int roomid = Integer.parseInt(req.getParameter("idroom"));
-                GestionRoom.deleteRoom(roomid);
+                int availability = Integer.parseInt(req.getParameter("availability"));
+                GestionRoom.updateAvailability(roomid,availability);
                 resp.sendRedirect("menu.jsp?view=habitaciones");
                 break;
             case "update":

@@ -7,6 +7,7 @@ public class Room {
     private StatusRoom statusRoom;
     private double price;
     private int floor;
+    private int available;
 
     public Room() {
     }
@@ -23,6 +24,16 @@ public class Room {
         this.price = price;
     }
 
+    public Room(int id, String number, TypeRoom typeRoom, StatusRoom statusRoom, double price, int floor,
+                int available) {
+        this.id = id;
+        this.number = number;
+        this.typeRoom = typeRoom;
+        this.statusRoom = statusRoom;
+        this.price = price;
+        this.floor = floor;
+        this.available = available;
+    }
     public Room(int id, String number, TypeRoom typeRoom, StatusRoom statusRoom, double price, int floor) {
         this.id = id;
         this.number = number;
@@ -38,6 +49,14 @@ public class Room {
         this.statusRoom = statusRoom;
         this.price = price;
         this.floor = floor;
+    }
+
+    public int getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(int available) {
+        this.available = available;
     }
 
     public int getId() {

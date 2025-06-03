@@ -95,34 +95,39 @@ public class GestionRoom {
 
         return result;
     }
-    public static boolean deleteRoom(int RoomId) {
+    public static boolean updateAvailability(int roomId, int availability) {
         String checkSql = "SELECT COUNT(*) FROM habitaciones WHERE id = ?";
-        String deleteSql = "DELETE FROM habitaciones WHERE id = ?";
-
+        String updateSql = "UPDATE habitaciones SET disponible = ? WHERE id = ?";
         boolean result = false;
+
+        // Invertir el valor: si es 1 pasa a 0, si es 0 pasa a 1
+        int newAvailability = (availability == 1) ? 0 : 1;
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement checkPs = cnn.prepareStatement(checkSql)) {
 
-            checkPs.setInt(1, RoomId);
-            ResultSet rs = checkPs.executeQuery();
+            checkPs.setInt(1, roomId);
+            try (ResultSet rs = checkPs.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    try (PreparedStatement updatePs = cnn.prepareStatement(updateSql)) {
+                        updatePs.setInt(1, newAvailability);
+                        updatePs.setInt(2, roomId);
 
-            if (rs.next() && rs.getInt(1) > 0) {
-                try (PreparedStatement deletePs = cnn.prepareStatement(deleteSql)) {
-                    deletePs.setInt(1, RoomId);
-
-                    int rowsAffected = deletePs.executeUpdate();
-                    if (rowsAffected > 0) {
-                        LOGGER.info("Room with ID " + RoomId + " deleted successfully.");
-                        result = true;
+                        int rowsAffected = updatePs.executeUpdate();
+                        if (rowsAffected > 0) {
+                            LOGGER.info("Room with ID " + roomId + " availability updated to " + newAvailability);
+                            result = true;
+                        } else {
+                            LOGGER.warning("No rows updated. Room ID may not exist.");
+                        }
                     }
+                } else {
+                    LOGGER.warning("No room found with ID: " + roomId);
                 }
-            } else {
-                LOGGER.warning("Error deleting Room. No Room found with ID: " + RoomId);
             }
 
         } catch (SQLException e) {
-            LOGGER.severe("Error deleting Room " + RoomId + ": " + e.getMessage());
+            LOGGER.severe("Error updating availability for room " + roomId + ": " + e.getMessage());
         }
 
         return result;
@@ -137,12 +142,13 @@ public class GestionRoom {
                 "    t.nombre AS tipo_nombre, t.estatus AS estado_tipo, " +
                 "    h.precio, " +
                 "    h.estado_id, " +
-                "    e.estado AS estado_nombre " +
+                "    e.estado AS estado_nombre, " +
+                "    h.disponible " +
                 "FROM habitaciones h " +
                 "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
                 "JOIN estado_habitacion e ON h.estado_id = e.id " +
                 "JOIN pisos p ON p.id = h.piso_id " +
-                "WHERE p.estatus = 'Activo' and t.estatus = 'Activo'";  // Paginación aplicada
+                "WHERE p.estatus = 'Activo' and t.estatus = 'Activo' and h.disponible=1";  // Paginación aplicada
 
         List<Room> rooms = new ArrayList<>();
 
@@ -160,6 +166,7 @@ public class GestionRoom {
                 int statusId = rs.getInt("estado_id");
                 double price = rs.getDouble("precio");
                 int floorId = rs.getInt("piso_id");
+                int disponible = rs.getInt("disponible");
 
                 // Se obtiene el enum directamente por ID
                 StatusRoom statusRoom = StatusRoom.fromId(statusId);
@@ -167,7 +174,7 @@ public class GestionRoom {
                 // Se crea el objeto TypeRoom directamente sin consulta extra
                 TypeRoom typeRoom = new TypeRoom(typeId, typeName, statusTypeRoom);
 
-                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId));
+                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId,disponible));
             }
 
         } catch (SQLException e) {
@@ -188,7 +195,8 @@ public class GestionRoom {
                 "    t.nombre AS tipo_nombre, t.estatus AS estado_tipo, " +
                 "    h.precio, " +
                 "    h.estado_id, " +
-                "    e.estado AS estado_nombre " +
+                "    e.estado AS estado_nombre, " +
+                "    h.disponible " +
                 "FROM habitaciones h " +
                 "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
                 "JOIN estado_habitacion e ON h.estado_id = e.id " +
@@ -210,6 +218,7 @@ public class GestionRoom {
                 int statusId = rs.getInt("estado_id");
                 double price = rs.getDouble("precio");
                 int floorId = rs.getInt("piso_id");
+                int disponible = rs.getInt("disponible");
 
                 // Se obtiene el enum directamente por ID
                 StatusRoom statusRoom = StatusRoom.fromId(statusId);
@@ -217,7 +226,7 @@ public class GestionRoom {
                 // Se crea el objeto TypeRoom directamente sin consulta extra
                 TypeRoom typeRoom = new TypeRoom(typeId, typeName, statusTypeRoom);
 
-                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId));
+                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId, disponible));
             }
 
         } catch (SQLException e) {
@@ -238,7 +247,8 @@ public class GestionRoom {
                 "    t.nombre AS tipo_nombre, t.estatus AS estado_tipo, " +
                 "    h.precio, " +
                 "    h.estado_id, " +
-                "    e.estado AS estado_nombre " +
+                "    e.estado AS estado_nombre, " +
+                "    h.disponible " +
                 "FROM habitaciones h " +
                 "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
                 "JOIN estado_habitacion e ON h.estado_id = e.id " +
@@ -265,11 +275,12 @@ public class GestionRoom {
                 int statusId = rs.getInt("estado_id");
                 double price = rs.getDouble("precio");
                 int floorId = rs.getInt("piso_id");
+                int disponible = rs.getInt("disponible");
 
                 StatusRoom statusRoom = StatusRoom.fromId(statusId);
                 TypeRoom typeRoom = new TypeRoom(typeId, typeName, statusTypeR);
 
-                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId));
+                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId, disponible));
             }
 
         } catch (SQLException e) {
@@ -429,7 +440,7 @@ public class GestionRoom {
     public static List<Room> getRoomByTypeRoom(int typeRoomId) {
         String sql = "SELECT * FROM habitaciones h " +
                 "INNER JOIN tipo_habitacion th ON h.tipo_id=th.id " +
-                "WHERE th.id = ?";
+                "WHERE th.id = ? and h.disponible=1";
         List<Room> rooms = new ArrayList<>();
 
         try (Connection cnn = dataSource.getConnection();

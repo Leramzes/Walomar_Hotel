@@ -48,11 +48,16 @@ public class FilterRoomController extends HttpServlet {
                         "data-bs-toggle='modal' " +
                         "data-bs-target='#modalEditarHabitacion' " +
                         "onclick='editarRoom(" + room.getId() + ")'>✏️</button>");
-                out.println("  <form action='roomcontroller' method='post'>");
-                out.println("    <input type='hidden' name='idroom' value='" + room.getId() + "'>");
-                out.println("    <input type='hidden' name='actionRoom' value='delete'>");
-                out.println("    <button class='btn btn-danger btn-sm'>❌</button>");
-                out.println("  </form>");
+                boolean disponible = room.getAvailable() == 1;
+                String btnClass = disponible ? "btn-danger" : "btn-success";
+                String btnText = disponible ? "❌" : "✅";
+
+                out.println("<form action='roomcontroller' method='post'>");
+                out.println("  <input type='hidden' name='idroom' value='" + room.getId() + "'>");
+                out.println("  <input type='hidden' name='availability' value='" + room.getAvailable() + "'>");
+                out.println("  <input type='hidden' name='actionRoom' value='disponible'>");
+                out.println("  <button class='btn " + btnClass + " btn-sm'>" + btnText + "</button>");
+                out.println("</form>");
                 out.println("</td>");
                 out.println("</tr>");
 
