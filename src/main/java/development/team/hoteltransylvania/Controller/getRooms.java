@@ -56,10 +56,12 @@ public class getRooms extends HttpServlet {
                         .replace("'", "\\'")         // escapa comillas simples
                         .replace("\n", "\\n");
                 out.println("<option value='"+room.getId()+"' data-precio='"+room.getPrice()+"' " +
-                        "data-msj='"+msjEscapado+"' data-estatusroom='"+room.getStatusRoom().getValue()+"'>"+room.getNumber()+"</option>");
+                        "data-msj='"+msjEscapado+"' data-status='"+room.getStatusRoom().getValue()+"'>"+room.getNumber()+"</option>");
             }
             out.println("</select>");
 
+            out.println("<div class=\"form-text text-danger small\" id=\"msjStatus\">");
+            out.println("</div>");
             out.println("<div class=\"form-text text-danger small\" id=\"msjRoom\">");
             out.println("</div>");
 

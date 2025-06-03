@@ -134,12 +134,9 @@
                                             onchange='updateTotal()'>
                                         <option value="">Seleccione una habitación</option>
                                     </select>
+                                    <div class="form-text text-danger small" id="msjStatus">
+                                    </div>
                                     <div class="form-text text-danger small" id="msjRoom">
-                                        <%--<label for="msj" class="form-text text-danger small">
-                                            <strong>Reservas asociadas:</strong><br>
-                                            - Habitación reservada del 02/06/2025 al 03/06/2025<br>
-                                            - Habitación reservada del 10/06/2025 al 12/06/2025
-                                        </label>--%>
                                     </div>
                                 </div>
                                 <%
@@ -158,11 +155,7 @@
                                     <input type="datetime-local" class="form-control" id="fechaSalida"
                                            name="fechaSalida" min="<%= fechaHoraActual %>" required>
                                 </div>
-                                <div class="form-text text-danger small">
-                                    <label>
-                                        OJO 👀: Las reservas deben realizarse con al menos 1 hora y 30 minutos de diferencia respecto a otra existente.
-                                    </label>
-                                </div>
+
                             </div>
 
                             <!-- Costo -->
@@ -211,9 +204,17 @@
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Guardar</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <div class="modal-footer flex-column align-items-stretch">
+                            <div class="form-text text-danger small mb-3">
+                                <label>
+                                    OJO 👀: Las reservas deben realizarse con al menos 1 hora y 30 minutos de diferencia
+                                    respecto a otra existente.
+                                </label>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-success me-2" id="btnGuardar">Guardar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -559,7 +560,8 @@
                 </td>
                 <td class="align-middle text-center">
                     <div class="d-flex justify-content-center align-items-center gap-1">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle" title="Ver Detalle"
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle"
+                                title="Ver Detalle"
                                 onclick="detalleReserva(<%=reservations.getIdReservation()%>)">
                             👁️
                         </button>

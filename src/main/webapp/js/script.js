@@ -482,7 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Define la función updateTotal primero
 window.updateTotal = function () {
     let precio = parseFloat($("#habitacion option:selected").attr("data-precio")) || 0;
-    let status = $("#habitacion option:selected").attr("data-estatusroom");
+    let status = parseInt($("#habitacion option:selected").attr("data-status"));
     const  msj = $("#habitacion option:selected").attr("data-msj") || "";
     let descuento = parseFloat($("#descuento").val()) || 0;
     let cobroExtra = parseFloat($("#cobroExtra").val()) || 0;
@@ -496,6 +496,15 @@ window.updateTotal = function () {
 
     document.querySelector("#totalPagar").value = total.toFixed(2);
     document.querySelector("#msjRoom").innerHTML = msj.replace(/\\n/g, "<br>");
+
+    if(status === 2){
+        document.querySelector("#msjStatus").innerHTML = "Habitación actualmente ocupada.";
+    }else if(status === 3){
+        document.querySelector("#msjStatus").innerHTML = "Habitación actualmente en mantenimiento.";
+        document.querySelector("#btnGuardar").disabled = true;
+    }else {
+        document.querySelector("#msjStatus").innerHTML = ""; // limpiar o poner otro mensaje si deseas
+    }
 };
 
 // Luego, cuando el DOM esté listo, asigna los eventos //ESTA ES LA FUNCION CLAVE

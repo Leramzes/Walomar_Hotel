@@ -442,7 +442,8 @@ public class GestionRoom {
                 int id = rs.getInt("id");
                 String number = rs.getString("numero");
                 double price = rs.getDouble("precio");
-                rooms.add(new Room(id, number,price));
+                StatusRoom statusRoom = StatusRoom.fromId(rs.getInt("estado_id"));
+                rooms.add(new Room(id, number,price,statusRoom));
             }
         } catch (SQLException e) {
             LOGGER.severe("No rooms of type could be found " + typeRoomId + ": " + e.getMessage());
