@@ -499,6 +499,7 @@ window.updateTotal = function () {
 
     if(status === 2){
         document.querySelector("#msjStatus").innerHTML = "Habitación actualmente ocupada.";
+        document.querySelector("#msjRoom").innerHTML = "";
     }else if(status === 3){
         document.querySelector("#msjStatus").innerHTML = "Habitación actualmente en mantenimiento.";
         document.querySelector("#btnGuardar").disabled = true;

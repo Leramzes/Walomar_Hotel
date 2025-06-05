@@ -4,6 +4,7 @@ import development.team.hoteltransylvania.Business.GestionClient;
 import development.team.hoteltransylvania.Business.GestionReservation;
 import development.team.hoteltransylvania.Business.GestionRoom;
 import development.team.hoteltransylvania.Business.GestionUser;
+import development.team.hoteltransylvania.DTO.TableReservationDTO;
 import development.team.hoteltransylvania.Model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,6 +18,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @WebServlet(name = "recepController", urlPatterns = {"/recepController"})
 public class RecepcionController extends HttpServlet {
@@ -48,6 +50,8 @@ public class RecepcionController extends HttpServlet {
         Double adelanto = Double.parseDouble(req.getParameter("adelantoRecep"));//adelanto
         Double totalPagar = Double.parseDouble(req.getParameter("totalPagarRecep"));//total a pagar
         Client cliente = GestionClient.getClientById(Integer.parseInt(idCLiente));//obtener cliente
+        List<TableReservationDTO> reservaAsociate = GestionReservation.
+                getRoomAsociateReservationPendiete(Integer.parseInt(habitacion)); //verificar reservas asociadas a la habitacion
 
 
 
@@ -69,6 +73,14 @@ public class RecepcionController extends HttpServlet {
                 // Puedes redirigir a una página de error o mostrar un mensaje
                 resp.sendRedirect("menu.jsp?view=recepcion&error=fechas_invalidas"); //aqui manejar alerta
                 return; // Evita que continúe con el proceso
+            }
+
+            boolean puedeReservar = validarReserva(fechaEntrada, fechaSalida, reservaAsociate);
+
+            if (!puedeReservar) {
+                System.out.println("Error: No se puede reservar porque hay un choque con otra reserva.");
+                resp.sendRedirect("menu.jsp?view=reserva&error=choque_fechas"); //aqui manejar alerta
+                return;
             }
 
             // Calcular días correctamente
@@ -98,5 +110,34 @@ public class RecepcionController extends HttpServlet {
 
 
 
+    }
+
+    public static boolean validarReserva(
+            Timestamp fechaEntrada,
+            Timestamp fechaSalida,
+            List<TableReservationDTO> reservasExistentes) {
+
+        // 90 minutos en milisegundos
+        long margen = 90 * 60 * 1000;
+
+        for (TableReservationDTO reserva : reservasExistentes) {
+            Timestamp inicioExistente = reserva.getCheckInDate();
+            Timestamp finExistente = reserva.getCheckOutDate();
+
+            // Calculamos los tiempos con margen
+            long finExistenteMasMargen = finExistente.getTime() + margen;
+            long inicioExistenteMenosMargen = inicioExistente.getTime() - margen;
+
+            long nuevaEntrada = fechaEntrada.getTime();
+            long nuevaSalida = fechaSalida.getTime();
+
+            // Verificamos si no hay suficiente margen
+            boolean choque = !(nuevaSalida + margen <= inicioExistente.getTime() || finExistente.getTime() + margen <= nuevaEntrada);
+
+            if (choque) {
+                return false; // Hay choque
+            }
+        }
+        return true; // No hay choque con ninguna reserva
     }
 }

@@ -92,7 +92,7 @@ public class GestionReservation {
                 "    INNER JOIN habitaciones h ON h.id = dh.habitacion_id\n" +
                 "    INNER JOIN tipo_habitacion th ON th.id = h.tipo_id\n" +
                 "WHERE h.id = ? \n" +
-                "  AND r.estado_id = 1 \n" +
+                "  AND r.estado_id in (1,4) \n" +
                 "ORDER BY r.fecha_inicio ASC;";
 
         List<TableReservationDTO> reservations = new ArrayList<>();
