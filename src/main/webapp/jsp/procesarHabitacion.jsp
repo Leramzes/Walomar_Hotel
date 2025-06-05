@@ -37,7 +37,7 @@
     boolean mostrar = false;
     TableReservationDTO reservaPendiente = null;
 
-    switch (statusRoom){
+    switch (statusRoom) {
         case 4:
             //display del cliente se puede ver
             mostrar = true;
@@ -118,7 +118,8 @@
                             <label for="busquedaCliente" class="form-label mb-0"><strong>Documento:</strong></label>
                             <input type="text" class="form-control" id="busquedaCliente"
                                    placeholder="Buscar por Documento"
-                                   onkeyup="buscarClienteRecepcion()" required autofocus <%= camposBloqueados ? "disabled" : "" %>>
+                                   onkeyup="buscarClienteRecepcion()" required
+                                   autofocus <%= camposBloqueados ? "disabled" : "" %>>
                             <button class="btn btn-primary"
                                     onclick="cargarPagina('jsp/clientes.jsp')"
                                     <%= camposBloqueados ? "disabled" : "" %>>
@@ -132,33 +133,39 @@
                                 <div class="col-md-6 mt-2">
                                     <label for="tipoDocumento" class="form-label"><strong>Tipo de
                                         Documento:</strong></label>
-                                    <input type="text" class="form-control" id="tipoDocumento" name="tipoDocumentoProcesar"
-                                           value="<%= reservaPendiente != null ? reservaPendiente.getDocumentType() : "" %>" readonly>
+                                    <input type="text" class="form-control" id="tipoDocumento"
+                                           name="tipoDocumentoProcesar"
+                                           value="<%= reservaPendiente != null ? reservaPendiente.getDocumentType() : "" %>"
+                                           readonly>
                                 </div>
 
                                 <div class="col-md-6 mt-2">
                                     <label for="documento" class="form-label"><strong>Documento:</strong></label>
                                     <input type="text" class="form-control" id="documento" name="documentoProcesar"
-                                           value="<%= reservaPendiente != null ? reservaPendiente.getDocumentNumber() : "" %>" readonly>
+                                           value="<%= reservaPendiente != null ? reservaPendiente.getDocumentNumber() : "" %>"
+                                           readonly>
                                 </div>
                             </div>
 
                             <div class="col-md-12 mt-2">
                                 <label for="name" class="form-label"><strong>Nombre Completo:</strong></label>
                                 <input type="text" class="form-control" id="name" name="nombreProcesar"
-                                       value="<%= reservaPendiente != null ? reservaPendiente.getClientName() : "" %>" readonly>
+                                       value="<%= reservaPendiente != null ? reservaPendiente.getClientName() : "" %>"
+                                       readonly>
                             </div>
                             <div class="col-md-12 mt-2">
                                 <label for="correo" class="form-label"><strong>Correo:</strong></label>
                                 <input type="email" class="form-control" id="correo" name="emailProcesar"
-                                       value="<%= reservaPendiente != null ? reservaPendiente.getEmail() : "" %>" readonly>
+                                       value="<%= reservaPendiente != null ? reservaPendiente.getEmail() : "" %>"
+                                       readonly>
                             </div>
 
 
                             <div class="col-md-12 mt-2">
                                 <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
                                 <input type="text" class="form-control" id="telefono" name="telefonoProcesar"
-                                       value="<%= reservaPendiente != null ? reservaPendiente.getPhone() : "" %>" readonly>
+                                       value="<%= reservaPendiente != null ? reservaPendiente.getPhone() : "" %>"
+                                       readonly>
                             </div>
                         </div>
 
@@ -179,21 +186,65 @@
                             java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
                             String fechaHoraActual = now.format(formatter);
                         %>
-                        <div class="col-md-6 mt-2">
+                        <!-- Columna Izquierda -->
+                        <div class="col-md-6">
+                            <div class="mt-2">
+                                <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
+                                    Entrada Reservada:</strong></label>
+                                <input type="datetime-local" class="form-control" id="fechaEntradaRecep"
+                                       name="fechaEntradaRecep"
+                                       value="<%= fechaHoraActual %>" readonly <%= camposBloqueados ? "disabled" : "" %>>
+                            </div>
+
+                            <div class="mt-2">
+                                <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
+                                    Entrada de Ingreso:</strong></label>
+                                <input type="datetime-local" class="form-control" id="fechaEntradaRecep"
+                                       name="fechaEntradaRecep"
+                                       readonly <%= camposBloqueados ? "disabled" : "" %>>
+                            </div>
+                        </div>
+
+                        <!-- Columna Derecha -->
+                        <div class="col-md-6">
+                            <div class="mt-2">
+                                <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
+                                <input type="datetime-local" class="form-control" id="fechaSalidaRecep"
+                                       name="fechaSalidaRecep"
+                                       min="<%= fechaHoraActual %>" required <%= camposBloqueados ? "disabled" : "" %>
+                                       value="<%= reservaPendiente != null ? reservaPendiente.getCheckOutDate() : "" %>">
+                            </div>
+                        </div>
+
+                        <div style="border-bottom: 1px solid #ccc; margin: 20px auto; width: 94%;"></div>
+
+                    <%--<div class="col-md-6 mt-2">
                             <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
-                                Entrada:</strong></label>
-                            <input type="datetime-local" class="form-control" id="fechaEntradaRecep" name="fechaEntradaRecep"
+                                Entrada Reservada:</strong></label>
+                            <input type="datetime-local" class="form-control" id="fechaEntradaRecep"
+                                   name="fechaEntradaRecep"
                                    value="<%= fechaHoraActual %>" readonly <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
                         <div class="col-md-6 mt-2">
                             <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
-                            <input type="datetime-local" class="form-control" id="fechaSalidaRecep" name="fechaSalidaRecep"
+                            <input type="datetime-local" class="form-control" id="fechaSalidaRecep"
+                                   name="fechaSalidaRecep"
                                    min="<%= fechaHoraActual %>" required <%= camposBloqueados ? "disabled" : "" %>
                                    value="<%= reservaPendiente != null ? reservaPendiente.getCheckOutDate() : "" %>">
                         </div>
+                        <div class="col-md-6 mt-2">
+                            <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
+                                Entrada de Ingreso:</strong></label>
+                            <input type="datetime-local" class="form-control" id="fechaEntradaRecep"
+                                   name="fechaEntradaRecep"
+                                   readonly <%= camposBloqueados ? "disabled" : "" %>>
+                        </div>--%>
+
+
                         <!--Solo para pasar el precio-->
-                        <input type="hidden" data-precio="<%=room.getPrice()%>" name="habitacionRecep" id="habitacionRecep">
+                        <input type="hidden" data-precio="<%=room.getPrice()%>" name="habitacionRecep"
+                               id="habitacionRecep">
                         <input type="hidden" name="roomSelect" value="<%=room.getId()%>">
                         <div class="col-md-6 mt-2">
                             <div class="d-flex justify-content-between align-items-center">
@@ -220,7 +271,8 @@
 
                         <div class="col-md-6 mt-2">
                             <label for="cobroExtraRecep" class="form-label"><strong>Cobro Extra:</strong></label>
-                            <input type="number" class="form-control" id="cobroExtraRecep" name="cobroExtraRecep" min="0"
+                            <input type="number" class="form-control" id="cobroExtraRecep" name="cobroExtraRecep"
+                                   min="0"
                                    value="0" required <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
@@ -232,13 +284,15 @@
 
                         <div class="col-md-6 mt-2">
                             <label for="totalPagarRecep" class="form-label"><strong>Total a Pagar:</strong></label>
-                            <input type="text" class="form-control" id="totalPagarRecep" name="totalPagarRecep" value="<%=room.getPrice()%>" readonly required
+                            <input type="text" class="form-control" id="totalPagarRecep" name="totalPagarRecep"
+                                   value="<%=room.getPrice()%>" readonly required
                                 <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
                         <div class="col-md-12 mt-2">
                             <label for="observaciones" class="form-label"><strong>Observaciones:</strong></label>
-                            <textarea class="form-control" id="observaciones" rows="3" <%= camposBloqueados ? "disabled" : "" %>></textarea>
+                            <textarea class="form-control" id="observaciones"
+                                      rows="3" <%= camposBloqueados ? "disabled" : "" %>></textarea>
                         </div>
 
                         <div class="col-md-12 mt-2 d-flex justify-content-between">
@@ -251,7 +305,9 @@
                                     break;
                                 case 3:
                             %>
-                            <button type="submit" name="accion" value="habilitar" class="btn btn-warning">Habilitar Habitación</button>
+                            <button type="submit" name="accion" value="habilitar" class="btn btn-warning">Habilitar
+                                Habitación
+                            </button>
                             <%
                                     break;
                                 case 4:
