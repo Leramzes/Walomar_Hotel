@@ -133,6 +133,19 @@ public class GestionRoom {
         return result;
     }
     public static List<Room> getAllRoomsReservation() {
+
+        String actualizarPendientes =
+                "UPDATE habitaciones " +
+                        "SET estado_id = 4 " +
+                        "WHERE id IN ( " +
+                        "  SELECT h.id " +
+                        "  FROM habitaciones h " +
+                        "  JOIN detalle_habitacion dh ON h.id = dh.habitacion_id " +
+                        "  JOIN reservas r ON r.id = dh.reserva_id " +
+                        "  WHERE r.estado_id = 1 " +
+                        "    AND r.fecha_inicio BETWEEN NOW() AND NOW() + interval '1 hour' " +
+                        ")";
+
         String sql = "SELECT " +
                 "    h.id, " +
                 "    h.numero, " +
@@ -152,29 +165,33 @@ public class GestionRoom {
 
         List<Room> rooms = new ArrayList<>();
 
-        try (Connection cnn = dataSource.getConnection();
-             PreparedStatement ps = cnn.prepareStatement(sql)) {
+        try (Connection cnn = dataSource.getConnection()) {
 
-            ResultSet rs = ps.executeQuery();
+            // Ejecutar la actualización primero
+            try (PreparedStatement actualizarPs = cnn.prepareStatement(actualizarPendientes)) {
+                actualizarPs.executeUpdate(); // Ejecuta el UPDATE
+            }
 
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String number = rs.getString("numero");
-                int typeId = rs.getInt("tipo_id");
-                String typeName = rs.getString("tipo_nombre");
-                String statusTypeRoom = rs.getString("estado_tipo");
-                int statusId = rs.getInt("estado_id");
-                double price = rs.getDouble("precio");
-                int floorId = rs.getInt("piso_id");
-                int disponible = rs.getInt("disponible");
+            // Ahora sí, obtenemos las habitaciones ya actualizadas
+            try (PreparedStatement ps = cnn.prepareStatement(sql)) {
+                ResultSet rs = ps.executeQuery();
 
-                // Se obtiene el enum directamente por ID
-                StatusRoom statusRoom = StatusRoom.fromId(statusId);
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String number = rs.getString("numero");
+                    int typeId = rs.getInt("tipo_id");
+                    String typeName = rs.getString("tipo_nombre");
+                    String statusTypeRoom = rs.getString("estado_tipo");
+                    int statusId = rs.getInt("estado_id");
+                    double price = rs.getDouble("precio");
+                    int floorId = rs.getInt("piso_id");
+                    int disponible = rs.getInt("disponible");
 
-                // Se crea el objeto TypeRoom directamente sin consulta extra
-                TypeRoom typeRoom = new TypeRoom(typeId, typeName, statusTypeRoom);
+                    StatusRoom statusRoom = StatusRoom.fromId(statusId);
+                    TypeRoom typeRoom = new TypeRoom(typeId, typeName, statusTypeRoom);
 
-                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId,disponible));
+                    rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId, disponible));
+                }
             }
 
         } catch (SQLException e) {

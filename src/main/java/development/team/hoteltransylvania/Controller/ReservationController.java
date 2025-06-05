@@ -141,7 +141,7 @@ public class ReservationController extends HttpServlet {
         //aun falta pasr bien el employee
 
         //cambio de estado de habitacion: cuando es reserva siempre será status 4 pendiente
-        GestionRoom.updateStatusRoom(room.getId(),4);
+        /*GestionRoom.updateStatusRoom(room.getId(),4);*/
     }
     public static boolean validarReserva(
             Timestamp fechaEntrada,
