@@ -32,9 +32,31 @@ public class RecepcionController extends HttpServlet {
         HttpSession session = req.getSession();
         String accion = req.getParameter("accion");
         String habitacion = req.getParameter("roomSelect");//habitacion seleccionada
+        int idReserva = Integer.parseInt(req.getParameter("idReserva"));
+        Timestamp fechaEntradaReal = parseFecha(req.getParameter("fechaEntradaRealRecep"));
 
         if ("habilitar".equalsIgnoreCase(accion)) {
             GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 1);
+            resp.sendRedirect("menu.jsp?view=recepcion");
+            return;
+        }
+        if ("cancelar".equalsIgnoreCase(accion)) {
+            GestionReservation.updateStatusReservation(idReserva,3);
+            GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 1);
+            resp.sendRedirect("menu.jsp?view=recepcion");
+            return;
+        }
+        if ("ocuparReservada".equalsIgnoreCase(accion)) {
+            /*logica para ocupar haitacion reservada*/
+            /*
+                - obtener la reserva y cambiarle el estaod a ocupada
+                - obtener la reserva y colocarle la fehca real de ingreso
+                - obetenr la habiatcion y ponerle estado ocupada
+            */
+            GestionReservation.updateStatusReservation(idReserva,4);
+            boolean actualizo = GestionReservation.updateFechaIngresoReserva(idReserva,fechaEntradaReal);
+            System.out.println(actualizo);
+            GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 2);
             resp.sendRedirect("menu.jsp?view=recepcion");
             return;
         }
@@ -42,7 +64,7 @@ public class RecepcionController extends HttpServlet {
         User user = (User) session.getAttribute("usuario");
         Employee employee1 = GestionUser.obtenerEmpleadoPorId(user.getId()); //empleado en sesion
         String idCLiente = req.getParameter("idClienteProcesar");//cliente
-        String fecEntrada = req.getParameter("fechaEntradaRecep");//fecha de entrada (del sistema)
+        String fecEntrada = req.getParameter("fechaEntradaRecep");//fecha de entrada reservada
         String fecSalida = req.getParameter("fechaSalidaRecep");//fecga de salida (ingresada)
         String val4 = req.getParameter("descuentoRecep");//dsct
         int descuento = (val4 == null || val4.isEmpty()) ? 0 : Integer.parseInt(val4);
@@ -102,7 +124,7 @@ public class RecepcionController extends HttpServlet {
 
         int reservationResgitered = GestionReservation.registerReservation(reservation,room,payment, checkout);
 
-        //cambio de estado de habitacion: cuando es recepcion inicial siempre será status 2 ocupada
+        //cambio de estado de habitacion: cuando es recepcion siempre será status 2 ocupada
         GestionRoom.updateStatusRoom(room.getId(),2);
 
         System.out.println("se registro: "+reservationResgitered);
@@ -112,10 +134,7 @@ public class RecepcionController extends HttpServlet {
 
     }
 
-    public static boolean validarReserva(
-            Timestamp fechaEntrada,
-            Timestamp fechaSalida,
-            List<TableReservationDTO> reservasExistentes) {
+    public static boolean validarReserva(Timestamp fechaEntrada, Timestamp fechaSalida, List<TableReservationDTO> reservasExistentes) {
 
         // 90 minutos en milisegundos
         long margen = 90 * 60 * 1000;
@@ -139,5 +158,12 @@ public class RecepcionController extends HttpServlet {
             }
         }
         return true; // No hay choque con ninguna reserva
+    }
+    private static Timestamp parseFecha(String fechaStr) {
+        if (fechaStr == null || fechaStr.isEmpty()) return null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(fechaStr, formatter);
+        return Timestamp.valueOf(localDateTime);
     }
 }

@@ -213,6 +213,41 @@ public class GestionReservation {
         return generatedId;
     }
 
+    public static boolean updateStatusReservation(int idReservation, int statusReservation) {
+        String sql = "UPDATE reservas SET estado_id = ? WHERE id = ?";
+        boolean success = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+            ps.setInt(1, statusReservation);
+            ps.setInt(2, idReservation);
+
+            int rows = ps.executeUpdate();
+            success = rows > 0;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return success;
+    }
+    public static boolean updateFechaIngresoReserva(int idReservation, Timestamp fechaIngreso) {
+        String sql = "UPDATE reservas SET fecha_ingreso = ? WHERE id = ?";
+        boolean success = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+            ps.setTimestamp(1, fechaIngreso);
+            ps.setInt(2, idReservation);
+
+            int rows = ps.executeUpdate();
+            success = rows > 0;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return success;
+    }
+
     private static boolean registerDetailRoom(Connection cnn, RoomDetails roomDetails, int idReservation, double payment) {
         String sql = "INSERT INTO detalle_habitacion (reserva_id, habitacion_id, pago_total) VALUES (?, ?, ?)";
         boolean success = false;
