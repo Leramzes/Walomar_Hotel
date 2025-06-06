@@ -54,8 +54,7 @@ public class RecepcionController extends HttpServlet {
                 - obetenr la habiatcion y ponerle estado ocupada
             */
             GestionReservation.updateStatusReservation(idReserva,4);
-            boolean actualizo = GestionReservation.updateFechaIngresoReserva(idReserva,fechaEntradaReal);
-            System.out.println(actualizo);
+            GestionReservation.updateFechaIngresoReserva(idReserva,fechaEntradaReal);
             GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 2);
             resp.sendRedirect("menu.jsp?view=recepcion");
             return;

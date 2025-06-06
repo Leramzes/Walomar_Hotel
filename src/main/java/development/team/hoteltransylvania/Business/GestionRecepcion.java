@@ -33,6 +33,7 @@ public class GestionRecepcion {
                 "    c.nombre AS nombre_cliente,\n" +
                 "    r.fecha_inicio,\n" +
                 "    r.fecha_fin,\n" +
+                "    r.fecha_ingreso,\n" +
                 "    c.tipo_documento,\n" +
                 "    c.numero_documento,\n" +
                 "    c.telefono,\n" +
@@ -69,6 +70,7 @@ public class GestionRecepcion {
                     dto.setPhone(rs.getString("telefono"));
                     dto.setEmail(rs.getString("email"));
                     dto.setDocumentNumber(rs.getString("numero_documento"));
+                    dto.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
                 }
             }
 
@@ -89,6 +91,7 @@ public class GestionRecepcion {
                 "    c.nombre AS nombre_cliente,\n" +
                 "    r.fecha_inicio,\n" +
                 "    r.fecha_fin,\n" +
+                "    r.fecha_ingreso,\n" +
                 "    c.tipo_documento,\n" +
                 "    c.numero_documento,\n" +
                 "    c.telefono,\n" +
@@ -125,6 +128,7 @@ public class GestionRecepcion {
                     dto.setPhone(rs.getString("telefono"));
                     dto.setEmail(rs.getString("email"));
                     dto.setDocumentNumber(rs.getString("numero_documento"));
+                    dto.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
                 }
             }
 

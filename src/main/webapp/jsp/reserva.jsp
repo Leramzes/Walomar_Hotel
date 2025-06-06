@@ -475,7 +475,8 @@
 <div class="card-body mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <span class="d-none d-md-inline">Mostrando
-        <input type="number" min="1" max="999" value="1" class="form-control d-inline-block" style="width: 5rem;"
+        <input type="number" min="1" max="999" value="<%=allReservations.size()%>"
+               class="form-control d-inline-block" style="width: 5rem;"
                readonly> registros
       </span>
         <div class="d-flex flex-wrap align-items-center gap-3" style="max-width: 100%;">

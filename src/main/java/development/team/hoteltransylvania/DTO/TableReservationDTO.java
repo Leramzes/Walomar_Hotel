@@ -13,6 +13,7 @@ public class TableReservationDTO {
     private String roomType;
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
+    private Timestamp fecha_ingreso;
     private String reservationStatus;
     private String email;
     private String phone;
@@ -62,6 +63,14 @@ public class TableReservationDTO {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationStatus = reservationStatus;
+    }
+
+    public Timestamp getFecha_ingreso() {
+        return fecha_ingreso;
+    }
+
+    public void setFecha_ingreso(Timestamp fecha_ingreso) {
+        this.fecha_ingreso = fecha_ingreso;
     }
 
     public String getReservationStatus() {

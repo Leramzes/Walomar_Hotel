@@ -189,7 +189,7 @@
                         <!-- Columna Izquierda -->
                         <div class="col-md-6">
                             <div class="mt-2">
-                                <label for="fechaEntrada" class="form-label"><strong>Fecha y Hora de
+                                <label for="fechaEntradaRecep" class="form-label"><strong>Fecha y Hora de
                                     Entrada:</strong></label>
                                 <input type="datetime-local" class="form-control" id="fechaEntradaRecep"
                                        name="fechaEntradaRecep"
@@ -199,11 +199,12 @@
 
                             <%if(reservaPendiente != null){%>
                                 <div class="mt-2">
-                                    <label for="fechaEntradaReal" class="form-label"><strong>Fecha y Hora de
+                                    <label for="fechaEntradaRealRecep" class="form-label"><strong>Fecha y Hora de
                                         Entrada de Ingreso:</strong></label>
                                     <input type="datetime-local" class="form-control" id="fechaEntradaRealRecep"
                                            name="fechaEntradaRealRecep"
-                                           readonly value="<%=fechaHoraActual%>" <%= camposBloqueados ? "disabled" : "" %>>
+                                           value="<%=reservaPendiente.getFecha_ingreso()==null
+                                           ? fechaHoraActual : reservaPendiente.getFecha_ingreso()%>" readonly>
                                 </div>
                             <%}%>
                         </div>
