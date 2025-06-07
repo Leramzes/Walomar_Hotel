@@ -15,6 +15,7 @@ public class TableReservationDTO {
     private Timestamp checkOutDate;
     private Timestamp fecha_ingreso;
     private String reservationStatus;
+    private int reservationStatusId;
     private String email;
     private String phone;
     private String address;
@@ -75,6 +76,14 @@ public class TableReservationDTO {
 
     public String getReservationStatus() {
         return reservationStatus;
+    }
+
+    public int getReservationStatusId() {
+        return reservationStatusId;
+    }
+
+    public void setReservationStatusId(int reservationStatusId) {
+        this.reservationStatusId = reservationStatusId;
     }
 
     public void setReservationStatus(String reservationStatus) {

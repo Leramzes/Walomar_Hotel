@@ -53,11 +53,11 @@
 </div>
 
 <div class="d-flex justify-content-center gap-1">
-    <div class="square bg-primary" title="Nueva Reservación"></div>
-    <div class="square bg-success" title="Reservación Confirmada"></div>
-    <div class="square" style="background-color: orange;" title="Reservación Ocupada"></div>
-    <div class="square bg-dark" title="Reservación Cancelada"></div>
-    <div class="square bg-warning" title="Reservación Culminada"></div>
+    <div class="square bg-success" ></div>
+    <div class="square bg-info" ></div>
+    <div class="square bg-dark" ></div>
+    <div class="square bg-danger" style="background-color: orange;" ></div>
+    <div class="square bg-warning" ></div>
 </div>
 
 <!-- Sección de Reserva -->
@@ -229,8 +229,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 <!-- MODAL DE CLAVE -->
@@ -356,7 +354,6 @@
     </div>
 </div>
 
-
 <!-- Modal para editar Reserva -->
 <div class="modal fade" id="modalEditarReserva" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -478,7 +475,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="card-body mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">

@@ -148,6 +148,7 @@ public class GestionReservation {
                 dto.setCheckInDate(rs.getTimestamp("fecha_inicio"));
                 dto.setCheckOutDate(rs.getTimestamp("fecha_fin"));
                 dto.setReservationStatus(rs.getString("estado"));
+                dto.setReservationStatusId(rs.getInt("id_statusreserva"));
 
                 reservationDTOS.add(dto);
             }
