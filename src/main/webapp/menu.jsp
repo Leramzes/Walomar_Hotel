@@ -859,5 +859,27 @@
         });
     }
 </script>
+<script>
+
+    document.getElementById('contenido').addEventListener('submit', function (e) {
+        if (e.target.id === 'formHabitacion') {
+            const pisoSeleccionado = document.getElementById("piso").value.trim();
+            const nombreHabitacion = document.getElementById("nombre").value.trim();
+
+            if (!nombreHabitacion.startsWith(pisoSeleccionado.toString())) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Validación',
+                    text: 'El número de habitación debe comenzar con el número del piso. Ejemp: '+ pisoSeleccionado +'--).',
+                    confirmButtonColor: '#198754',
+                    confirmButtonText: 'Ok',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+            }
+        }
+    });
+</script>
 </body>
 </html>
