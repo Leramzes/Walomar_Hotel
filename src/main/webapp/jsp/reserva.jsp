@@ -8,6 +8,10 @@
 <%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionReservation" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionEmployee" %>
+<%@ page import="java.time.ZoneId" %>
+<%@ page import="java.time.ZonedDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.LocalDateTime" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -140,10 +144,14 @@
                                     </div>
                                 </div>
                                 <%
-                                    java.time.LocalDateTime now = java.time.LocalDateTime.now();
-                                    // Formateador para datetime-local
-                                    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+                                    LocalDateTime now = LocalDateTime.now(); // Usa la zona horaria del servidor
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
                                     String fechaHoraActual = now.format(formatter);
+
+                                    /*ZoneId zonaPeru = ZoneId.of("America/Lima");
+                                    ZonedDateTime now = ZonedDateTime.now(zonaPeru);
+                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+                                    String fechaHoraActual = now.format(formatter);*/
                                 %>
                                 <div class="mb-3">
                                     <label for="fechaEntrada">Fecha y Hora de Entrada</label>
