@@ -45,7 +45,7 @@ public class GestionRecepcion {
                 "WHERE h.estado_id = 4  -- Estado \"pendiente\" de la habitación\n" +
                 "  AND r.estado_id = 1  -- Estado \"pendiente\" de la reserva\n" +
                 "  AND h.numero = ?\n" +
-                "ORDER BY h.id\n" +
+                "ORDER BY r.fecha_inicio ASC\n" +
                 "LIMIT 1;";
 
         TableReservationDTO dto = null;
