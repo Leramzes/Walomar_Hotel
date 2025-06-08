@@ -7,7 +7,10 @@ import development.team.hoteltransylvania.Util.LoggerConfifg;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -346,16 +349,16 @@ public class GestionReservation {
 
         String clientLower = client.toLowerCase().trim();
         String documentoLower = documento.toLowerCase().trim();
-        String fecDesdeLower = fecDesde.toLowerCase().trim();
-        String fecHastaLower = fecHasta.toLowerCase().trim();
+        java.sql.Timestamp fecDesdeLower = parseFecha(fecDesde);
+        java.sql.Timestamp fecHastaLower = parseFecha(fecHasta);
         String estadoLower = estado.toLowerCase().trim();
 
         List<TableReservationDTO> filteredRooms = allReservations.stream()
                 .filter(reservation ->
                                 (clientLower.isEmpty() || reservation.getClientName().toLowerCase().contains(clientLower)) &&
                                 (documentoLower.isEmpty() || reservation.getDocumentNumber().contains(documentoLower)) &&
-                                /*(fecDesdeLower.isEmpty() || !reservation.getCheckInDate().toLocalDateTime().toLocalDate().isBefore(LocalDate.parse(fecDesdeLower, formatter))) &&
-                                (fecHastaLower.isEmpty() || reservation.getClientName().contains(nombreLower)) &&*/
+                                (fecDesdeLower == null || !reservation.getCheckOutDate().before(fecDesdeLower)) &&
+                                (fecHastaLower == null || !reservation.getCheckInDate().after(fecHastaLower)) &&
                                 (estadoLower.isEmpty() || reservation.getReservationStatus().toLowerCase().equalsIgnoreCase(estadoLower))
                 )
                 .collect(Collectors.toList());
@@ -372,17 +375,24 @@ public class GestionReservation {
 
         String clientLower = client.toLowerCase().trim();
         String documentoLower = documento.toLowerCase().trim();
-        String fecDesdeLower = fecDesde.toLowerCase().trim();
-        String fecHastaLower = fecHasta.toLowerCase().trim();
+        java.sql.Timestamp fecDesdeLower = parseFecha(fecDesde);
+        java.sql.Timestamp fecHastaLower = parseFecha(fecHasta);
         String estadoLower = estado.toLowerCase().trim();
 
         return (int) allReservations.stream()
                 .filter(reservation ->
                         (clientLower.isEmpty() || reservation.getClientName().toLowerCase().contains(clientLower)) &&
                                 (documentoLower.isEmpty() || reservation.getDocumentNumber().contains(documentoLower)) &&
-                                /*(fecDesdeLower.isEmpty() || !reservation.getCheckInDate().toLocalDateTime().toLocalDate().isBefore(LocalDate.parse(fecDesdeLower, formatter))) &&
-                                (fecHastaLower.isEmpty() || reservation.getClientName().contains(nombreLower)) &&*/
+                                (fecDesdeLower == null || !reservation.getCheckOutDate().before(fecDesdeLower)) &&
+                                (fecHastaLower == null || !reservation.getCheckInDate().after(fecHastaLower)) &&
                                 (estadoLower.isEmpty() || reservation.getReservationStatus().toLowerCase().equalsIgnoreCase(estadoLower))
                 ).count();
+    }
+    private static Timestamp parseFecha(String fechaStr) {
+        if (fechaStr == null || fechaStr.isEmpty()) return null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.parse(fechaStr, formatter);
+        return Timestamp.valueOf(localDateTime);
     }
 }

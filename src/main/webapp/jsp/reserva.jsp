@@ -498,14 +498,14 @@
             </div>
 
             <div style="max-width: 150px;">
-                <input type="date" id="filtroFechaDesde" class="form-control" placeholder="Fecha Desde"
-                       onkeyup="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
+                <input type="datetime-local" id="filtroFechaDesde" class="form-control" placeholder="Fecha Desde"
+                       onchange="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
                        '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
             <div style="max-width: 150px;">
-                <input type="date" id="filtroFechaHasta" class="form-control" placeholder="Fecha Hasta"
-                       onkeyup="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
+                <input type="datetime-local" id="filtroFechaHasta" class="form-control" placeholder="Fecha Hasta"
+                       onchange="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
                        '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
@@ -513,7 +513,7 @@
                 <select id="filtroEstado" class="form-select"
                         onchange="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
                        '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
-                    <option value="">Estado</option>
+                    <option value="">Todas</option>
                     <option value="Pendiente">Pendiente</option>
                     <option value="Cancelada">Cancelada</option>
                     <option value="Ocupada">Ocupada</option>
