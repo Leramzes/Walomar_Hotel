@@ -159,6 +159,60 @@ public class GestionReservation {
 
         return reservationDTOS;
     }
+    public static List<TableReservationDTO> getAllReservations() {
+        String sql = "SELECT\n" +
+                "            r.id AS id_reserva,\n" +
+                "            cl.id AS id_cliente,\n" +
+                "            cl.nombre,\n" +
+                "            cl.tipo_documento,\n" +
+                "            cl.numero_documento,\n" +
+                "            h.id AS id_habitacion,\n" +
+                "            h.numero,\n" +
+                "            th.nombre AS tipo_habitacion,\n" +
+                "            r.fecha_inicio,\n" +
+                "            r.fecha_fin,\n" +
+                "            er.estado,\n" +
+                "            er.id AS id_statusreserva\n" +
+                "        FROM reservas r\n" +
+                "                 INNER JOIN estado_reserva er ON er.id = r.estado_id\n" +
+                "                 INNER JOIN clientes cl ON r.cliente_id = cl.id\n" +
+                "                 INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
+                "                 INNER JOIN habitaciones h ON h.id = dh.habitacion_id\n" +
+                "                 INNER JOIN tipo_habitacion th ON th.id = h.tipo_id\n" +
+                "        ORDER BY r.id DESC";
+
+        List<TableReservationDTO> reservationDTOS = new ArrayList<>();
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                TableReservationDTO dto = new TableReservationDTO();
+                dto.setIdReservation(rs.getInt("id_reserva"));
+                dto.setIdClient(rs.getInt("id_cliente"));
+                dto.setClientName(rs.getString("nombre"));
+                dto.setDocumentType(rs.getString("tipo_documento"));
+                dto.setDocumentNumber(rs.getString("numero_documento"));
+                dto.setIdRoom(rs.getInt("id_habitacion"));
+                dto.setNumberRoom(rs.getString("numero"));
+                dto.setRoomType(rs.getString("tipo_habitacion"));
+                dto.setCheckInDate(rs.getTimestamp("fecha_inicio"));
+                dto.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                dto.setReservationStatus(rs.getString("estado"));
+                dto.setReservationStatusId(rs.getInt("id_statusreserva"));
+
+                reservationDTOS.add(dto);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving Reservations: " + e.getMessage());
+        }
+
+        return reservationDTOS;
+    }
 
     public static int registerReservation(Reservation reservation, Room room, double payment, Checkout checkout) {
         String sql = "INSERT INTO reservas (cliente_id, empleado_id, fecha_inicio, fecha_fin, estado_id, descuento, cobro_extra, adelanto) " +
@@ -284,5 +338,51 @@ public class GestionReservation {
         }
 
         return success;
+    }
+
+    public static List<TableReservationDTO> filterReservation(String client, String documento, String fecDesde, String fecHasta,
+                                                              String estado, int page, int size) {
+        List<TableReservationDTO> allReservations = getAllReservations(); // Obtiene todos los registros
+
+        String clientLower = client.toLowerCase().trim();
+        String documentoLower = documento.toLowerCase().trim();
+        String fecDesdeLower = fecDesde.toLowerCase().trim();
+        String fecHastaLower = fecHasta.toLowerCase().trim();
+        String estadoLower = estado.toLowerCase().trim();
+
+        List<TableReservationDTO> filteredRooms = allReservations.stream()
+                .filter(reservation ->
+                                (clientLower.isEmpty() || reservation.getClientName().toLowerCase().contains(clientLower)) &&
+                                (documentoLower.isEmpty() || reservation.getDocumentNumber().contains(documentoLower)) &&
+                                /*(fecDesdeLower.isEmpty() || !reservation.getCheckInDate().toLocalDateTime().toLocalDate().isBefore(LocalDate.parse(fecDesdeLower, formatter))) &&
+                                (fecHastaLower.isEmpty() || reservation.getClientName().contains(nombreLower)) &&*/
+                                (estadoLower.isEmpty() || reservation.getReservationStatus().toLowerCase().equalsIgnoreCase(estadoLower))
+                )
+                .collect(Collectors.toList());
+
+        // Paginación: calcular desde qué índice empezar y hasta dónde llegar
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, filteredRooms.size());
+
+        return filteredRooms.subList(fromIndex, toIndex);
+    }
+    public static int countFilteredReservations(String client, String documento, String fecDesde, String fecHasta,
+                                                String estado) {
+        List<TableReservationDTO> allReservations = getAllReservations();
+
+        String clientLower = client.toLowerCase().trim();
+        String documentoLower = documento.toLowerCase().trim();
+        String fecDesdeLower = fecDesde.toLowerCase().trim();
+        String fecHastaLower = fecHasta.toLowerCase().trim();
+        String estadoLower = estado.toLowerCase().trim();
+
+        return (int) allReservations.stream()
+                .filter(reservation ->
+                        (clientLower.isEmpty() || reservation.getClientName().toLowerCase().contains(clientLower)) &&
+                                (documentoLower.isEmpty() || reservation.getDocumentNumber().contains(documentoLower)) &&
+                                /*(fecDesdeLower.isEmpty() || !reservation.getCheckInDate().toLocalDateTime().toLocalDate().isBefore(LocalDate.parse(fecDesdeLower, formatter))) &&
+                                (fecHastaLower.isEmpty() || reservation.getClientName().contains(nombreLower)) &&*/
+                                (estadoLower.isEmpty() || reservation.getReservationStatus().toLowerCase().equalsIgnoreCase(estadoLower))
+                ).count();
     }
 }

@@ -479,7 +479,7 @@
 <div class="card-body mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <span class="d-none d-md-inline">Mostrando
-        <input type="number" min="1" max="999" value="<%=allReservations.size()%>"
+        <input type="number" id="sizeReservations" min="1" max="999" value="<%=allReservations.size()%>"
                class="form-control d-inline-block" style="width: 5rem;"
                readonly> registros
       </span>
@@ -487,37 +487,36 @@
 
             <div style="max-width: 180px;">
                 <input type="text" id="filtroCliente" class="form-control" placeholder="Nombre del cliente"
-                       onkeyup="filtrarTabla()">
+                       onkeyup="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
+                       '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
             <div style="max-width: 180px;">
                 <input type="text" id="filtroNumDoc" class="form-control" placeholder="N° de documento"
-                       onkeyup="filtrarTabla()">
-            </div>
-
-            <div style="max-width: 200px;">
-                <select id="filtroTipoDoc" class="form-select" onchange="filtrarTabla()">
-                    <option value="">Tipo de documento</option>
-                    <option value="DNI">DNI</option>
-                    <option value="RUC">RUC</option>
-                    <option value="Pasaporte">Pasaporte</option>
-                </select>
+                       onkeyup="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
+                       '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
             <div style="max-width: 150px;">
-                <input type="date" id="filtroFechaDesde" class="form-control" onchange="filtrarTabla()">
+                <input type="date" id="filtroFechaDesde" class="form-control" placeholder="Fecha Desde"
+                       onkeyup="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
+                       '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
             <div style="max-width: 150px;">
-                <input type="date" id="filtroFechaHasta" class="form-control" onchange="filtrarTabla()">
+                <input type="date" id="filtroFechaHasta" class="form-control" placeholder="Fecha Hasta"
+                       onkeyup="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
+                       '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
             <div style="max-width: 130px;">
-                <select id="filtroEstado" class="form-select" onchange="filtrarTabla()">
+                <select id="filtroEstado" class="form-select"
+                        onchange="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
+                       '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
                     <option value="">Estado</option>
                     <option value="Pendiente">Pendiente</option>
-                    <option value="Confirmado">Confirmado</option>
-                    <option value="Cancelado">Cancelado</option>
+                    <option value="Cancelada">Cancelada</option>
+                    <option value="Ocupada">Ocupada</option>
                 </select>
             </div>
 
@@ -525,7 +524,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-bordered align-middle">
+        <table class="table table-bordered align-middle" id="tableReserva">
             <thead class="table-warning">
             <tr>
                 <th>N°</th>
@@ -533,7 +532,6 @@
                 <th>Tipo Doc.</th>
                 <th>N° Doc.</th>
                 <th>Habitación</th>
-                <%--ejemplo: 302 - Presidencial--%>
                 <th>Fecha de Entrada</th>
                 <th>Fecha de Salida</th>
                 <th>Estado</th>
@@ -583,11 +581,21 @@
     </div>
 
     <div class="d-flex justify-content-end align-items-center">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination mb-0">
-                <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+        <nav aria-label="Page navigation">
+            <ul class="pagination" id="pagination">
+                <li class="page-item <% if (pagina == 1) { %>disabled<% } %>">
+                    <a class="page-link" href="menu.jsp?view=reserva&page=<%= pagina - 1 %>">Anterior</a>
+                </li>
+
+                <% for (int i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <% if (i == pagina) { %>active<% } %>">
+                    <a class="page-link" href="menu.jsp?view=reserva&page=<%= i %>"><%= i %></a>
+                </li>
+                <% } %>
+
+                <li class="page-item <% if (pagina == totalPages) { %>disabled<% } %>">
+                    <a class="page-link" href="menu.jsp?view=reserva&page=<%= pagina + 1 %>">Siguiente</a>
+                </li>
             </ul>
         </nav>
     </div>

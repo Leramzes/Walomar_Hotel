@@ -382,6 +382,93 @@ function updatePagination(totalRecords, currentPage, size, wordKey, stateKey, ta
     );
 }
 
+window.filtrarTablaReserva = function (wordKey1, wordKey2, wordKey3, wordKey4, wordKey5, tableSearch, quantitySearch, controller,
+                                       page = 1, size = 10) {
+    var clientFilter = $(wordKey1).val().trim();
+    var docFilter = $(wordKey2).val().trim();
+    var fecDesdeFilter = $(wordKey3).val().trim();
+    var fecHastaFilter = $(wordKey4).val().trim();
+    var statusFilter = $(wordKey5).val().trim();
+
+    $.ajax({
+        url: controller,
+        data: {
+            clientFilter: clientFilter,
+            docFilter: docFilter,
+            fecDesdeFilter: fecDesdeFilter,
+            fecHastaFilter: fecHastaFilter,
+            statusFilter: statusFilter,
+            page: page,
+            size: size
+        },
+        success: function (result) {
+            console.log("Respuesta:", result);
+            $(tableSearch).find("tbody").html(result);
+
+            // Extraer la cantidad de registros desde el comentario oculto
+            var match = result.match(/<!--COUNT:(\d+)-->/);
+            var totalRecords = match ? parseInt(match[1]) : 0;
+
+            // Actualizar el input con la cantidad de registros
+            $(quantitySearch).val($(tableSearch).find("tbody tr").length);
+
+            // Actualizar la paginación
+            updatePaginationReserva(totalRecords, page, size, wordKey1, wordKey2, wordKey3, wordKey4, wordKey5, tableSearch, quantitySearch, controller);
+        },
+        error: function () {
+            console.error("Error al obtener los datos filtrados.");
+        }
+    });
+}
+function updatePaginationReserva(totalRecords, currentPage, size, wordKey1, wordKey2, wordKey3, wordKey4, wordKey5, tableSearch, quantitySearch, controller) {
+    const totalPages = Math.ceil(totalRecords / size);
+    const paginationContainer = $("#pagination");
+    paginationContainer.empty();
+
+    // Contenedor donde quieres mostrar el mensaje
+    const noDataContainer = $("#no-data");
+    noDataContainer.empty();
+
+    if (totalPages === 0) {
+        noDataContainer.html('<div class="alert alert-info w-100 text-center">No hay datos para mostrar</div>');
+        return;
+    }
+
+    noDataContainer.empty(); // Limpiamos el mensaje si había uno
+
+    const prevPage = currentPage > 1 ? currentPage - 1 : 1;
+    const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+
+    // Botón "Anterior"
+    paginationContainer.append(
+        `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="if(${currentPage === 1}) return false; 
+    filtrarTablaReserva('${wordKey1}', '${wordKey2}', '${wordKey3}', '${wordKey4}', '${wordKey5}', '${tableSearch}', '${quantitySearch}', '${controller}', 
+    ${prevPage}, ${size})">Anterior</a>
+        </li>`
+    );
+
+    // Números de página
+    for (let i = 1; i <= totalPages; i++) {
+        paginationContainer.append(
+            `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" 
+                onclick="filtrarTablaReserva('${wordKey1}', '${wordKey2}', '${wordKey3}', '${wordKey4}', '${wordKey5}',
+                 '${tableSearch}', '${quantitySearch}', '${controller}', ${i}, ${size})">${i}</a>
+            </li>`
+        );
+    }
+
+    // Botón "Siguiente"
+    paginationContainer.append(
+        `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="if(${currentPage === totalPages}) return false; 
+    filtrarTablaReserva('${wordKey1}', '${wordKey2}', '${wordKey3}', '${wordKey4}', '${wordKey5}', '${tableSearch}', '${quantitySearch}', '${controller}', 
+    ${nextPage}, ${size})">Siguiente</a>
+        </li>`
+    );
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // Obtener parámetros de la URL
     const params = new URLSearchParams(window.location.search);
