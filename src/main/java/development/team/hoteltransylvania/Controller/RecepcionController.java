@@ -46,6 +46,20 @@ public class RecepcionController extends HttpServlet {
             resp.sendRedirect("menu.jsp?view=recepcion");
             return;
         }
+        if ("finalizar".equalsIgnoreCase(accion)) {
+            /*
+            * la habitacion pasa a estado 1 libre
+            * el estado reserva pasa a 5 finalizada*/
+            GestionReservation.updateStatusReservation(idReserva,5);
+            GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 1);
+            resp.sendRedirect("menu.jsp?view=recepcion");
+            return;
+        }
+        if ("mantenimiento".equalsIgnoreCase(accion)) {
+            GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 3);
+            resp.sendRedirect("menu.jsp?view=recepcion");
+            return;
+        }
         if ("ocuparReservada".equalsIgnoreCase(accion)) {
             /*logica para ocupar haitacion reservada*/
             /*

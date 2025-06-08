@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <%
-    List<Room> rooms = GestionRoom.getAllRoomsReservation(); // Cambiar por habitaciones habilitadas segun piso
+    List<Room> rooms = GestionRoom.getAllRoomsReservation();
     List<Floor> floors = GestionRoom.quantityFloorsEnabled().stream()
             .sorted(Comparator.comparing(Floor::getId))
             .toList();

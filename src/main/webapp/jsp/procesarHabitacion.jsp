@@ -281,7 +281,7 @@
                                 switch (room.getStatusRoom().getValue()) {
                                     case 2:
                             %>
-                            <button type="submit" class="btn btn-danger">Finalizar</button>
+                            <button type="submit" name="accion" value="finalizar" class="btn btn-danger">Finalizar</button>
                             <%
                                     break;
                                 case 3:
@@ -301,6 +301,7 @@
                             default:
                         %>
                         <button type="submit" class="btn btn-primary">Ocupar Habitación</button>
+                        <button type="submit" name="accion" value="mantenimiento" class="btn btn-warning" formnovalidate>Dar Mantenimiento</button>
                         <%
                                     break;
                             }
