@@ -520,8 +520,9 @@
                 <th>Tipo Doc.</th>
                 <th>N° Doc.</th>
                 <th>Habitación</th>
-                <th>Fecha de Entrada</th>
-                <th>Fecha de Salida</th>
+                <th>Fecha Programada - Entrada</th>
+                <th>Fecha Programada - Salida</th>
+                <th>Fecha de Real Entrada</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -546,6 +547,23 @@
                 <td><%=reservations.getCheckInDate()%>
                 </td>
                 <td><%=reservations.getCheckOutDate()%>
+                </td>
+                <td>
+                    <%
+                        if ("Cancelada".equalsIgnoreCase(reservations.getReservationStatus())) {
+                    %>
+                    ----
+                    <%
+                    } else if (reservations.getFecha_ingreso() == null) {
+                    %>
+                    Aún no ingresó
+                    <%
+                    } else {
+                    %>
+                    <%= reservations.getFecha_ingreso() %>
+                    <%
+                        }
+                    %>
                 </td>
                 <td><%=reservations.getReservationStatus()%>
                 </td>

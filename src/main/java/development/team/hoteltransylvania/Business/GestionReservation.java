@@ -150,6 +150,7 @@ public class GestionReservation {
                 dto.setRoomType(rs.getString("tipo_habitacion"));
                 dto.setCheckInDate(rs.getTimestamp("fecha_inicio"));
                 dto.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                dto.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
                 dto.setReservationStatus(rs.getString("estado"));
                 dto.setReservationStatusId(rs.getInt("id_statusreserva"));
 
