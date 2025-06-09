@@ -107,7 +107,7 @@
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="documento">Documento</label>
+                                        <%--<label for="documento">Documento</label>--%>
                                         <input type="hidden" class="form-control" id="documento" name="documento"
                                                required>
                                     </div>

@@ -45,7 +45,7 @@ public class FilterClientUnique extends HttpServlet {
             out.println("</div>");
 
             out.println("<div class=\"mb-3\">");
-            out.println("    <label for=\"documento\">Documento</label>");
+            /*out.println("    <label for=\"documento\">Documento</label>");*/
             out.println("    <input type=\"hidden\" class=\"form-control\" id=\"documento\" name=\"documento\" value=\"" +
                     client.getNumberDocument() + "\" required readonly>");
             out.println("</div>");
