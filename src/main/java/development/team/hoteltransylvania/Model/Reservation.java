@@ -9,6 +9,7 @@ public class Reservation {
     private Employee employee;
     private Timestamp fechaInicio;
     private Timestamp fechaFin;
+    private Timestamp fechaIngreso;
     private StatusReservation statusReservation;
     private int dsct;
     private double cobro_extra;
@@ -19,7 +20,7 @@ public class Reservation {
     }
 
     public Reservation(Client client, Employee employee, Timestamp fechaInicio, Timestamp fechaFin, StatusReservation statusReservation, int dsct,
-                       double cobro_extra, double adelanto, int cant_dias) {
+                       double cobro_extra, double adelanto, int cant_dias, Timestamp fechaIngreso) {
         this.client = client;
         this.employee = employee;
         this.fechaInicio = fechaInicio;
@@ -29,6 +30,7 @@ public class Reservation {
         this.cobro_extra = cobro_extra;
         this.adelanto = adelanto;
         this.cant_dias = cant_dias;
+        this.fechaIngreso = fechaIngreso;
     }
 
     public Reservation(int id, Client client, Employee employee, Timestamp fechaInicio, Timestamp fechaFin, StatusReservation statusReservation,
@@ -43,6 +45,14 @@ public class Reservation {
         this.cobro_extra = cobro_extra;
         this.adelanto = adelanto;
         this.cant_dias = cant_dias;
+    }
+
+    public Timestamp getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Timestamp fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
     }
 
     public int getCant_dias() {

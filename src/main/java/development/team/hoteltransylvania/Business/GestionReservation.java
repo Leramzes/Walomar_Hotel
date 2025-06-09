@@ -218,8 +218,8 @@ public class GestionReservation {
     }
 
     public static int registerReservation(Reservation reservation, Room room, double payment, Checkout checkout) {
-        String sql = "INSERT INTO reservas (cliente_id, empleado_id, fecha_inicio, fecha_fin, estado_id, descuento, cobro_extra, adelanto) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reservas (cliente_id, empleado_id, fecha_inicio, fecha_fin, estado_id, descuento, cobro_extra, adelanto,fecha_ingreso) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int generatedId = -1;
 
         try (Connection cnn = dataSource.getConnection()) {
@@ -236,6 +236,7 @@ public class GestionReservation {
                 ps.setInt(6, reservation.getDsct());
                 ps.setDouble(7, reservation.getCobro_extra());
                 ps.setDouble(8, reservation.getAdelanto());
+                ps.setTimestamp(9, reservation.getFechaIngreso());
                 int rowsAffected = ps.executeUpdate();
                 System.out.println(rowsAffected);
                 if (rowsAffected > 0) {

@@ -126,7 +126,7 @@ public class RecepcionController extends HttpServlet {
 
         // Crear reserva con ststus 4 (ocupada)
         Reservation reservation = new Reservation(cliente, employee1, fechaEntrada, fechaSalida,
-                StatusReservation.fromId(4), descuento, cobroExtra, adelanto, cant_dias);
+                StatusReservation.fromId(4), descuento, cobroExtra, adelanto, cant_dias, fechaEntrada);
         // Obtener habitación y calcular pago
 
         Room room = GestionRoom.getRoomById(Integer.parseInt(habitacion));
