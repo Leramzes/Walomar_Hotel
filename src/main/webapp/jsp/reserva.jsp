@@ -108,7 +108,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="documento">Documento</label>
-                                        <input type="text" class="form-control" id="documento" name="documento"
+                                        <input type="hidden" class="form-control" id="documento" name="documento"
                                                required>
                                     </div>
                                     <div class="mb-3">
@@ -372,11 +372,11 @@
                             <h5>Datos del Cliente</h5>
                             <div class="mb-3">
                                 <label for="nombreEditar" class="form-label">Nombre Completo</label>
-                                <input type="text" class="form-control" id="nombreEditar" required>
+                                <input type="text" class="form-control" id="nombreEditar" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="tipoDocumentoEditar" class="form-label">Tipo de Documento</label>
-                                <select class="form-select" id="tipoDocumentoEditar" required>
+                                <select class="form-select" id="tipoDocumentoEditar" disabled>
                                     <option value="DNI">DNI</option>
                                     <option value="PASAPORTE">PASAPORTE</option>
                                     <option value="RUC">RUC</option>
@@ -384,23 +384,15 @@
                             </div>
                             <div class="mb-3">
                                 <label for="documentoEditar" class="form-label">Documento</label>
-                                <input type="text" class="form-control" id="documentoEditar" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nitEditar" class="form-label">NIT</label>
-                                <input type="text" class="form-control" id="nitEditar" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="facturarEditar" class="form-label">Nombre a Facturar</label>
-                                <input type="text" class="form-control" id="facturarEditar" required>
+                                <input type="text" class="form-control" id="documentoEditar" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="correoEditar" class="form-label">Correo</label>
-                                <input type="email" class="form-control" id="correoEditar" required>
+                                <input type="email" class="form-control" id="correoEditar" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="telefonoEditar" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="telefonoEditar" maxlength="9" required>
+                                <input type="tel" class="form-control" id="telefonoEditar" maxlength="9" disabled>
                             </div>
                         </div>
 
@@ -455,10 +447,6 @@
                             <div class="mb-3">
                                 <label for="totalPagarEditar" class="form-label">Total a Pagar</label>
                                 <input type="number" class="form-control" id="totalPagarEditar" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="observacionEditar" class="form-label">Observaciones</label>
-                                <textarea class="form-control" id="observacionEditar" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
@@ -568,10 +556,8 @@
                                 onclick="detalleReserva(<%=reservations.getIdReservation()%>)">
                             👁️
                         </button>
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#modalEditarReserva">✏️
-                        </button>
-                        <button class="btn btn-danger btn-sm">❌</button>
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarReserva" title="Editar Reserva">✏️</button>
+                        <button class="btn btn-danger btn-sm" title="Cancelar Reserva">❌</button>
                     </div>
                 </td>
             </tr>
