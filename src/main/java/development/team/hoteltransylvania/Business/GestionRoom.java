@@ -177,7 +177,6 @@ public class GestionRoom {
             // Ejecutar la actualización primero
             try (PreparedStatement actualizarPs = cnn.prepareStatement(actualizarPendientes)) {
                 int rowsUpdated = actualizarPs.executeUpdate();
-                System.out.println("Habitaciones actualizadas: " + rowsUpdated);
             }
 
             // Ahora sí, obtenemos las habitaciones ya actualizadas

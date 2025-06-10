@@ -476,16 +476,18 @@
                        '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
-            <div style="max-width: 150px;">
-                <input type="datetime-local" id="filtroFechaDesde" class="form-control" placeholder="Fecha Desde"
+            <div style="max-width: 180px;">
+                <input type="datetime-local" id="filtroFechaDesde" class="form-control"
+                       title="Selecciona la fecha y hora DESDE"
                        onchange="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
-                       '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
+           '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
-            <div style="max-width: 150px;">
-                <input type="datetime-local" id="filtroFechaHasta" class="form-control" placeholder="Fecha Hasta"
+            <div style="max-width: 180px;">
+                <input type="datetime-local" id="filtroFechaHasta" class="form-control"
+                       title="Selecciona la fecha y hora HASTA"
                        onchange="filtrarTablaReserva('#filtroCliente', '#filtroNumDoc', '#filtroFechaDesde', '#filtroFechaHasta',
-                       '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
+           '#filtroEstado', '#tableReserva','#sizeReservations','filterReservations',1,10)">
             </div>
 
             <div style="max-width: 130px;">
