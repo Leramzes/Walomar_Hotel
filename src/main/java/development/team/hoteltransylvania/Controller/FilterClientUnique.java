@@ -35,24 +35,23 @@ public class FilterClientUnique extends HttpServlet {
             out.println("<div class=\"mb-3\">");
             out.println("    <label for=\"nombre\">Nombre Completo</label>");
             out.println("    <input type=\"hidden\" class=\"form-control\" id=\"idCLiente\" name=\"idCLiente\" value=\"" + client.getId() + "\" required>");
-            out.println("    <input type=\"text\" class=\"form-control\" id=\"nombre\" name=\"nombre\" value=\"" + client.getName() + "\" required readonly>");
+            out.println("    <input type=\"text\" class=\"form-control readonly-style\" id=\"nombre\" name=\"nombre\" value=\"" + client.getName() + "\" required readonly>");
             out.println("</div>");
 
             out.println("<div class=\"mb-3\">");
             out.println("    <label for=\"tipoDocumento\">Tipo de Documento</label>");
-            out.println("    <input type=\"text\" class=\"form-control\" id=\"tipoDocumento\" name=\"tipoDocumento\" value=\"" +
+            out.println("    <input type=\"text\" class=\"form-control readonly-style\" id=\"tipoDocumento\" name=\"tipoDocumento\" value=\"" +
                     client.getTypeDocument().name() + "\" required readonly>");
             out.println("</div>");
 
             out.println("<div class=\"mb-3\">");
-            /*out.println("    <label for=\"documento\">Documento</label>");*/
-            out.println("    <input type=\"hidden\" class=\"form-control\" id=\"documento\" name=\"documento\" value=\"" +
+            out.println("    <input type=\"hidden\" class=\"form-control readonly-style\" id=\"documento\" name=\"documento\" value=\"" +
                     client.getNumberDocument() + "\" required readonly>");
             out.println("</div>");
 
             out.println("<div class=\"mb-3\">");
             out.println("    <label for=\"correo\">Correo</label>");
-            out.println("    <input type=\"email\" class=\"form-control\" id=\"correo\" name=\"correo\" value=\"" +
+            out.println("    <input type=\"email\" class=\"form-control readonly-style\" id=\"correo\" name=\"correo\" value=\"" +
                     client.getEmail() + "\" pattern=\"[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$\" required readonly>");
             out.println("</div>");
 

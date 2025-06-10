@@ -167,3 +167,10 @@ hr {
     height: 4px;
     background-color: #0e2238;
 }
+.readonly-style {
+    background-color: #e9ecef; /* típico de inputs disabled */
+    color: #6c757d;
+    cursor: not-allowed;
+    pointer-events: none; /* evita interacción visual */
+    border-color: #ced4da;
+}

@@ -24,6 +24,15 @@
     <title>Reserva</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        .readonly-style {
+            background-color: #e9ecef;
+            color: #95989a;
+            cursor: not-allowed;
+            pointer-events: none;
+            border-color: #ced4da;
+        }
+    </style>
 
 
 </head>
@@ -96,14 +105,14 @@
                                         cliente</p>
                                     <div class="mb-3">
                                         <label for="nombre">Nombre Completo</label>
-                                        <input type="hidden" class="form-control" id="idCLiente" name="idCLiente"
+                                        <input type="hidden" class="form-control readonly-style" id="idCLiente" name="idCLiente"
                                                required>
                                         <input type="text" class="form-control" id="nombre" name="nombre" required
                                                readonly>
                                     </div>
                                     <div class="mb-3">
                                         <label for="tipoDocumento">Tipo de Documento</label>
-                                        <select class="form-select" id="tipoDocumento" name="tipoDocumento" required>
+                                        <select class="form-select" id="tipoDocumento" name="tipoDocumento" required >
                                             <option value="#">DNI</option>
                                             <option value="#">PASAPORTE</option>
                                             <option value="#">RUC</option>
@@ -117,7 +126,7 @@
                                     <div class="mb-3">
                                         <label for="correo">Correo</label>
                                         <input type="email" class="form-control" id="correo" name="correo"
-                                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required readonly>
                                     </div>
                                 </div>
                             </div>

@@ -194,8 +194,7 @@
                         <!-- Columna Izquierda -->
                         <div class="col-md-6">
                             <div class="mt-2">
-                                <label for="fechaEntradaRecep" class="form-label"><strong>Fecha y Hora de
-                                    Entrada:</strong></label>
+                                <label for="fechaEntradaRecep" class="form-label"><strong>Fecha Programada - Entrada:</strong></label>
                                 <input type="datetime-local" class="form-control" id="fechaEntradaRecep"
                                        name="fechaEntradaRecep"
                                        value="<%= reservaPendiente == null ? fechaHoraActual : reservaPendiente.getCheckInDate()%>"
@@ -205,7 +204,7 @@
                             <%if(reservaPendiente != null){%>
                                 <div class="mt-2">
                                     <label for="fechaEntradaRealRecep" class="form-label"><strong>Fecha y Hora de
-                                        Entrada de Ingreso:</strong></label>
+                                        Ingreso:</strong></label>
                                     <input type="datetime-local" class="form-control" id="fechaEntradaRealRecep"
                                            name="fechaEntradaRealRecep"
                                            value="<%=reservaPendiente.getFecha_ingreso()==null
@@ -217,7 +216,7 @@
                         <!-- Columna Derecha -->
                         <div class="col-md-6">
                             <div class="mt-2">
-                                <label for="fechaSalida" class="form-label"><strong>Fecha y Hora de Salida:</strong></label>
+                                <label for="fechaSalida" class="form-label"><strong>Fecha Programada - Salida:</strong></label>
                                 <input type="datetime-local" class="form-control" id="fechaSalidaRecep"
                                        name="fechaSalidaRecep"
                                        min="<%= fechaHoraActual %>" required <%= camposBloqueados ? "disabled" : "" %>
