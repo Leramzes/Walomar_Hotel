@@ -169,6 +169,11 @@ public class GestionRoom {
 
         try (Connection cnn = dataSource.getConnection()) {
 
+            // Forzar la zona horaria en cada conexión del pool
+            try (PreparedStatement setTZ = cnn.prepareStatement("SET TIME ZONE 'America/Lima'")) {
+                setTZ.execute();
+            }
+
             // Ejecutar la actualización primero
             try (PreparedStatement actualizarPs = cnn.prepareStatement(actualizarPendientes)) {
                 int rowsUpdated = actualizarPs.executeUpdate();

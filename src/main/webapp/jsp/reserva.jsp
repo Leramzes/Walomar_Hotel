@@ -513,7 +513,7 @@
                 <th>Habitación</th>
                 <th>Fecha Programada - Entrada</th>
                 <th>Fecha Programada - Salida</th>
-                <th>Fecha de Real Entrada</th>
+                <th>Fecha de Ingreso</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>

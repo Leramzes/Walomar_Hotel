@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -62,8 +64,9 @@ public class FilterReservationController extends HttpServlet {
                     contenidoTD = "----";
                 } else if (fechaIngreso == null) {
                     if ("Pendiente".equalsIgnoreCase(estado) && fechaInicio != null) {
+                        ZoneId zonaPeru = ZoneId.of("America/Lima");
                         LocalDateTime inicio = fechaInicio.toLocalDateTime();
-                        LocalDateTime ahora = LocalDateTime.now();
+                        LocalDateTime ahora = ZonedDateTime.now(zonaPeru).toLocalDateTime();
                         long minutosPasados = Duration.between(inicio, ahora).toMinutes();
 
                         if (minutosPasados > 20) {
