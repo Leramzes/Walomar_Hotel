@@ -143,7 +143,7 @@ public class GestionRoom {
                         "  JOIN detalle_habitacion dh ON h.id = dh.habitacion_id " +
                         "  JOIN reservas r ON r.id = dh.reserva_id " +
                         "  WHERE r.estado_id = 1 " +
-                        "    AND r.fecha_inicio BETWEEN NOW() AND NOW() + interval '1 hour' " +
+                        "    AND r.fecha_inicio BETWEEN NOW() - interval '20 minutes' AND NOW() + interval '1 hour' " +
                         ")";
 
         String sql = "SELECT " +

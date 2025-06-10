@@ -12,6 +12,8 @@
 <%@ page import="java.time.ZonedDateTime" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.Duration" %>
+<%@ page import="java.sql.Timestamp" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -53,11 +55,11 @@
 </div>
 
 <div class="d-flex justify-content-center gap-1">
-    <div class="square bg-success" ></div>
-    <div class="square bg-info" ></div>
-    <div class="square bg-dark" ></div>
-    <div class="square bg-danger" style="background-color: orange;" ></div>
-    <div class="square bg-warning" ></div>
+    <div class="square bg-success"></div>
+    <div class="square bg-info"></div>
+    <div class="square bg-dark"></div>
+    <div class="square bg-danger" style="background-color: orange;"></div>
+    <div class="square bg-warning"></div>
 </div>
 
 <!-- Sección de Reserva -->
@@ -550,18 +552,49 @@
                 </td>
                 <td>
                     <%
-                        if ("Cancelada".equalsIgnoreCase(reservations.getReservationStatus())) {
+                        String estado = reservations.getReservationStatus();
+                        Timestamp fechaIngreso = reservations.getFecha_ingreso();
+                        Timestamp fechaInicio = reservations.getCheckInDate();
+
+                        if ("Cancelada".equalsIgnoreCase(estado)) {
                     %>
                     ----
                     <%
-                    } else if (reservations.getFecha_ingreso() == null) {
+                    } else if (fechaIngreso == null) {
+                        if ("Pendiente".equalsIgnoreCase(estado) && fechaInicio != null) {
+                            LocalDateTime inicio = fechaInicio.toLocalDateTime();
+                            LocalDateTime ahora = LocalDateTime.now();
+                            long minutosPasados = Duration.between(inicio, ahora).toMinutes();
+
+                            if (minutosPasados > 20) {
                     %>
-                    Aún no ingresó
+                    <span style="color: red;">Fuera del tiempo de tolerancia</span>
                     <%
                     } else {
                     %>
-                    <%= reservations.getFecha_ingreso() %>
+                    Aún no ingresó
                     <%
+                        }
+                    } else {
+                    %>
+                    Aún no ingresó
+                    <%
+                        }
+                    } else {
+                        // Ya tiene ingreso
+                        LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
+                        LocalDateTime ahora = LocalDateTime.now();
+                        long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
+
+                        if ("Pendiente".equalsIgnoreCase(estado) && minutosPasados > 20) {
+                    %>
+                    <span style="color: red;">Fuera del tiempo de tolerancia</span>
+                    <%
+                    } else {
+                    %>
+                    <%= fechaIngreso %>
+                    <%
+                            }
                         }
                     %>
                 </td>
@@ -574,7 +607,9 @@
                                 onclick="detalleReserva(<%=reservations.getIdReservation()%>)">
                             👁️
                         </button>
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarReserva" title="Editar Reserva">✏️</button>
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalEditarReserva" title="Editar Reserva">✏️
+                        </button>
                         <button class="btn btn-danger btn-sm" title="Cancelar Reserva">❌</button>
                     </div>
                 </td>
@@ -593,7 +628,8 @@
 
                 <% for (int i = 1; i <= totalPages; i++) { %>
                 <li class="page-item <% if (i == pagina) { %>active<% } %>">
-                    <a class="page-link" href="menu.jsp?view=reserva&page=<%= i %>"><%= i %></a>
+                    <a class="page-link" href="menu.jsp?view=reserva&page=<%= i %>"><%= i %>
+                    </a>
                 </li>
                 <% } %>
 

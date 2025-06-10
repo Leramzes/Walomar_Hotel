@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -49,6 +51,42 @@ public class FilterReservationController extends HttpServlet {
                 out.println("  <td>" + reservation.getNumberRoom() + " - " + reservation.getRoomType() + "</td>");
                 out.println("  <td>" + reservation.getCheckInDate() + "</td>");
                 out.println("  <td>" + reservation.getCheckOutDate() + "</td>");
+                String estado = reservation.getReservationStatus();
+                Timestamp fechaIngreso = reservation.getFecha_ingreso();
+                Timestamp fechaInicio = reservation.getCheckInDate();
+
+                String contenidoTD = "";
+
+                if ("Cancelada".equalsIgnoreCase(estado)) {
+                    contenidoTD = "----";
+                } else if (fechaIngreso == null) {
+                    if ("Pendiente".equalsIgnoreCase(estado) && fechaInicio != null) {
+                        LocalDateTime inicio = fechaInicio.toLocalDateTime();
+                        LocalDateTime ahora = LocalDateTime.now();
+                        long minutosPasados = Duration.between(inicio, ahora).toMinutes();
+
+                        if (minutosPasados > 20) {
+                            contenidoTD = "<span style='color: red;'>Fuera del tiempo de tolerancia</span>";
+                        } else {
+                            contenidoTD = "Aún no ingresó";
+                        }
+                    } else {
+                        contenidoTD = "Aún no ingresó";
+                    }
+                } else {
+                    // Ya tiene ingreso
+                    LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
+                    LocalDateTime ahora = LocalDateTime.now();
+                    long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
+
+                    if ("Pendiente".equalsIgnoreCase(estado) && minutosPasados > 20) {
+                        contenidoTD = "<span style='color: red;'>Fuera del tiempo de tolerancia</span>";
+                    } else {
+                        contenidoTD = fechaIngreso.toString(); // puedes formatear si lo deseas
+                    }
+                }
+
+                out.println("<td>" + contenidoTD + "</td>");
                 out.println("  <td>" + reservation.getReservationStatus() + "</td>");
                 out.println("  <td class='align-middle text-center'>");
                 out.println("    <div class='d-flex justify-content-center align-items-center gap-1'>");
