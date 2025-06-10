@@ -536,25 +536,26 @@
                     count++;
             %>
             <tr>
-                <td><%=count%>
+                <td><%= count %>
                 </td>
-                <td><%=reservations.getClientName()%>
+                <td><%= reservations.getClientName() %>
                 </td>
-                <td><%=reservations.getDocumentType()%>
+                <td><%= reservations.getDocumentType() %>
                 </td>
-                <td><%=reservations.getDocumentNumber()%>
+                <td><%= reservations.getDocumentNumber() %>
                 </td>
-                <td><%=reservations.getNumberRoom()%> - <%=reservations.getRoomType()%>
+                <td><%= reservations.getNumberRoom() %> - <%= reservations.getRoomType() %>
                 </td>
-                <td><%=reservations.getCheckInDate()%>
+                <td><%= reservations.getCheckInDate() %>
                 </td>
-                <td><%=reservations.getCheckOutDate()%>
+                <td><%= reservations.getCheckOutDate() %>
                 </td>
                 <td>
                     <%
                         String estado = reservations.getReservationStatus();
                         Timestamp fechaIngreso = reservations.getFecha_ingreso();
                         Timestamp fechaInicio = reservations.getCheckInDate();
+                        boolean permitCancel = false;
 
                         if ("Cancelada".equalsIgnoreCase(estado)) {
                     %>
@@ -567,6 +568,7 @@
                             long minutosPasados = Duration.between(inicio, ahora).toMinutes();
 
                             if (minutosPasados > 20) {
+                                permitCancel = true;
                     %>
                     <span style="color: red;">Fuera del tiempo de tolerancia</span>
                     <%
@@ -581,7 +583,6 @@
                     <%
                         }
                     } else {
-                        // Ya tiene ingreso
                         LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
                         LocalDateTime ahora = LocalDateTime.now();
                         long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
@@ -598,23 +599,34 @@
                         }
                     %>
                 </td>
-                <td><%=reservations.getReservationStatus()%>
+                <td><%= reservations.getReservationStatus() %>
                 </td>
                 <td class="align-middle text-center">
                     <div class="d-flex justify-content-center align-items-center gap-1">
                         <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle"
                                 title="Ver Detalle"
-                                onclick="detalleReserva(<%=reservations.getIdReservation()%>)">
+                                onclick="detalleReserva(<%= reservations.getIdReservation() %>)">
                             👁️
                         </button>
                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#modalEditarReserva" title="Editar Reserva">✏️
                         </button>
-                        <button class="btn btn-danger btn-sm" title="Cancelar Reserva">❌</button>
+                        <%if (permitCancel) {%>
+                        <form action="recepController" method="post">
+                            <input type="hidden" name="vista" value="reserva">
+                            <input type="hidden" name="idReserva" value="<%= reservations.getIdReservation() %>">
+                            <input type="hidden" name="roomSelect" value="<%= reservations.getIdRoom() %>">
+                            <button type="submit" name="accion" value="cancelar" class="btn btn-danger btn-sm"
+                                    title="Cancelar Reserva">❌
+                            </button>
+                        </form>
+                        <%}%>
                     </div>
                 </td>
             </tr>
-            <%}%>
+            <%
+                }
+            %>
             </tbody>
         </table>
     </div>

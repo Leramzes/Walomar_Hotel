@@ -31,6 +31,7 @@ public class RecepcionController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         String accion = req.getParameter("accion");
+        String vista = req.getParameter("vista");
         String habitacion = req.getParameter("roomSelect");//habitacion seleccionada
         int idReserva = Integer.parseInt(req.getParameter("idReserva"));
         Timestamp fechaEntradaReal = parseFecha(req.getParameter("fechaEntradaRealRecep"));
@@ -43,7 +44,11 @@ public class RecepcionController extends HttpServlet {
         if ("cancelar".equalsIgnoreCase(accion)) {
             GestionReservation.updateStatusReservation(idReserva,3);
             GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 1);
-            resp.sendRedirect("menu.jsp?view=recepcion");
+            if("reserva".equalsIgnoreCase(vista)){
+                resp.sendRedirect("menu.jsp?view=reserva");
+            }else{
+                resp.sendRedirect("menu.jsp?view=recepcion");
+            }
             return;
         }
         if ("finalizar".equalsIgnoreCase(accion)) {

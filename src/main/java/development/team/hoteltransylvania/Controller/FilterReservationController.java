@@ -54,6 +54,7 @@ public class FilterReservationController extends HttpServlet {
                 String estado = reservation.getReservationStatus();
                 Timestamp fechaIngreso = reservation.getFecha_ingreso();
                 Timestamp fechaInicio = reservation.getCheckInDate();
+                boolean permitCancel = false;
 
                 String contenidoTD = "";
 
@@ -66,6 +67,7 @@ public class FilterReservationController extends HttpServlet {
                         long minutosPasados = Duration.between(inicio, ahora).toMinutes();
 
                         if (minutosPasados > 20) {
+                            permitCancel = true;
                             contenidoTD = "<span style='color: red;'>Fuera del tiempo de tolerancia</span>";
                         } else {
                             contenidoTD = "Aún no ingresó";
@@ -96,7 +98,14 @@ public class FilterReservationController extends HttpServlet {
                 out.println("          👁️");
                 out.println("      </button>");
                 out.println("      <button class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#modalEditarReserva'>✏️</button>");
-                out.println("      <button class='btn btn-danger btn-sm'>❌</button>");
+                if (permitCancel) {
+                    out.println("<form action=\"recepController\" method=\"post\">");
+                    out.println("    <input type=\"hidden\" name=\"vista\" value=\"reserva\">");
+                    out.println("    <input type=\"hidden\" name=\"idReserva\" value=\"" + reservation.getIdReservation() + "\">");
+                    out.println("    <input type=\"hidden\" name=\"roomSelect\" value=\"" + reservation.getIdRoom() + "\">");
+                    out.println("    <button type=\"submit\" name=\"accion\" value=\"cancelar\" class=\"btn btn-danger btn-sm\" title=\"Cancelar Reserva\">❌</button>");
+                    out.println("</form>");
+                }
                 out.println("    </div>");
                 out.println("  </td>");
                 out.println("</tr>");
