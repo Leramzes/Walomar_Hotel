@@ -147,14 +147,10 @@
                                     </div>
                                 </div>
                                 <%
-                                    LocalDateTime now = LocalDateTime.now(); // Usa la zona horaria del servidor
+                                    ZoneId zonaPeru = ZoneId.of("America/Lima");
+                                    ZonedDateTime ahoraEnPeru = ZonedDateTime.now(zonaPeru);
                                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-                                    String fechaHoraActual = now.format(formatter);
-
-                                    /*ZoneId zonaPeru = ZoneId.of("America/Lima");
-                                    ZonedDateTime now = ZonedDateTime.now(zonaPeru);
-                                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-                                    String fechaHoraActual = now.format(formatter);*/
+                                    String fechaHoraActual = ahoraEnPeru.format(formatter);
                                 %>
                                 <div class="mb-3">
                                     <label for="fechaEntrada">Fecha y Hora de Entrada</label>
@@ -557,7 +553,7 @@
                     } else if (fechaIngreso == null) {
                         if ("Pendiente".equalsIgnoreCase(estado) && fechaInicio != null) {
                             LocalDateTime inicio = fechaInicio.toLocalDateTime();
-                            LocalDateTime ahora = LocalDateTime.now();
+                            LocalDateTime ahora = ZonedDateTime.now(zonaPeru).toLocalDateTime();
                             long minutosPasados = Duration.between(inicio, ahora).toMinutes();
 
                             if (minutosPasados > 20) {
@@ -576,9 +572,9 @@
                     <%
                         }
                     } else {
-                        LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
-                        LocalDateTime ahora = LocalDateTime.now();
-                        long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
+                            LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
+                            ZonedDateTime ahora = ZonedDateTime.now(zonaPeru);
+                            long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
 
                         if ("Pendiente".equalsIgnoreCase(estado) && minutosPasados > 20) {
                     %>

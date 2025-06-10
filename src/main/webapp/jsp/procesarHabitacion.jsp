@@ -5,6 +5,9 @@
 <%@ page import="development.team.hoteltransylvania.Business.GestionClient" %>
 <%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionRecepcion" %>
+<%@ page import="java.time.ZoneId" %>
+<%@ page import="java.time.ZonedDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -181,9 +184,11 @@
                 <div class="card-body">
                     <div class="row">
                         <%
-                            java.time.LocalDateTime now = java.time.LocalDateTime.now();
-                            // Formateador para datetime-local
-                            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+                            ZoneId zonaPeru = ZoneId.of("America/Lima");
+                            ZonedDateTime now = ZonedDateTime.now(zonaPeru);
+
+                            // Formateador compatible con input type="datetime-local"
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
                             String fechaHoraActual = now.format(formatter);
                         %>
                         <!-- Columna Izquierda -->

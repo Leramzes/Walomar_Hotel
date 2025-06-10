@@ -143,7 +143,9 @@ public class GestionRoom {
                         "  JOIN detalle_habitacion dh ON h.id = dh.habitacion_id " +
                         "  JOIN reservas r ON r.id = dh.reserva_id " +
                         "  WHERE r.estado_id = 1 " +
-                        "    AND r.fecha_inicio BETWEEN NOW() - interval '20 minutes' AND NOW() + interval '1 hour' " +
+                        "    AND r.fecha_inicio BETWEEN " +
+                        "      now() - interval '20 minutes' AND " +
+                        "      now() + interval '1 hour' " +
                         ")";
 
         String sql = "SELECT " +
@@ -169,7 +171,8 @@ public class GestionRoom {
 
             // Ejecutar la actualización primero
             try (PreparedStatement actualizarPs = cnn.prepareStatement(actualizarPendientes)) {
-                actualizarPs.executeUpdate(); // Ejecuta el UPDATE
+                int rowsUpdated = actualizarPs.executeUpdate();
+                System.out.println("Habitaciones actualizadas: " + rowsUpdated);
             }
 
             // Ahora sí, obtenemos las habitaciones ya actualizadas

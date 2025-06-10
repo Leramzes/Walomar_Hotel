@@ -17,7 +17,7 @@ public class DataBaseUtil {
 
     // Construimos la URL de PostgreSQL
     private static final String DB_URL = String.format(
-            "jdbc:postgresql://%s:%s/%s", DB_HOST, DB_PORT, DB_NAME
+            "jdbc:postgresql://%s:%s/%s?options=-c%%20TimeZone=America/Lima", DB_HOST, DB_PORT, DB_NAME
     );
 
     private static final int MAX_POOL_SIZE = 10;
