@@ -28,20 +28,27 @@ public class GestionReservation {
                 "    cl.nombre,\n" +
                 "    cl.tipo_documento,\n" +
                 "    cl.numero_documento,\n" +
+                "    cl.email,\n" +
+                "    cl.telefono,\n" +
                 "    h.id AS id_habitacion,\n" +
                 "    h.numero,\n" +
                 "    th.nombre AS tipo_habitacion,\n" +
                 "    r.fecha_inicio,\n" +
                 "    r.fecha_fin,\n" +
+                "    r.fecha_ingreso,\n" +
+                "    r.descuento,\n" +
+                "    r.cobro_extra,\n" +
+                "    r.adelanto,\n" +
+                "    dh.pago_total,\n" +
                 "    er.estado\n" +
                 "FROM reservas r\n" +
-                "    INNER JOIN estado_reserva er ON er.id = r.estado_id\n" +
-                "    INNER JOIN clientes cl ON r.cliente_id = cl.id\n" +
-                "    INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
-                "    INNER JOIN habitaciones h ON h.id = dh.habitacion_id\n" +
-                "    INNER JOIN tipo_habitacion th ON th.id = h.tipo_id\n" +
+                "         INNER JOIN estado_reserva er ON er.id = r.estado_id\n" +
+                "         INNER JOIN clientes cl ON r.cliente_id = cl.id\n" +
+                "         INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
+                "         INNER JOIN habitaciones h ON h.id = dh.habitacion_id\n" +
+                "         INNER JOIN tipo_habitacion th ON th.id = h.tipo_id\n" +
                 "WHERE r.id = ?\n" +
-                "ORDER BY r.id DESC";
+                "ORDER BY r.id DESC;";
 
         TableReservationDTO reservation = null;
 
@@ -59,11 +66,18 @@ public class GestionReservation {
                 reservation.setClientName(rs.getString("nombre"));
                 reservation.setDocumentType(rs.getString("tipo_documento"));
                 reservation.setDocumentNumber(rs.getString("numero_documento"));
+                reservation.setEmail(rs.getString("email"));
+                reservation.setPhone(rs.getString("telefono"));
                 reservation.setIdRoom(rs.getInt("id_habitacion"));
                 reservation.setNumberRoom(rs.getString("numero"));
                 reservation.setRoomType(rs.getString("tipo_habitacion"));
                 reservation.setCheckInDate(rs.getTimestamp("fecha_inicio"));
                 reservation.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                reservation.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
+                reservation.setDsct(rs.getInt("descuento"));
+                reservation.setCobro_extra(rs.getDouble("cobro_extra"));
+                reservation.setAdelanto(rs.getDouble("adelanto"));
+                reservation.setPago_total(rs.getDouble("pago_total"));
                 reservation.setReservationStatus(rs.getString("estado"));
 
             }

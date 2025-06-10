@@ -14,6 +14,7 @@
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="java.time.Duration" %>
 <%@ page import="java.sql.Timestamp" %>
+<%@ page import="development.team.hoteltransylvania.Model.Room" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -269,27 +270,27 @@
                         <h5>Datos del Cliente</h5>
                         <div class="mb-3">
                             <label for="nombreDetalle">Nombre Completo</label>
-                            <input type="text" class="form-control" id="nombreDetalle" readonly>
+                            <input type="text" class="form-control" id="nombreDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="tipoDocumentoDetalle">Tipo de Documento</label>
-                            <select class="form-select" id="tipoDocumentoDetalle" disabled>
+                            <select class="form-select" id="tipoDocumentoDetalle" disabled disabled>
                                 <option value="DNI">DNI</option>
-                                <option value="PASAPORTE">PASAPORTE</option>
+                                <option value="Pasaporte">PASAPORTE</option>
                                 <option value="RUC">RUC</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="documentoDetalle">Documento</label>
-                            <input type="text" class="form-control" id="documentoDetalle" readonly>
+                            <input type="text" class="form-control" id="documentoDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="correoDetalle">Correo</label>
-                            <input type="email" class="form-control" id="correoDetalle" readonly>
+                            <input type="text" class="form-control" id="correoDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="telefonoDetalle">Teléfono</label>
-                            <input type="tel" class="form-control" id="telefonoDetalle" readonly>
+                            <input type="text" class="form-control" id="telefonoDetalle" readonly disabled>
                         </div>
                     </div>
 
@@ -298,27 +299,19 @@
                         <h5>Datos del Alojamiento</h5>
                         <div class="mb-3">
                             <label for="tipoHabitacionDetalle">Tipo de Habitación</label>
-                            <select class="form-select" id="tipoHabitacionDetalle" disabled>
-                                <option value="Simple">Simple</option>
-                                <option value="Doble">Doble</option>
-                                <option value="Presidencial">Presidencial</option>
-                            </select>
+                            <input type="text" class="form-control" id="tipoHabitacionDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="habitacionDetalle">Habitación</label>
-                            <select class="form-select" id="habitacionDetalle" disabled>
-                                <option value="696">696</option>
-                                <option value="600">600</option>
-                                <option value="100">100</option>
-                            </select>
+                            <input type="text" class="form-control" id="habitacionDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="fechaEntradaDetalle">Fecha y Hora de Entrada</label>
-                            <input type="datetime-local" class="form-control" id="fechaEntradaDetalle" readonly>
+                            <input type="text" class="form-control" id="fechaEntradaDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="fechaSalidaDetalle">Fecha y Hora de Salida</label>
-                            <input type="datetime-local" class="form-control" id="fechaSalidaDetalle" readonly>
+                            <input type="text" class="form-control" id="fechaSalidaDetalle" readonly disabled>
                         </div>
                     </div>
 
@@ -327,26 +320,29 @@
                         <h5>Costo</h5>
                         <div class="mb-3">
                             <label for="descuentoDetalle">Descuento</label>
-                            <select class="form-select" id="descuentoDetalle" disabled>
-                                <option value="0%">0%</option>
-                                <option value="5%">5%</option>
-                                <option value="10%">10%</option>
-                            </select>
+                            <input type="text" class="form-control" id="descuentoDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="cobroExtraDetalle">Cobro extra</label>
-                            <input type="number" class="form-control" id="cobroExtraDetalle" readonly>
+                            <input type="text" class="form-control" id="cobroExtraDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
                             <label for="adelantoDetalle">Adelanto</label>
-                            <input type="number" class="form-control" id="adelantoDetalle" readonly>
+                            <input type="text" class="form-control" id="adelantoDetalle" readonly disabled>
                         </div>
+
                         <div class="mb-3">
                             <label for="totalPagarDetalle">Total a Pagar</label>
-                            <input type="number" class="form-control" id="totalPagarDetalle" readonly>
+                            <input type="text" class="form-control" id="totalPagarDetalle" readonly disabled>
                         </div>
+                        <div class="mb-3">
+                            <label for="restanteDetalle">Restante</label>
+                            <input type="text" class="form-control" id="restanteDetalle" readonly disabled>
+                        </div>
+
                     </div>
                 </div>
+                <h5 class="text-danger fw-bold text-center" id="proximo"></h5>
             </div>
 
             <div class="modal-footer">
@@ -378,11 +374,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="tipoDocumentoEditar" class="form-label">Tipo de Documento</label>
-                                <select class="form-select" id="tipoDocumentoEditar" disabled>
-                                    <option value="DNI">DNI</option>
-                                    <option value="PASAPORTE">PASAPORTE</option>
-                                    <option value="RUC">RUC</option>
-                                </select>
+                                <input type="text" class="form-control" id="tipoDocumentoEditar" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="documentoEditar" class="form-label">Documento</label>
@@ -390,11 +382,11 @@
                             </div>
                             <div class="mb-3">
                                 <label for="correoEditar" class="form-label">Correo</label>
-                                <input type="email" class="form-control" id="correoEditar" disabled>
+                                <input type="text" class="form-control" id="correoEditar" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="telefonoEditar" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="telefonoEditar" maxlength="9" disabled>
+                                <input type="text" class="form-control" id="telefonoEditar" disabled>
                             </div>
                         </div>
 
@@ -462,6 +454,7 @@
 
                 </form>
             </div>
+            <h5 class="text-danger fw-bold text-center" id="proximo"></h5>
         </div>
     </div>
 </div>
@@ -609,7 +602,9 @@
                             👁️
                         </button>
                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#modalEditarReserva" title="Editar Reserva">✏️
+                                data-bs-target="#modalEditarReserva" title="Editar Reserva"
+                                onclick="editarReserva(<%= reservations.getIdReservation() %>)">
+                            ✏️
                         </button>
                         <%if (permitCancel) {%>
                         <form action="recepController" method="post">

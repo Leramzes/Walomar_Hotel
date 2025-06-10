@@ -19,6 +19,10 @@ public class TableReservationDTO {
     private String email;
     private String phone;
     private String address;
+    private int dsct;
+    private double cobro_extra;
+    private double adelanto;
+    private double pago_total;
 
     public TableReservationDTO() {
     }
@@ -64,6 +68,38 @@ public class TableReservationDTO {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.reservationStatus = reservationStatus;
+    }
+
+    public double getPago_total() {
+        return pago_total;
+    }
+
+    public void setPago_total(double pago_total) {
+        this.pago_total = pago_total;
+    }
+
+    public int getDsct() {
+        return dsct;
+    }
+
+    public void setDsct(int dsct) {
+        this.dsct = dsct;
+    }
+
+    public double getCobro_extra() {
+        return cobro_extra;
+    }
+
+    public void setCobro_extra(double cobro_extra) {
+        this.cobro_extra = cobro_extra;
+    }
+
+    public double getAdelanto() {
+        return adelanto;
+    }
+
+    public void setAdelanto(double adelanto) {
+        this.adelanto = adelanto;
     }
 
     public Timestamp getFecha_ingreso() {

@@ -16,3 +16,12 @@ hr {
     height: 4px;
     background-color: #0e2238;
 }
+#totalPagarDetalle {
+    border: 2px solid green;
+    border-radius: 5px;
+}
+
+#restanteDetalle {
+    border: 2px solid red;
+    border-radius: 5px;
+}

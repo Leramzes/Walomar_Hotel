@@ -169,13 +169,42 @@ function detalleReserva(id) {
             document.getElementById("nombreDetalle").value = data.clientName;
             document.getElementById("tipoDocumentoDetalle").value = data.documentType;
             document.getElementById("documentoDetalle").value = data.documentNumber;
-            /*document.getElementById("correoDetalle").value = data.documentType;
-            document.getElementById("telefonoDetalle").value = data.documentType;
-            document.getElementById("tipoDocumentoDetalle").value = data.documentType;
-            document.getElementById("tipoDocumentoDetalle").value = data.documentType;*/
-            /*document.getElementById("documentoEditar").value = data.numberDocument;
+            document.getElementById("correoDetalle").value = data.email;
+            document.getElementById("telefonoDetalle").value = data.phone;
+            document.getElementById("tipoHabitacionDetalle").value = data.roomType;
+            document.getElementById("habitacionDetalle").value = data.numberRoom;
+            document.getElementById("fechaEntradaDetalle").value = data.checkInDate;
+            document.getElementById("fechaSalidaDetalle").value = data.checkOutDate;
+            document.getElementById("descuentoDetalle").value = data.dsct;
+            document.getElementById("cobroExtraDetalle").value = data.cobro_extra;
+            document.getElementById("adelantoDetalle").value = data.adelanto;
+            document.getElementById("totalPagarDetalle").value = data.pago_total;
+            document.getElementById("restanteDetalle").value = data.pago_total - data.adelanto;
+            document.getElementById("proximo").innerText = "Próximamente se validarán pagos";
+        })
+        .catch(error => console.error("Error al obtener datos:", error));
+}
+function editarReserva(id) {
+
+    fetch("reservatioController?action=get&idreserva=" + id)
+        .then(response => response.json())  // Convertimos la respuesta a JSON
+        .then(data => {
+
+            document.getElementById("nombreEditar").value = data.clientName;
+            document.getElementById("tipoDocumentoEditar").value = data.documentType;
+            document.getElementById("documentoEditar").value = data.documentNumber;
             document.getElementById("correoEditar").value = data.email;
-            document.getElementById("telefonoEditar").value = data.telephone;*/
+            document.getElementById("telefonoEditar").value = data.phone;
+            /*document.getElementById("tipoHabitacionDetalle").value = data.roomType;
+            document.getElementById("habitacionDetalle").value = data.numberRoom;
+            document.getElementById("fechaEntradaDetalle").value = data.checkInDate;
+            document.getElementById("fechaSalidaDetalle").value = data.checkOutDate;
+            document.getElementById("descuentoDetalle").value = data.dsct;
+            document.getElementById("cobroExtraDetalle").value = data.cobro_extra;
+            document.getElementById("adelantoDetalle").value = data.adelanto;
+            document.getElementById("totalPagarDetalle").value = data.pago_total;
+            document.getElementById("restanteDetalle").value = data.pago_total - data.adelanto;*/
+            document.getElementById("proximo").innerText = "Próximamente se validarán pagos";
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }
