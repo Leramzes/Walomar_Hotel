@@ -11,6 +11,7 @@ public class TableReservationDTO {
     private int idRoom;
     private String numberRoom;
     private String roomType;
+    private int roomTypeId;
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
     private Timestamp fecha_ingreso;
@@ -228,6 +229,14 @@ public class TableReservationDTO {
 
     public void setCheckOutDate(Timestamp checkOutDate) {
         this.checkOutDate = checkOutDate;
+    }
+
+    public int getRoomTypeId() {
+        return roomTypeId;
+    }
+
+    public void setRoomTypeId(int roomTypeId) {
+        this.roomTypeId = roomTypeId;
     }
 
     @Override

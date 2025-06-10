@@ -391,18 +391,19 @@
                             <h5>Datos del Alojamiento</h5>
                             <div class="mb-3">
                                 <label for="tipoHabitacionEditar" class="form-label">Tipo de Habitación</label>
-                                <select class="form-select" id="tipoHabitacionEditar" required>
-                                    <option value="Simple">Simple</option>
-                                    <option value="Doble">Doble</option>
-                                    <option value="Presidencial">Presidencial</option>
+                                <select class="form-select" id="tipoHabitacionEditar" name="tipoHabitacionEditar"
+                                        onchange="getRoomsByType('#tipoHabitacion')" required>
+                                    <%for (TypeRoom typeRoom : allTypeRooms) {%>
+                                    <option value="<%=typeRoom.getId()%>"><%=typeRoom.getName()%>
+                                    </option>
+                                    <%}%>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="habitacionEditar" class="form-label">Habitación</label>
-                                <select class="form-select" id="habitacionEditar" required>
-                                    <option value="696">696</option>
-                                    <option value="600">600</option>
-                                    <option value="100">100</option>
+                                <select class="form-select" id="habitacionEditar" name="habitacionEditar" required
+                                        onchange='updateTotal()'>
+                                    <option value="">Seleccione una habitación</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -449,8 +450,9 @@
                     </div>
 
                 </form>
+                <h5 class="text-danger fw-bold text-center" id="proximoEdit"></h5>
             </div>
-            <h5 class="text-danger fw-bold text-center" id="proximo"></h5>
+
         </div>
     </div>
 </div>

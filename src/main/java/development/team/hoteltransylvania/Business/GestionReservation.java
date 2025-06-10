@@ -32,6 +32,7 @@ public class GestionReservation {
                 "    cl.telefono,\n" +
                 "    h.id AS id_habitacion,\n" +
                 "    h.numero,\n" +
+                "    h.tipo_id,\n" +
                 "    th.nombre AS tipo_habitacion,\n" +
                 "    r.fecha_inicio,\n" +
                 "    r.fecha_fin,\n" +
@@ -79,6 +80,7 @@ public class GestionReservation {
                 reservation.setAdelanto(rs.getDouble("adelanto"));
                 reservation.setPago_total(rs.getDouble("pago_total"));
                 reservation.setReservationStatus(rs.getString("estado"));
+                reservation.setRoomTypeId(rs.getInt("tipo_id"));
 
             }
 

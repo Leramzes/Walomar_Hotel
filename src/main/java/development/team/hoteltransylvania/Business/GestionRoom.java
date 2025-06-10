@@ -148,6 +148,28 @@ public class GestionRoom {
                         "      now() + interval '1 hour' " +
                         ")";
 
+        String actualizarPasadas = "UPDATE habitaciones \n" +
+                "SET estado_id = 1\n" +
+                "WHERE id IN (\n" +
+                "    SELECT h.id\n" +
+                "    FROM habitaciones h\n" +
+                "    JOIN detalle_habitacion dh ON h.id = dh.habitacion_id\n" +
+                "    JOIN reservas r ON r.id = dh.reserva_id\n" +
+                "    WHERE r.estado_id = 1\n" +
+                "      AND r.fecha_inicio < now() - interval '20 minutes'\n" +
+                ");";
+
+        String actualizarReservasPasTolerancia = "UPDATE reservas\n" +
+                "SET estado_id = 3\n" +
+                "WHERE id IN (\n" +
+                "    SELECT r.id\n" +
+                "    FROM reservas r\n" +
+                "    JOIN detalle_habitacion dh ON r.id = dh.reserva_id\n" +
+                "    JOIN habitaciones h ON dh.habitacion_id = h.id\n" +
+                "    WHERE r.estado_id = 1\n" +
+                "      AND r.fecha_inicio < now() - interval '20 minutes'\n" +
+                ");";
+
         String sql = "SELECT " +
                 "    h.id, " +
                 "    h.numero, " +
@@ -176,7 +198,13 @@ public class GestionRoom {
 
             // Ejecutar la actualización primero
             try (PreparedStatement actualizarPs = cnn.prepareStatement(actualizarPendientes)) {
-                int rowsUpdated = actualizarPs.executeUpdate();
+                actualizarPs.executeUpdate();
+            }
+            try (PreparedStatement actualizarPas = cnn.prepareStatement(actualizarPasadas)) {
+                actualizarPas.executeUpdate();
+            }
+            try (PreparedStatement actualizarPasTol = cnn.prepareStatement(actualizarReservasPasTolerancia)) {
+                actualizarPasTol.executeUpdate();
             }
 
             // Ahora sí, obtenemos las habitaciones ya actualizadas

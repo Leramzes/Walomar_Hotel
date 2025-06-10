@@ -191,20 +191,20 @@ function editarReserva(id) {
         .then(data => {
 
             document.getElementById("nombreEditar").value = data.clientName;
+            document.querySelector("#nombreEditar").disabled = true;
             document.getElementById("tipoDocumentoEditar").value = data.documentType;
+            document.querySelector("#tipoDocumentoEditar").disabled = true;
             document.getElementById("documentoEditar").value = data.documentNumber;
+            document.querySelector("#documentoEditar").disabled = true;
             document.getElementById("correoEditar").value = data.email;
+            document.querySelector("#correoEditar").disabled = true;
             document.getElementById("telefonoEditar").value = data.phone;
-            /*document.getElementById("tipoHabitacionDetalle").value = data.roomType;
-            document.getElementById("habitacionDetalle").value = data.numberRoom;
-            document.getElementById("fechaEntradaDetalle").value = data.checkInDate;
-            document.getElementById("fechaSalidaDetalle").value = data.checkOutDate;
-            document.getElementById("descuentoDetalle").value = data.dsct;
-            document.getElementById("cobroExtraDetalle").value = data.cobro_extra;
-            document.getElementById("adelantoDetalle").value = data.adelanto;
-            document.getElementById("totalPagarDetalle").value = data.pago_total;
-            document.getElementById("restanteDetalle").value = data.pago_total - data.adelanto;*/
-            document.getElementById("proximo").innerText = "Próximamente se validarán pagos";
+            document.querySelector("#telefonoEditar").disabled = true;
+            document.getElementById("tipoHabitacionEditar").value = data.roomTypeId;
+            /*document.getElementById("habitacionEditar").value = data.numberRoom;
+            document.getElementById("fechaEntradaEditar").value = data.checkInDate;
+            document.getElementById("fechaSalidaEditar").value = data.checkOutDate;*/
+            document.getElementById("proximoEdit").innerText = "Próximamente se editara fecha check-out";
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }
