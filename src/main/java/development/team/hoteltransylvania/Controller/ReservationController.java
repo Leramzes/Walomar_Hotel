@@ -104,6 +104,9 @@ public class ReservationController extends HttpServlet {
                 resp.sendRedirect("menu.jsp?view=reserva&error=fechas_invalidas"); //aqui manejar alerta
                 return; // Evita que continúe con el proceso
             }
+            if (fechaEntradaLocal.isAfter(fechaSalidaLocal)) {
+
+            }
 
             boolean puedeReservar = validarReserva(fechaEntrada, fechaSalida, reservaAsociate);
 

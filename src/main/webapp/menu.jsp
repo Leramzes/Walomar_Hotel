@@ -858,6 +858,13 @@
             text: 'No se puede reservar porque hay un choque con otra reserva.',
         });
     }
+    if (params.get("error") === "fechas_invalidas") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'La fecha de entrada es posterior a la de salida.',
+        });
+    }
 </script>
 <script>
 
