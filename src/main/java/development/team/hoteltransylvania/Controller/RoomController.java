@@ -59,7 +59,11 @@ public class RoomController extends HttpServlet {
             case "disponible":
                 int roomid = Integer.parseInt(req.getParameter("idroom"));
                 int availability = Integer.parseInt(req.getParameter("availability"));
-                GestionRoom.updateAvailability(roomid,availability);
+                if(!GestionRoom.hasUpcomingReservations(roomid)) {
+                    GestionRoom.updateAvailability(roomid,availability);
+
+                }
+
                 resp.sendRedirect("menu.jsp?view=habitaciones");
                 break;
             case "update":

@@ -212,16 +212,40 @@ function editarReserva(id) {
 function editarRoom(id) {
     document.getElementById("inputEditarHabitacion").value = id;
 
-    fetch("roomcontroller?action=get&idroom=" + id)
-        .then(response => response.json())  // Convertimos la respuesta a JSON
+    fetch(`checkreservations?id=${id}`)
+        .then(res => res.json())
         .then(data => {
-            // Llenar los campos del formulario con los datos obtenidos
-            document.getElementById("nombreEditar").value = data.number;
-            document.getElementById("tipoeditar").value = data.typeRoom.id;
-            document.getElementById("precioEditar").value = data.price;
-            document.getElementById("estatusEditar").value = data.statusRoom;
-        })
-        .catch(error => console.error("Error al obtener datos:", error));
+            if (data.hasReservations) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'No se puede Editar',
+                    text: 'Esta habitación no se puede editar debido a que tiene reservas próximas/pendientes.'
+                });
+            } else {
+                fetch("roomcontroller?action=get&idroom=" + id)
+                    .then(response => response.json())  // Convertimos la respuesta a JSON
+                    .then(data => {
+                        // Llenar los campos del formulario con los datos obtenidos
+                        document.getElementById("nombreEditar").value = data.number;
+                        document.getElementById("tipoeditar").value = data.typeRoom.id;
+                        document.getElementById("precioEditar").value = data.price;
+                        document.getElementById("estatusEditar").value = data.statusRoom;
+                        // ✅ Ahora que todo está listo, abre el modal manualmente
+                        const modal = new bootstrap.Modal(document.getElementById("modalEditarHabitacion"));
+                        modal.show();
+                    })
+                    .catch(error => console.error("Error al obtener datos:", error));
+            }
+        }).catch(error => {
+        console.error("Error en fetch:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al conectar',
+            text: 'No se pudo verificar la habitación. Revisa la ruta del servlet.'
+        });
+    });
+
+
 }
 
 function editarTypeRoom(id) {

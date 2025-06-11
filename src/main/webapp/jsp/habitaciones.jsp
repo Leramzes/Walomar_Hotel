@@ -161,14 +161,6 @@
               <input type="number" class="form-control" id="precioEditar" name="precioedit" required>
             </div>
             <div class="mb-3">
-              <label for="tarifaEditar">Tarifa</label>
-              <select class="form-select" id="tarifaEditar" required>
-                <option value="23">24 hr.</option>
-                <option value="12">12 hr.</option>
-                <option value="XX">XX hr.</option>
-              </select>
-            </div>
-            <div class="mb-3">
               <label for="estatusEditar">Estatus</label>
               <select class="form-select" id="estatusEditar" name="statusedit">
                 <option value="libre">Libre</option>
@@ -219,13 +211,12 @@
           <td>24hr.</td>
           <td><%= room.getStatusRoom().getName() %></td>
           <td class="d-flex justify-content-center gap-1">
+            <input type="hidden" id="idroom" name="idroom" value="<%= room.getId() %>">
             <button class="btn btn-warning btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalEditarHabitacion"
                     onclick="editarRoom(<%= room.getId() %>)">
               ✏️
             </button>
-            <form action="roomcontroller" method="post">
+            <form action="roomcontroller" method="post" id="roomInactive">
               <input type="hidden" name="idroom" value="<%= room.getId() %>">
               <input type="hidden" name="availability" value="<%=room.getAvailable()%>">
               <input type="hidden" name="actionRoom" value="disponible">

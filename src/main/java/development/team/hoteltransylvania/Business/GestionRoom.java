@@ -95,6 +95,31 @@ public class GestionRoom {
 
         return result;
     }
+    public static boolean hasUpcomingReservations(int idRoom) {
+        String sql = "SELECT\n" +
+                "    count(*)\n" +
+                "FROM habitaciones h\n" +
+                "         JOIN detalle_habitacion dh ON h.id = dh.habitacion_id\n" +
+                "         JOIN reservas r ON r.id = dh.reserva_id\n" +
+                "         JOIN estado_habitacion e ON h.estado_id = e.id\n" +
+                "WHERE dh.habitacion_id=? and r.estado_id in (1,4);";
+        boolean result = false;
+
+        try(Connection cnn = dataSource.getConnection();
+            PreparedStatement ps = cnn.prepareStatement(sql)){
+            ps.setInt(1, idRoom);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    result = rs.getInt(1) > 0;
+                }
+            }
+
+        }catch (SQLException e){
+            LOGGER.severe("Error room not found. " + idRoom + ": " + e.getMessage());
+        }
+        return result;
+    }
     public static boolean updateAvailability(int roomId, int availability) {
         String checkSql = "SELECT COUNT(*) FROM habitaciones WHERE id = ?";
         String updateSql = "UPDATE habitaciones SET disponible = ? WHERE id = ?";

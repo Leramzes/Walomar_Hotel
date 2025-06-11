@@ -676,6 +676,57 @@
             }
 
         });
+        // Alerta para desactivar una Habitacion
+        document.getElementById('contenido').addEventListener('submit', function (e) {
+            if (e.target.id === 'roomInactive') {
+                e.preventDefault();
+                const roomId = e.target.querySelector('input[name="idroom"]').value;
+                const isDisponible = e.target.querySelector('input[name="availability"]').value === '1';
+
+                const title = isDisponible ? '¿Desea desactivar esta habitación?' : '¿Desea activar esta habitación?';
+                const text = isDisponible
+                    ? 'Se desactivará la habitación y no estará disponible hasta que la active.'
+                    : 'Se activará la habitación y estará disponible para reservas.';
+
+                // Consulta al backend si tiene reservas asociadas
+                fetch(`checkreservations?id=`+roomId)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.hasReservations) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se puede desactivar',
+                                text: 'Esta habitación tiene reservas próximas/pendientes.'
+                            });
+                        } else {
+                            // Mostrar alerta de confirmación
+                            Swal.fire({
+                                title: title,
+                                text: text,
+                                icon: 'info',
+                                showCancelButton: true,
+                                confirmButtonColor: '#198754',
+                                cancelButtonColor: '#6c757d',
+                                confirmButtonText: isDisponible ? 'Sí, desactivar' : 'Sí, activar',
+                                cancelButtonText: 'Cancelar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    e.target.submit();
+                                }
+                            });
+                        }
+                    }).catch(error => {
+                    console.error("Error en fetch:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al conectar',
+                        text: 'No se pudo verificar la habitación. Revisa la ruta del servlet.'
+                    });
+                });
+            }
+        });
     });
 
 </script>
