@@ -689,7 +689,7 @@
                     : 'Se activará la habitación y estará disponible para reservas.';
 
                 // Consulta al backend si tiene reservas asociadas
-                fetch(`checkreservations?id=`+roomId)
+                fetch(`checkreservations?id=` + roomId)
                     .then(res => res.json())
                     .then(data => {
                         if (data.hasReservations) {
@@ -872,6 +872,7 @@
         }
     });
 </script>
+
 <script>
     const params = new URLSearchParams(window.location.search);
     if (params.get("error") === "pisoexistente") {
@@ -917,26 +918,57 @@
         });
     }
 </script>
+
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("✅ JS cargado para vista previa de imagen");
 
-    document.getElementById('contenido').addEventListener('submit', function (e) {
-        if (e.target.id === 'formHabitacion') {
-            const pisoSeleccionado = document.getElementById("piso").value.trim();
-            const nombreHabitacion = document.getElementById("nombre").value.trim();
+        document.addEventListener('shown.bs.modal', function (event) {
+            // Solo queremos actuar si es el modalCambiarImg
+            const modal = event.target;
+            if (modal.id === 'modalCambiarImg') {
+                console.log("👁️ Modal abierto, agregando listener para input de imagen");
 
-            if (!nombreHabitacion.startsWith(pisoSeleccionado.toString())) {
-                e.preventDefault();
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Validación',
-                    text: 'El número de habitación debe comenzar con el número del piso. Ejemp: '+ pisoSeleccionado +'--).',
-                    confirmButtonColor: '#198754',
-                    confirmButtonText: 'Ok',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
+                const input = modal.querySelector('#nuevaImagen');
+                const preview = modal.querySelector('#preview');
+
+                if (input && preview) {
+                    input.addEventListener('change', function () {
+                        const file = this.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                preview.src = e.target.result;
+                                preview.style.display = 'block';
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            preview.style.display = 'none';
+                        }
+                    }, { once: false }); // Importante: hace que se agregue muchas veces
+                }
+            }
+        });
+    });
+    document.addEventListener('hidden.bs.modal', function (event) {
+        if (event.target.id === 'modalCambiarImg') {
+            const preview = event.target.querySelector('#preview');
+            if (preview) {
+                preview.src = '';
+                preview.style.display = 'none';
             }
         }
+    });
+    modal.addEventListener('hidden.bs.modal', function () {
+        const input = modal.querySelector('#nuevaImagen');
+        const preview = modal.querySelector('#preview');
+
+        // Limpiar el input
+        input.value = '';
+
+        // Ocultar y limpiar la vista previa
+        preview.src = '';
+        preview.style.display = 'none';
     });
 </script>
 </body>
