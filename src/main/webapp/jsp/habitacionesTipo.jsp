@@ -156,13 +156,13 @@
                       data-bs-target="#modalEditarTipo"
                       onclick="editarTypeRoom(<%=typeRoom.getId()%>)">✏️</button>
               <% if (typeRoom.getStatus().equals("Activo")) { %>
-              <form action="typeroomcontroller" method="post">
+              <form id="typeRoomInactive" action="typeroomcontroller" method="post">
                 <input type="hidden" name="idType" value="<%=typeRoom.getId()%>">
                 <input type="hidden" name="actionTypeRoom" value="inactivate">
                 <button class="btn btn-danger btn-sm">❌</button>
               </form>
               <% } else { %>
-              <form action="typeroomcontroller" method="post">
+              <form id="typeRoomInactive" action="typeroomcontroller" method="post">
                 <input type="hidden" name="idType" value="<%=typeRoom.getId()%>">
                 <input type="hidden" name="actionTypeRoom" value="activate">
                 <button class="btn btn-success btn-sm">✅</button>

@@ -1,6 +1,7 @@
 package development.team.hoteltransylvania.Controller;
 
 import com.google.gson.Gson;
+import development.team.hoteltransylvania.Business.GestionRoom;
 import development.team.hoteltransylvania.Business.GestionTypeRoom;
 import development.team.hoteltransylvania.Model.TypeRoom;
 import jakarta.servlet.ServletException;
@@ -63,7 +64,9 @@ public class TypeRoomController extends HttpServlet {
                 break;
             case "inactivate":
                 int idType = Integer.parseInt(req.getParameter("idType"));
-                GestionTypeRoom.updateStatus(idType, "Inactivo");
+                if(!GestionTypeRoom.hasUpcomingReservations(idType)) {
+                    GestionTypeRoom.updateStatus(idType, "Inactivo");
+                }
                 resp.sendRedirect("menu.jsp?view=habitacionesTipo");
                 break;
             case "activate":

@@ -727,6 +727,57 @@
                 });
             }
         });
+        // Alerta para desactivar un tipo de habitación
+        document.getElementById('contenido').addEventListener('submit', function (e) {
+            if (e.target.id === 'typeRoomInactive') {
+                e.preventDefault();
+                const typeRoomId = e.target.querySelector('input[name="idType"]').value;
+                const isDisponible = e.target.querySelector('input[name="actionTypeRoom"]').value === 'activate';
+
+                const title = isDisponible ? '¿Desea activar este tipo de habitación?' : '¿Desea desactivar este tipo de habitación?';
+                const text = isDisponible
+                    ? 'Se activará este tipo de habitación y sus habitaciones asociadas.'
+                    : 'Se desactivará este tipo de habitación y sus habitaciones asociadas.';
+
+                // Consulta al backend si tiene reservas asociadas
+                fetch(`checkreservationstyperoom?id=` + typeRoomId)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.hasReservations) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se puede desactivar',
+                                text: 'Este tipo de habitación tiene habitaciones asociadas a reservas próximas/pendientes.'
+                            });
+                        } else {
+                            // Mostrar alerta de confirmación
+                            Swal.fire({
+                                title: title,
+                                text: text,
+                                icon: 'info',
+                                showCancelButton: true,
+                                confirmButtonColor: '#198754',
+                                cancelButtonColor: '#6c757d',
+                                confirmButtonText: isDisponible ? 'Sí, activar' : 'Sí, desactivar',
+                                cancelButtonText: 'Cancelar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    e.target.submit();
+                                }
+                            });
+                        }
+                    }).catch(error => {
+                    console.error("Error en fetch:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al conectar',
+                        text: 'No se pudo verificar la habitación. Revisa la ruta del servlet.'
+                    });
+                });
+            }
+        });
     });
 
 </script>
@@ -979,7 +1030,7 @@
     });
 </script>
 <script>
-    //validacion correo
+    //validacion informacion hotelera
     document.addEventListener('submit', function (e) {
         const form = e.target;
 

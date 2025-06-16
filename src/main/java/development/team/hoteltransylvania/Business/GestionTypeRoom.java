@@ -355,6 +355,32 @@ public class GestionTypeRoom {
         System.out.println("Empleados filtrados: " + filteredTypeRooms);
         return filteredTypeRooms;
     }
+
+    public static boolean hasUpcomingReservations(int idTypeRoom) {
+        String sql = "SELECT count(*)\n" +
+                "FROM habitaciones h\n" +
+                "         JOIN estado_habitacion e ON h.estado_id = e.id\n" +
+                "         JOIN detalle_habitacion dh ON h.id = dh.habitacion_id\n" +
+                "         JOIN reservas r ON dh.reserva_id = r.id\n" +
+                "WHERE h.tipo_id = ?\n" +
+                "  AND r.estado_id IN (1, 4);";
+        boolean result = false;
+
+        try(Connection cnn = dataSource.getConnection();
+            PreparedStatement ps = cnn.prepareStatement(sql)){
+            ps.setInt(1, idTypeRoom);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    result = rs.getInt(1) > 0;
+                }
+            }
+
+        }catch (SQLException e){
+            LOGGER.severe("Error type room not found " + idTypeRoom + ": " + e.getMessage());
+        }
+        return result;
+    }
 }
 
 
