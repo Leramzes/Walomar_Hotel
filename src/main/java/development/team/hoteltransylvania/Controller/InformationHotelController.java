@@ -36,30 +36,37 @@ public class InformationHotelController extends HttpServlet {
                 InformationHotel Hotel = new InformationHotel(1, nombreHotel, ubicacionHotel, telefonoHotel, correoHotel);
                 GestionInformationHotel.updateInformationHotel(Hotel);
 
-                resp.sendRedirect("menu.jsp");
+                resp.sendRedirect("menu.jsp?view=informacionHotelera");
                 break;
             case 2:
                 Part filePart = req.getPart("nuevaImagen");
-                System.out.println(filePart.getSubmittedFileName());
-
                 /*if (filePart != null && filePart.getSize() > 0) {
-                    String fileName = "hotel_logo_" + System.currentTimeMillis() + ".png"; // Nombre único
-                    String relativePath = "img/" + fileName;
-                    String absolutePath = getServletContext().getRealPath("/") + relativePath;
+                    // Nombre del archivo con timestamp
+                    String fileName = "hotel_logo_" + System.currentTimeMillis() + ".png";
 
-                    // Crear carpeta si no existe
-                    File uploadDir = new File(getServletContext().getRealPath("/") + "img/");
-                    if (!uploadDir.exists()) uploadDir.mkdirs();
+                    // Ruta absoluta real hacia la carpeta 'img' dentro de 'webapp'
+                    String imgFolderPath = getServletContext().getRealPath("/img");
 
-                    // Guardar archivo
-                    filePart.write(absolutePath);
+                    // Asegurarse de que el directorio existe
+                    File uploadDir = new File(imgFolderPath);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdirs();
+                    }
 
+                    // Ruta completa donde se guardará el archivo
+                    String fullImagePath = imgFolderPath + File.separator + fileName;
 
-                    // Ejemplo:
-                    //HotelDAO dao = new HotelDAO();
-                    //dao.actualizarLogo(relativePath); // Método que actualiza en BD
+                    // Guardar archivo en ruta
+                    filePart.write(fullImagePath);
+                    //Guardar ruta de archivo en BD
+                    GestionInformationHotel.updateImgHotel(fullImagePath,1);
 
-                    resp.sendRedirect("menu.jsp");
+                    // Ruta relativa para acceder a la imagen desde el navegador (útil si la guardas en BD)
+                    *//*String imageUrl = req.getContextPath() + "/img/" + fileName;
+                    System.out.println("Imagen guardada correctamente en: " + imageUrl);*//*
+
+                    // Redirección (puedes pasar imageUrl como parámetro si quieres mostrar la imagen luego)
+                    resp.sendRedirect("menu.jsp?view=informacionHotelera");
                 }*/
                 break;
         }

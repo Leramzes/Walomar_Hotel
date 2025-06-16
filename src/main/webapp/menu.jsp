@@ -917,6 +917,13 @@
             text: 'La fecha de entrada es posterior a la de salida.',
         });
     }
+    if (params.get("error") === "tipo_no_valido") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El archivo suido no es una imagen válida.',
+        });
+    }
 </script>
 
 <script>
@@ -969,6 +976,80 @@
         // Ocultar y limpiar la vista previa
         preview.src = '';
         preview.style.display = 'none';
+    });
+</script>
+<script>
+    //validacion correo
+    document.addEventListener('submit', function (e) {
+        const form = e.target;
+
+        if (form && form.id === 'formHotel') {
+            e.preventDefault(); // Detener siempre el envío al inicio
+
+            const nombreHotel = form.querySelector('#nombreHotel');
+            const telefonoHotel = form.querySelector('#telefonoHotel');
+            const correoHotel = form.querySelector('#correoHotel');
+            const ubicacionHotel = form.querySelector('#ubicacionHotel');
+
+            const mostrarAlerta = (mensaje) => {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campo inválido',
+                    text: mensaje,
+                    timer: 3000,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            };
+
+            // Validaciones
+            if (!nombreHotel.value.trim()) {
+                mostrarAlerta('El nombre del hotel no puede estar vacío.');
+                return;
+            }
+
+            if (!telefonoHotel.value.trim()) {
+                mostrarAlerta('El teléfono no puede estar vacío.');
+                return;
+            }
+
+            if (!ubicacionHotel.value.trim()) {
+                mostrarAlerta('La ubicación no puede estar vacía.');
+                return;
+            }
+
+            const correo = correoHotel.value.trim();
+            const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+
+            if (!correo) {
+                mostrarAlerta('El correo no puede estar vacío.');
+                return;
+            }
+
+            if (!regexCorreo.test(correo)) {
+                mostrarAlerta('El correo no tiene un formato válido. Ej: ejemplo@dominio.com');
+                return;
+            }
+
+            // Si pasó todas las validaciones, mostrar la alerta de confirmación
+            Swal.fire({
+                title: '¿Deseas guardar los datos?',
+                text: 'Se actualizará la información del hotel',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#198754',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Se vuelve a enviar el formulario manualmente
+                }
+            });
+        }
     });
 </script>
 </body>

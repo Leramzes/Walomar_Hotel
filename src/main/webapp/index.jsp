@@ -1,3 +1,5 @@
+<%@ page import="development.team.hoteltransylvania.Model.InformationHotel" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionInformationHotel" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,13 +13,17 @@
     <link rel="stylesheet" href="css/login.css">
 </head>
 
+<%
+    //InformationHotel hotelInfo = GestionInformationHotel.getInformationHotel();
+%>
+
 <body>
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="row border rounded-5 p-3 bg-white shadow box-area">
         <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box p-3"
              style="background: white;">
             <div class="featured-image">
-                <img src="img/imagenWalomar.jpg" alt="Hotel Transylvania" class="img-fluid"
+                <img src="${pageContext.request.contextPath}/img/imagenWalomar.jpg" alt="Hotel Transylvania" class="img-fluid"
                      style="max-width: 100%; height: auto;">
             </div>
         </div>

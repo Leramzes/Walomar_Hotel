@@ -83,15 +83,15 @@
     <div class="card-body">
         <!-- Imagen actual del hotel -->
         <div class="text-center mb-3">
-            <img id="previewLogo" src="${pageContext.request.contextPath}/img/hotelLogo.png" class="img-fluid"
-                 style="max-width: 50%; height: auto;" alt="Hotel Transylvania">
+            <img id="previewLogo" src="${pageContext.request.contextPath}/img/imagenWalomar.jpg" class="img-fluid"
+                 style="max-width: 50%; height: auto;" alt="Hotel Transylvania" style="max-width: 100%; height: auto;">
         </div>
 
-        <div class="text-center mb-3">
+        <%--<div class="text-center mb-3">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCambiarImg">
                 <i class="fas fa-plus"></i> Cambiar Imagen
             </button>
-        </div>
+        </div>--%>
 
         <form id="formHotel" action="hotelcontrol" method="post">
             <input type="hidden" id="editIndex">
@@ -104,7 +104,11 @@
             <div class="mb-3">
                 <label for="telefonoHotel">Teléfono</label>
                 <input type="text" class="form-control" id="telefonoHotel" name="telefonoHotel"
-                       value="<%=hotelInfo.getPhone()%>" maxlength="9" required>
+                       value="<%=hotelInfo.getPhone()%>"
+                       pattern="\d{9}"
+                       oninput="this.value = this.value.replace(/\D/g, '').slice(0,9); this.setCustomValidity('')"
+                       oninvalid="this.setCustomValidity('Debe ingresar exactamente 9 dígitos numéricos')"
+                       required>
             </div>
             <div class="mb-3">
                 <label for="correoHotel">Correo</label>

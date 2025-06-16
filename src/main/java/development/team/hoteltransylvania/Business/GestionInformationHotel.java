@@ -16,7 +16,7 @@ public class GestionInformationHotel {
     private static final Logger LOGGER = LoggerConfifg.getLogger(GestionRoom.class);
 
     public static InformationHotel getInformationHotel() {
-        String sql = "SELECT id, nombre, telefono, email, ubicacion FROM informacion_hotel LIMIT 1";
+        String sql = "SELECT id, nombre, telefono, email, ubicacion, ruta_img FROM informacion_hotel LIMIT 1";
         InformationHotel hotel = null;
 
         try (Connection cnn = dataSource.getConnection();
@@ -30,6 +30,7 @@ public class GestionInformationHotel {
                 hotel.setPhone(rs.getString("telefono"));
                 hotel.setEmail(rs.getString("email"));
                 hotel.setAddress(rs.getString("ubicacion"));
+                hotel.setImg(rs.getString("img"));
             } else {
                 LOGGER.warning("No se encontró ningún registro en la tabla tipo_habitacion.");
             }
@@ -63,6 +64,30 @@ public class GestionInformationHotel {
             }
         } catch (SQLException e) {
             LOGGER.severe("Error updating InformationHotel " + Hotel.getId() + ": " + e.getMessage());
+        }
+        return result;
+    }
+
+    public static boolean updateImgHotel(String img, int hotelId) {
+        String sql = "UPDATE informacion_hotel SET ruta_img = ? " +
+                "WHERE id = ?";
+        boolean result = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setString(1, img);
+            ps.setInt(2, hotelId);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                LOGGER.info("InformationHotel " + hotelId + " img update successfully.");
+                result = true;
+            } else {
+                LOGGER.warning("Error updating InformationHotel found with ID: " + hotelId);
+            }
+        } catch (SQLException e) {
+            LOGGER.severe("Error updating InformationHotel " + hotelId + ": " + e.getMessage());
         }
         return result;
     }
