@@ -120,7 +120,7 @@
 
             <div class="mb-3">
               <label for="precio">Precio</label>
-              <input type="number" class="form-control" id="precio" name="precio" required>
+              <input type="number" class="form-control" id="precio" name="precio" required min="80">
             </div>
 
             <button type="submit" class="btn btn-success">Guardar</button>
