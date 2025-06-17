@@ -2,6 +2,7 @@ package development.team.hoteltransylvania.Controller;
 
 import com.google.gson.Gson;
 import development.team.hoteltransylvania.Business.GestionFloor;
+import development.team.hoteltransylvania.Business.GestionTypeRoom;
 import development.team.hoteltransylvania.Model.Floor;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -65,7 +66,9 @@ public class FloorController extends HttpServlet {
                 break;
             case "inactivate":
                 int idFloor = Integer.parseInt(req.getParameter("idFloor"));
-                GestionFloor.updateStatus(idFloor, "Inactivo");
+                if(!GestionFloor.hasUpcomingReservations(idFloor)) {
+                    GestionFloor.updateStatus(idFloor, "Inactivo");
+                }
                 resp.sendRedirect("menu.jsp?view=pisos");
                 break;
             case "activate":

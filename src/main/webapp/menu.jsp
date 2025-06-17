@@ -778,6 +778,57 @@
                 });
             }
         });
+        // Alerta para desactivar un piso
+        document.getElementById('contenido').addEventListener('submit', function (e) {
+            if (e.target.id === 'floorInactive') {
+                e.preventDefault();
+                const floorId = e.target.querySelector('input[name="idFloor"]').value;
+                const isDisponible = e.target.querySelector('input[name="actionFloor"]').value === 'activate';
+
+                const title = isDisponible ? '¿Desea activar este piso?' : '¿Desea desactivar este piso?';
+                const text = isDisponible
+                    ? 'Se activará este piso y sus habitaciones asociadas.'
+                    : 'Se desactivará este piso y sus habitaciones asociadas.';
+
+                // Consulta al backend si tiene reservas asociadas
+                fetch(`checkreservationbyroom?id=` + floorId)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.hasReservations) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se puede desactivar',
+                                text: 'Este piso tiene habitaciones asociadas a reservas próximas/pendientes.'
+                            });
+                        } else {
+                            // Mostrar alerta de confirmación
+                            Swal.fire({
+                                title: title,
+                                text: text,
+                                icon: 'info',
+                                showCancelButton: true,
+                                confirmButtonColor: '#198754',
+                                cancelButtonColor: '#6c757d',
+                                confirmButtonText: isDisponible ? 'Sí, activar' : 'Sí, desactivar',
+                                cancelButtonText: 'Cancelar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    e.target.submit();
+                                }
+                            });
+                        }
+                    }).catch(error => {
+                    console.error("Error en fetch:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al conectar',
+                        text: 'No se pudo verificar el piso. Revisa la ruta del servlet.'
+                    });
+                });
+            }
+        });
     });
 
 </script>

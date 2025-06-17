@@ -161,13 +161,13 @@
                                 onclick="editarFloor(<%=floors.getId()%>)">✏️
                         </button>
                         <% if (floors.getStatus().equals("Activo")) { %>
-                        <form action="floorcontroller" method="post">
+                        <form id="floorInactive" action="floorcontroller" method="post">
                             <input type="hidden" name="idFloor" value="<%=floors.getId()%>">
                             <input type="hidden" name="actionFloor" value="inactivate">
                             <button class="btn btn-danger btn-sm">❌</button>
                         </form>
                         <% } else { %>
-                        <form action="floorcontroller" method="post">
+                        <form id="floorInactive" action="floorcontroller" method="post">
                             <input type="hidden" name="idFloor" value="<%=floors.getId()%>">
                             <input type="hidden" name="actionFloor" value="activate">
                             <button class="btn btn-success btn-sm">✅</button>

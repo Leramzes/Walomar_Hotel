@@ -203,7 +203,31 @@ public class GestionFloor {
                                 (estadoLower.isEmpty() || floor.getStatus().equalsIgnoreCase(estadoLower))
                 ).count();
     }
+    public static boolean hasUpcomingReservations(int idFloor) {
+        String sql = "SELECT count(*)\n" +
+                "FROM habitaciones h\n" +
+                "         JOIN estado_habitacion e ON h.estado_id = e.id\n" +
+                "         JOIN detalle_habitacion dh ON h.id = dh.habitacion_id\n" +
+                "         JOIN reservas r ON dh.reserva_id = r.id\n" +
+                "WHERE h.piso_id = ?\n" +
+                "  AND r.estado_id IN (1, 4);";
+        boolean result = false;
 
+        try(Connection cnn = dataSource.getConnection();
+            PreparedStatement ps = cnn.prepareStatement(sql)){
+            ps.setInt(1, idFloor);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    result = rs.getInt(1) > 0;
+                }
+            }
+
+        }catch (SQLException e){
+            LOGGER.severe("Error floor not found " + idFloor + ": " + e.getMessage());
+        }
+        return result;
+    }
     public static int getTotalFloors() {
         String sql = "SELECT COUNT(*) FROM pisos";
         try (Connection cnn = dataSource.getConnection();
