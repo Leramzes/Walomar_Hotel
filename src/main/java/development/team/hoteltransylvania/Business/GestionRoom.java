@@ -330,6 +330,7 @@ public class GestionRoom {
                 "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
                 "JOIN estado_habitacion e ON h.estado_id = e.id " +
                 "JOIN pisos p ON p.id = h.piso_id " +
+                "WHERE p.estatus='Activo' AND t.estatus='Activo' " +
                 "ORDER BY h.numero ASC " +
                 "LIMIT ? OFFSET ?";
 
