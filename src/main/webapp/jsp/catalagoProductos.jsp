@@ -86,22 +86,14 @@
           <form id="formEditarCatalogoProducto" action="productcontrol" method="post">
             <input type="hidden" name="actionproduct" value="update">
             <input type="hidden" name="idproduct" id="inputEditarIdProducto">
-
-            <div class="mb-3">
-              <label for="tipoEditar">Tipo</label>
-              <select class="form-select" name="typeproduct" id="tipoEditar" required>
-                <option value="Producto">Producto</option>
-                <option value="Servicio">Servicio</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </div>
             <div class="mb-3">
               <label for="nombreEditar">Nombre</label>
               <input type="text" class="form-control" name="nameproduct" id="nombreEditar" required>
             </div>
             <div class="mb-3">
               <label for="precioVentaEditar">Precio Venta</label>
-              <input type="number" class="form-control" name="priceproduct" id="precioVentaEditar" min="2" step="0.01" required>
+              <input type="number" class="form-control" name="priceproduct" id="precioVentaEditar"
+                     min="" step="0.01" required>
             </div>
             <button type="submit" class="btn btn-success">Guardar</button>
           </form>
@@ -113,7 +105,8 @@
   <div class="card-body mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <span class="d-none d-md-inline">Mostrando
-        <input type="number" id="sizeProducts" min="1" max="999" value="<%=productsInCatalogo.size()%>" class="form-control d-inline-block" style="width: 4rem;"> registros
+        <input type="number" id="sizeProducts" min="1" max="999" value="<%=productsInCatalogo.size()%>"
+               class="form-control d-inline-block" style="width: 5rem;" readonly> registros
       </span>
       <form>
         <div class="input-group ms-auto" style="max-width: 250px;">
@@ -128,7 +121,6 @@
         <thead class="table-warning">
         <tr>
           <th>N°</th>
-          <th>Tipo</th>
           <th>Nombre</th>
           <th>Precio Venta</th>
           <th>Acciones</th>
@@ -139,7 +131,6 @@
           <%int count=1; for(Product product : productsInCatalogo){%>
             <tr>
               <td><%=count%></td>
-              <td>Producto</td>
               <td><%=product.getName()%></td>
               <td>S/. <%=product.getPrice()%></td>
               <td class="align-middle text-center">

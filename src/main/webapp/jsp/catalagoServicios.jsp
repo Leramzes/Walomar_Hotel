@@ -122,7 +122,6 @@
         <thead class="table-warning">
         <tr>
           <th>N°</th>
-          <th>Tipo</th>
           <th>Nombre</th>
           <th>Precio Venta</th>
           <th>Acciones</th>
@@ -132,7 +131,6 @@
 
         <tr>
           <td>1</td>
-          <td>Servicio</td>
           <td>Lavandería</td>
           <td>S/. 5</td>
           <td class="align-middle text-center">
