@@ -4,6 +4,7 @@ public class Service {
     private int id;
     private String name;
     private double price;
+    private int status;
 
     public Service() {
     }
@@ -36,6 +37,14 @@ public class Service {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override

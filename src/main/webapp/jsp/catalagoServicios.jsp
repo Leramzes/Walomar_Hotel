@@ -38,27 +38,19 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="agregarCatalagoServicio">Agregar Catálogo de Servicio</h5>
+          <h5 class="modal-title" id="agregarCatalagoServicio">Agregar Servicio al Catálogo</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <form id="formCatalogoProducto" action="" method="post">
             <input type="hidden" id="inputAgregarCatalagoProducto">
-            <input type="hidden" name="" value="add">
-            <div class="mb-3">
-              <label for="tipo">Tipo</label>
-              <select class="form-select" id="tipo" required>
-                <option value="#">Producto</option>
-                <option value="#">Servicio</option>
-                <option value="#">Otro</option>
-              </select>
-            </div>
+            <input type="hidden" name="actionservice" value="add">
             <div class="mb-3">
               <label for="nombre">Nombre</label>
               <input type="text" class="form-control" name="" id="nombre" required>
             </div>
             <div class="mb-3">
-              <label for="precioServicio">Precio Servicio</label>
+              <label for="precioServicio">Precio Servicio (S/)</label>
               <input type="number" class="form-control" name="" id="precioServicio" min="2" step="0.01" required>
             </div>
             <button type="submit" class="btn btn-success">Guardar</button>
@@ -73,28 +65,19 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Editar Catálogo de <Ser></Ser></h5>
+          <h5 class="modal-title">Editar Servicio</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <form id="formEditarCatalogoServicio" action="" method="post">
             <input type="hidden" name="" value="update">
             <input type="hidden" name="" id="inputEditarIdServicio">
-
-            <div class="mb-3">
-              <label for="tipoEditar">Tipo</label>
-              <select class="form-select" name="" id="tipoEditar" required>
-                <option value="Producto">Producto</option>
-                <option value="Servicio">Servicio</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </div>
             <div class="mb-3">
               <label for="nombreEditar">Nombre</label>
               <input type="text" class="form-control" name="" id="nombreEditar" required>
             </div>
             <div class="mb-3">
-              <label for="precioServicioEditar">Precio <Ser></Ser></label>
+              <label for="precioServicioEditar">Precio Servicio (S/)</label>
               <input type="number" class="form-control" name="" id="precioServicioEditar" min="2" step="0.01" required>
             </div>
             <button type="submit" class="btn btn-success">Guardar</button>
