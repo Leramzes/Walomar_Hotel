@@ -24,7 +24,7 @@
   }
 
   int pagina = 1;
-  int pageSize = 8;
+  int pageSize = 10;
 
   String pageParam = request.getParameter("page");
   if (pageParam != null) {
@@ -75,7 +75,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="agregarCatalagoProducto">Agregar Catálogo de Producto</h5>
+          <h5 class="modal-title" id="agregarCatalagoProducto">Agregar Producto al Catálogo</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -87,8 +87,12 @@
               <input type="text" class="form-control" name="nameproduct" id="nombre" required>
             </div>
             <div class="mb-3">
-              <label for="precioVenta">Precio Venta</label>
+              <label for="precioVenta">Precio Venta (S/)</label>
               <input type="number" class="form-control" name="priceproduct" id="precioVenta" min="2" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label for="cantidad">Cantidad (Unit.)</label>
+              <input type="number" class="form-control" name="cantidadproduct" id="cantidad" min="1" step="1" required>
             </div>
             <button type="submit" class="btn btn-success">Guardar</button>
           </form>
@@ -114,9 +118,13 @@
               <input type="text" class="form-control" name="nameproduct" id="nombreEditar" required>
             </div>
             <div class="mb-3">
-              <label for="precioVentaEditar">Precio Venta</label>
+              <label for="precioVentaEditar">Precio Venta (S/)</label>
               <input type="number" class="form-control" name="priceproduct" id="precioVentaEditar"
                      min="" step="0.01" required>
+            </div>
+            <div class="mb-3">
+              <label for="cantidad">Cantidad (Unit.)</label>
+              <input type="number" class="form-control" name="cantidadproduct" id="cantidadEditar" min="1" step="1" required>
             </div>
             <button type="submit" class="btn btn-success">Guardar</button>
           </form>
@@ -147,6 +155,7 @@
           <th>N°</th>
           <th>Nombre</th>
           <th>Precio Venta</th>
+          <th>Cantidad en Stock</th>
           <th>Acciones</th>
         </tr>
         </thead>
@@ -157,6 +166,7 @@
               <td><%=count%></td>
               <td><%=product.getName()%></td>
               <td>S/. <%=product.getPrice()%></td>
+              <td><%=product.getQuantity()%></td>
               <td class="align-middle text-center">
                 <div class="d-flex justify-content-center align-items-center gap-1">
                   <button class="btn btn-warning btn-sm" id="btn-editar"
@@ -167,8 +177,14 @@
                   </button>
                   <form action="productcontrol" method="post">
                     <input type="hidden" name="idproduct" value="<%=product.getId()%>">
-                    <input type="hidden" name="actionproduct" value="delete">
-                    <button class="btn btn-danger btn-sm">❌</button>
+                    <input type="hidden" name="actionproduct" value="inactive">
+                    <input type="hidden" name="availability" value="<%=product.getStatus()%>">
+                    <%
+                      boolean disponible = product.getStatus() == 1;
+                      String btnClass = disponible ? "btn-danger" : "btn-success";
+                      String btnText = disponible ? "❌" : "✅";
+                    %>
+                    <button class="btn <%= btnClass %> btn-sm"><%= btnText %></button>
                   </form>
                 </div>
               </td>

@@ -41,12 +41,14 @@ public class ProductController extends HttpServlet {
             case "add":
                 String productName = req.getParameter("nameproduct");
                 double price = Double.parseDouble(req.getParameter("priceproduct"));
-                GestionProduct.registerProduct(new Product(productName, price, 1, 0));
+                int quantity = Integer.parseInt(req.getParameter("cantidadproduct"));
+                GestionProduct.registerProduct(new Product(productName, price, 1, quantity));
                 resp.sendRedirect("menu.jsp?view=catalogoProductos");
                 break;
-            case "delete":
+            case "inactive":
                 int productId = Integer.parseInt(req.getParameter("idproduct"));
-                GestionProduct.deleteProduct(productId);
+                int availability = Integer.parseInt(req.getParameter("availability"));
+                GestionProduct.updateAvailability(productId,availability);
                 resp.sendRedirect("menu.jsp?view=catalogoProductos");
                 break;
             case "update":
@@ -54,7 +56,8 @@ public class ProductController extends HttpServlet {
                 Product product = GestionProduct.getProductById(id);
                 String name = req.getParameter("nameproduct");
                 String priceString = req.getParameter("priceproduct");
-                product.setName(name); product.setPrice(Double.parseDouble(priceString));
+                String quantityString = req.getParameter("cantidadproduct");
+                product.setName(name); product.setPrice(Double.parseDouble(priceString)); product.setQuantity(Integer.parseInt(quantityString));
                 GestionProduct.updateProduct(product);
                 resp.sendRedirect("menu.jsp?view=catalogoProductos");
                 break;

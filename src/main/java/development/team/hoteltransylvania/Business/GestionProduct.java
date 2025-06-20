@@ -44,7 +44,7 @@ public class GestionProduct {
         return result;
     }
     public static boolean updateProduct(Product product) {
-        String sql = "UPDATE productos SET nombre = ?, precio = ? WHERE id = ?";
+        String sql = "UPDATE productos SET nombre = ?, precio = ?, cantidad=? WHERE id = ?";
 
         boolean result = false;
 
@@ -53,7 +53,8 @@ public class GestionProduct {
 
             ps.setString(1, product.getName());
             ps.setDouble(2, product.getPrice());
-            ps.setInt(3, product.getId());
+            ps.setInt(3, product.getQuantity());
+            ps.setInt(4, product.getId());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
@@ -68,34 +69,39 @@ public class GestionProduct {
 
         return result;
     }
-    public static boolean deleteProduct(int productId) {
+    public static boolean updateAvailability(int productId, int availability) {
         String checkSql = "SELECT COUNT(*) FROM productos WHERE id = ?";
-        String deleteSql = "DELETE FROM productos WHERE id = ?";
-
+        String updateSql = "UPDATE productos SET status = ? WHERE id = ?";
         boolean result = false;
+
+        // Invertir el valor: si es 1 pasa a 0, si es 0 pasa a 1
+        int newAvailability = (availability == 1) ? 0 : 1;
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement checkPs = cnn.prepareStatement(checkSql)) {
 
             checkPs.setInt(1, productId);
-            ResultSet rs = checkPs.executeQuery();
+            try (ResultSet rs = checkPs.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    try (PreparedStatement updatePs = cnn.prepareStatement(updateSql)) {
+                        updatePs.setInt(1, newAvailability);
+                        updatePs.setInt(2, productId);
 
-            if (rs.next() && rs.getInt(1) > 0) {
-                try (PreparedStatement deletePs = cnn.prepareStatement(deleteSql)) {
-                    deletePs.setInt(1, productId);
-
-                    int rowsAffected = deletePs.executeUpdate();
-                    if (rowsAffected > 0) {
-                        LOGGER.info("Product with ID " + productId + " deleted successfully.");
-                        result = true;
+                        int rowsAffected = updatePs.executeUpdate();
+                        if (rowsAffected > 0) {
+                            LOGGER.info("Product with ID " + productId + " availability updated to " + newAvailability);
+                            result = true;
+                        } else {
+                            LOGGER.warning("No rows updated. Product ID may not exist.");
+                        }
                     }
+                } else {
+                    LOGGER.warning("No room found with ID: " + productId);
                 }
-            } else {
-                LOGGER.warning("Error deleting product. No product found with ID: " + productId);
             }
 
         } catch (SQLException e) {
-            LOGGER.severe("Error deleting product " + productId + ": " + e.getMessage());
+            LOGGER.severe("Error updating availability for room " + productId + ": " + e.getMessage());
         }
 
         return result;
@@ -154,7 +160,7 @@ public class GestionProduct {
         return products;
     }
     public static Product getProductById(int productId) {
-        String sql = "SELECT id, nombre, precio FROM productos WHERE id = ?";
+        String sql = "SELECT id, nombre, precio, cantidad FROM productos WHERE id = ?";
         Product product = null;
 
         try (Connection cnn = dataSource.getConnection();
@@ -167,8 +173,9 @@ public class GestionProduct {
                 int id = rs.getInt("id");
                 String name = rs.getString("nombre");
                 double price = rs.getDouble("precio");
+                int quantity = rs.getInt("cantidad");
 
-                product = new Product(id, name, price);
+                product = new Product(id, name, price, quantity);
             }
         } catch (SQLException e) {
             LOGGER.severe("Error retrieving product with ID " + productId + ": " + e.getMessage());

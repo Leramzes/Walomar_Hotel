@@ -136,6 +136,7 @@ function abrirModalEditar(id) {
             // Llenar los campos del formulario con los datos obtenidos
             document.getElementById("nombreEditar").value = data.name;
             document.getElementById("precioVentaEditar").value = data.price;
+            document.getElementById("cantidadEditar").value = data.quantity;
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }
