@@ -4,6 +4,8 @@ public class Product {
     private int id;
     private String name;
     private double price;
+    private int status;
+    private int quantity;
 
     public Product() {
     }
@@ -17,6 +19,29 @@ public class Product {
     public Product(String name, double price) {
         this.name = name;
         this.price = price;
+    }
+
+    public Product(String name, double price, int status, int quantity) {
+        this.name = name;
+        this.price = price;
+        this.status = status;
+        this.quantity = quantity;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getId() {

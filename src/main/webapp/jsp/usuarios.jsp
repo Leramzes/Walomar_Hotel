@@ -238,7 +238,7 @@
                     </td>
                     <td><%=employee.getEstado_user()%>
                     </td>
-                    <td class="d-flex justify-content-center gap-1">
+                    <td class="d-flex justify-content-center align-items-center gap-1">
                         <button class="btn btn-warning btn-sm" id="btn-editar"
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalEditarUsuario" title="Editar Usuario"

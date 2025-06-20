@@ -41,8 +41,7 @@ public class ProductController extends HttpServlet {
             case "add":
                 String productName = req.getParameter("nameproduct");
                 double price = Double.parseDouble(req.getParameter("priceproduct"));
-                GestionProduct.registerProduct(new Product(productName, price));
-                //req.getRequestDispatcher("jsp/catalagoProductos.jsp").forward(req, resp);
+                GestionProduct.registerProduct(new Product(productName, price, 1, 0));
                 resp.sendRedirect("menu.jsp?view=catalogoProductos");
                 break;
             case "delete":

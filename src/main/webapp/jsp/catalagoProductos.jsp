@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="development.team.hoteltransylvania.Model.Product" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionProduct" %>
+<%@ page import="development.team.hoteltransylvania.Model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -11,7 +12,28 @@
 </head>
 
 <%
-  List<Product> productsInCatalogo = GestionProduct.getAllProducts();
+  HttpSession sessionObj = request.getSession(false);
+  if (sessionObj == null || sessionObj.getAttribute("usuario") == null) {
+    response.sendRedirect("index.jsp"); //Mensaje: Inicia sesión primero
+    return;
+  }
+  User usuario = (User) sessionObj.getAttribute("usuario");
+  if (usuario.getEmployee().getPosition().equalsIgnoreCase("2")) {
+    response.sendRedirect("inicio.jsp"); //Mensaje: No tienes privilegios
+    return;
+  }
+
+  int pagina = 1;
+  int pageSize = 8;
+
+  String pageParam = request.getParameter("page");
+  if (pageParam != null) {
+    pagina = Integer.parseInt(pageParam);
+  }
+
+  List<Product> productsInCatalogo = GestionProduct.getAllProductsPaginated(pagina, pageSize);
+  int totalProduct = GestionProduct.getAllProducts().size();
+  int totalPages = (int) Math.ceil((double) totalProduct / pageSize);
 %>
 
 <body>
@@ -36,6 +58,15 @@
           <i class="fas fa-plus"></i> Agregar Producto
         </button>
       </div>
+      <div class="col-3 d-flex justify-content-end align-items-center">
+        <label for="estadoSelect" class="form-label m-0 me-2">Estado:</label>
+        <select id="estadoSelect" class="form-select  w-auto"
+                onchange="Search('#nameSearch', '#estadoSelect','#tablaCatalagoProductos','#sizeProducts','filterProducServlet', 1, 10)">
+          <option value="">Todos</option>
+          <option value="1">Activos</option>
+          <option value="0">Inactivos</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -51,14 +82,6 @@
           <form id="formCatalogoProducto" action="productcontrol" method="post">
             <input type="hidden" id="inputAgregarCatalagoProducto">
             <input type="hidden" name="actionproduct" value="add">
-            <div class="mb-3">
-              <label for="tipo">Tipo</label>
-              <select class="form-select" id="tipo" required>
-                <option value="#">Producto</option>
-                <option value="#">Servicio</option>
-                <option value="#">Otro</option>
-              </select>
-            </div>
             <div class="mb-3">
               <label for="nombre">Nombre</label>
               <input type="text" class="form-control" name="nameproduct" id="nombre" required>
@@ -110,14 +133,15 @@
       </span>
       <form>
         <div class="input-group ms-auto" style="max-width: 250px;">
-          <input type="text" class="form-control" id="nameSearch" placeholder="Buscar" onkeyup="buscar()">
+          <input type="text" class="form-control" id="nameSearch" placeholder="Buscar por nombre"
+                 onkeyup="Search('#nameSearch', '#estadoSelect','#tablaCatalagoProductos','#sizeProducts','filterProducServlet', 1, 10)">
           <span class="input-group-text"><i class="fas fa-search"></i></span>
         </div>
       </form>
     </div>
 
     <div class="table-responsive">
-      <table class="table table-bordered align-middle">
+      <table id="tablaCatalagoProductos" class="table table-bordered align-middle">
         <thead class="table-warning">
         <tr>
           <th>N°</th>
@@ -126,7 +150,7 @@
           <th>Acciones</th>
         </tr>
         </thead>
-        <tbody id="tablaCatalagoProductos">
+        <tbody>
 
           <%int count=1; for(Product product : productsInCatalogo){%>
             <tr>
@@ -156,10 +180,22 @@
 
     <div class="d-flex justify-content-end align-items-center">
       <nav aria-label="Page navigation example">
-        <ul class="pagination mb-0">
-          <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+        <ul class="pagination mb-0" id="pagination">
+          <li class="page-item <% if (pagina == 1) { %>disabled<% } %>">
+            <a class="page-link" aria-label="Anterior" href="menu.jsp?view=catalogoProductos&page=<%= pagina - 1 %>">Anterior</a>
+          </li>
+
+          <% for (int i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <% if (i == pagina) { %>active<% } %>">
+            <a class="page-link" aria-label="Actual" href="menu.jsp?view=catalogoProductos&page=<%= i %>"><%= i %>
+            </a>
+          </li>
+          <% } %>
+
+          <li class="page-item <% if (pagina == totalPages) { %>disabled<% } %>">
+            <a class="page-link" aria-label="Siguiente"
+               href="menu.jsp?view=catalogoProductos&page=<%= pagina + 1 %>">Siguiente</a>
+          </li>
         </ul>
       </nav>
     </div>

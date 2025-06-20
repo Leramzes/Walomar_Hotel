@@ -1,6 +1,8 @@
 package development.team.hoteltransylvania.Controller;
 
+import development.team.hoteltransylvania.Business.GestionEmployee;
 import development.team.hoteltransylvania.Business.GestionProduct;
+import development.team.hoteltransylvania.DTO.usersEmployeeDTO;
 import development.team.hoteltransylvania.Model.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,12 +21,25 @@ public class FilterProductController extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = resp.getWriter()) {
             String filter = req.getParameter("filter");
-            List<Product> products = GestionProduct.filterProducts(filter);
+            String estateParam = req.getParameter("estate");
+            Integer estate = null;
+
+            if (estateParam != null && !estateParam.trim().isEmpty()) {
+                estate = Integer.parseInt(estateParam);
+            }
+
+            // Obtener parámetros de paginación (si no existen, se asignan valores por defecto)
+            int page = req.getParameter("page") != null ? Integer.parseInt(req.getParameter("page")) : 1;
+            int size = req.getParameter("size") != null ? Integer.parseInt(req.getParameter("size")) : 10;
+
+            // Obtener lista paginada
+            List<Product> products = GestionProduct.filterProducts(filter, estate, page, size);
+            int totalProducts = GestionProduct.countFilteredProduct(filter, estate);
+
             int count = 1;
             for (Product product : products) {
                 out.println("<tr>");
                 out.println("<td>" + count + "</td>");
-                out.println("<td>Producto</td>");
                 out.println("<td>" + product.getName() + "</td>");
                 out.println("<td>S/. " + product.getPrice() + "</td>");
                 out.println("<td class='align-middle text-center'>");
@@ -40,7 +55,7 @@ public class FilterProductController extends HttpServlet {
                 out.println("</tr>");
                 count++;
             }
-            out.println("<!--COUNT:" + products.size() + "-->");
+            out.println("<!--COUNT:" + totalProducts + "-->");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
