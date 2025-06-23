@@ -14,6 +14,12 @@ public class Service {
         this.name = name;
         this.price = price;
     }
+    public Service(int id, String name, double price, int status) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.status = status;
+    }
 
     public int getId() {
         return id;
