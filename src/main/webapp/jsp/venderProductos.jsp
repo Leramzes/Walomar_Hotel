@@ -1,3 +1,9 @@
+<%@ page import="development.team.hoteltransylvania.Model.Room" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionRoom" %>
+<%@ page import="java.util.List" %>
+<%@ page import="development.team.hoteltransylvania.Model.Product" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionProduct" %>
+<%@ page import="java.util.stream.Collectors" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -22,15 +28,25 @@
     </nav>
 </div>
 
+<%
+    int idParam = Integer.parseInt(request.getParameter("id"));
+    Room room = GestionRoom.getRoomById(idParam);
+
+    List<Product> productsInList = GestionProduct.getAllProducts().
+            stream().filter(p -> p.getStatus() == 1).collect(Collectors.toUnmodifiableList());
+%>
+
 <!-- Sección de datos -->
 <div class="row mt-4">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="card">
             <div class="card-header bg-light"><strong>Datos de la Habitación</strong></div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> 696</p>
-                <p><strong>Tipo:</strong> PRESIDENCIAL</p>
-                <p><strong>Costo:</strong> <span class="text-primary">S/.696</span></p>
+                <p><strong>Nombre:</strong> <%=room.getNumber()%>
+                </p>
+                <p><strong>Tipo:</strong> <%=room.getTypeRoom().getName().toUpperCase()%>
+                </p>
+                <p><strong>Costo:</strong> <span class="text-primary">S/ <%=room.getPrice()%></span></p>
             </div>
         </div>
     </div>
@@ -51,12 +67,11 @@
     <div class="card-header text-white">
         <div class="row align-items-center">
             <div class="col-9 d-flex gap-2">
-                <input type="text" class="form-control" placeholder="Buscar producto">
                 <select class="form-select">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                    <option selected>Seleccione una opción</option>
+                    <%for (Product product : productsInList) {%>
+                    <option value="<%=product.getId()%>">Nombre: <%=product.getName()%> | Precio: <%=product.getPrice()%></option>
+                    <%}%>
                 </select>
                 <button class="btn btn-primary">Agregar</button>
             </div>
