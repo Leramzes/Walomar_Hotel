@@ -32,32 +32,38 @@ public class FilterServiceController extends HttpServlet {
 
             // Obtener lista paginada
             List<Service> services = GestionService.filterServices(filter, estate, page, size);
-            int totalProducts = GestionService.countFilteredService(filter, estate);
+            int totalServices = GestionService.countFilteredService(filter, estate);
 
             int count = 1;
             for (Service service : services) {
-                out.println("<tr>");
-                out.println("<td>" + count + "</td>");
-                out.println("<td>" + service.getName() + "</td>");
-                out.println("<td>S/. " + service.getPrice() + "</td>");
-                out.println("<td class='align-middle text-center'>");
-                out.println("<div class='d-flex justify-content-center align-items-center gap-1'>");
-                out.println("<button class='btn btn-warning' id='btn-editar' data-bs-toggle='modal' data-bs-target='#modalEditarCatalogoServicio' onclick='abrirModalEditar(" + service.getId() + ")'>✏️</button>");
                 boolean disponible = service.getStatus() == 1;
                 String btnClass = disponible ? "btn-danger" : "btn-success";
                 String btnText = disponible ? "❌" : "✅";
-                out.println("<form action='serviciocontrol' method='post'>");
-                out.println("<input type='hidden' name='idservice' value='" + service.getId() + "'>");
-                out.println("<input type='hidden' name='actionservice' value='inactive'>");
-                out.println("<input type='hidden' name='availability' value='" + service.getStatus() + "'>");
-                out.println("  <button class='btn " + btnClass + " btn-sm'>" + btnText + "</button>");
-                out.println("</form>");
-                out.println("</div>");
-                out.println("</td>");
+
+                out.println("<tr>");
+                out.println("    <td>" + count + "</td>");
+                out.println("    <td>" + service.getName() + "</td>");
+                out.println("    <td>S/. " + service.getPrice() + "</td>");
+                out.println("    <td class='align-middle text-center'>");
+                out.println("        <div class='d-flex justify-content-center align-items-center gap-1'>");
+                out.println("            <button class='btn btn-warning btn-sm' id='btn-editar'");
+                out.println("                    data-bs-toggle='modal'");
+                out.println("                    data-bs-target='#modalEditarCatalogoServicio'");
+                out.println("                    onclick='abrirModalEditarServicio(" + service.getId() + ")'>");
+                out.println("                ✏️");
+                out.println("            </button>");
+                out.println("            <form action='serviciocontrol' method='post'>");
+                out.println("                <input type='hidden' name='idservice' value='" + service.getId() + "'>");
+                out.println("                <input type='hidden' name='actionservice' value='inactive'>");
+                out.println("                <input type='hidden' name='availability' value='" + service.getStatus() + "'>");
+                out.println("                <button class='btn " + btnClass + " btn-sm'>" + btnText + "</button>");
+                out.println("            </form>");
+                out.println("        </div>");
+                out.println("    </td>");
                 out.println("</tr>");
                 count++;
             }
-            out.println("<!--COUNT:" + totalProducts + "-->");
+            out.println("<!--COUNT:" + totalServices + "-->");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

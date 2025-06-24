@@ -140,6 +140,17 @@ function abrirModalEditar(id) {
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }
+function abrirModalEditarServicio(id) {
+    document.getElementById("inputEditarIdServicio").value = id;
+    fetch("serviciocontrol?action=get&idservice=" + id)
+        .then(response => response.json())  // Convertimos la respuesta a JSON
+        .then(data => {
+            // Llenar los campos del formulario con los datos obtenidos
+            document.getElementById("nombreEditar").value = data.name;
+            document.getElementById("precioServicioEditar").value = data.price;
+        })
+        .catch(error => console.error("Error al obtener datos:", error));
+}
 
 function editarClient(id) {
     document.getElementById("inputEditarCliente").value = id;
@@ -549,7 +560,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ventaDirecta: "jsp/ventaDirecta.jsp",
         procesarHabitacion: "jsp/procesarHabitacion.jsp",
         venderServicios: "jsp/venderServicios.jsp",
-        catalogoServicios: "jsp/catalogoServicios.jsp",
+        catalogoServicios: "jsp/catalagoServicios.jsp",
         habitacionesServicio: "jsp/habitacionesServicio.jsp",
         reservaCalendario: "jsp/reservaCalendario.jsp"
 

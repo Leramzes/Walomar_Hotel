@@ -21,14 +21,14 @@ public class ServiceController extends HttpServlet {
         String action = req.getParameter("action");
 
         if ("get".equals(action)) {
-            String idProduct = req.getParameter("idproduct");
+            String idservice = req.getParameter("idservice");
 
-            Product product = GestionProduct.getProductById(Integer.parseInt(idProduct));
+            Service service = GestionService.getserviceById(Integer.parseInt(idservice));
 
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
             PrintWriter out = resp.getWriter();
-            out.print(new Gson().toJson(product));
+            out.print(new Gson().toJson(service));
             out.flush();
         }
     }
@@ -45,7 +45,6 @@ public class ServiceController extends HttpServlet {
                 service.setName(productName);
                 service.setPrice(price);
                 service.setStatus(1);
-                System.out.println(service);
                 GestionService.registerservice(service);
                 resp.sendRedirect("menu.jsp?view=catalogoServicios");
                 break;

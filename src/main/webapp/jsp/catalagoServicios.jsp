@@ -6,8 +6,7 @@
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <title>Catálogo de Servicios</title>
 
 </head>
@@ -137,7 +136,8 @@
       </span>
             <form>
                 <div class="input-group ms-auto" style="max-width: 250px;">
-                    <input type="text" class="form-control" id="nameSearch" placeholder="Buscar por nombre" onkeyup="buscar()">
+                    <input type="text" class="form-control" id="nameSearch" placeholder="Buscar por nombre"
+                           onkeyup="Search('#nameSearch', '#estadoSelect','#tablaCatalagoServicio','#sizeServices','filterServiceServlet', 1, 10)">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                 </div>
             </form>
@@ -159,13 +159,13 @@
                         <tr>
                             <td><%=count%></td>
                             <td><%=service.getName()%></td>
-                            <td><%=service.getPrice()%></td>
+                            <td>S/. <%=service.getPrice()%></td>
                             <td class="align-middle text-center">
                                 <div class="d-flex justify-content-center align-items-center gap-1">
                                     <button class="btn btn-warning btn-sm" id="btn-editar"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEditarCatalogoServicio"
-                                            onclick="abrirModalEditar(<%=service.getId()%>)">
+                                            onclick="abrirModalEditarServicio(<%=service.getId()%>)">
                                         ✏️
                                     </button>
                                     <form action="serviciocontrol" method="post">
@@ -192,19 +192,19 @@
             <nav aria-label="Page navigation example">
                 <ul class="pagination mb-0" id="pagination">
                     <li class="page-item <% if (pagina == 1) { %>disabled<% } %>">
-                        <a class="page-link" aria-label="Anterior" href="menu.jsp?view=catalogoServicios&page=<%= pagina - 1 %>">Anterior</a>
+                        <a class="page-link" aria-label="Anterior" href="menu.jsp?view=catalagoServicios&page=<%= pagina - 1 %>">Anterior</a>
                     </li>
 
                     <% for (int i = 1; i <= totalPages; i++) { %>
                     <li class="page-item <% if (i == pagina) { %>active<% } %>">
-                        <a class="page-link" aria-label="Actual" href="menu.jsp?view=catalogoServicios&page=<%= i %>"><%= i %>
+                        <a class="page-link" aria-label="Actual" href="menu.jsp?view=catalagoServicios&page=<%= i %>"><%= i %>
                         </a>
                     </li>
                     <% } %>
 
                     <li class="page-item <% if (pagina == totalPages) { %>disabled<% } %>">
                         <a class="page-link" aria-label="Siguiente"
-                           href="menu.jsp?view=catalogoServicios&page=<%= pagina + 1 %>">Siguiente</a>
+                           href="menu.jsp?view=catalagoServicios&page=<%= pagina + 1 %>">Siguiente</a>
                     </li>
                 </ul>
             </nav>
