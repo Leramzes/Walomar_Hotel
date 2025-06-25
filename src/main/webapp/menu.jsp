@@ -1161,6 +1161,7 @@
     });
 </script>
 <script>
+    //Eliminar productos del carrito en venta
     // Delegado porque los botones se agregan dinámicamente
     $(document).on("click", ".btn-eliminar-producto", function () {
         $(this).closest("tr").remove();
@@ -1171,6 +1172,16 @@
             tbody.append('<tr><td colspan="5" class="text-center text-muted">Agrega productos</td></tr>');
         }
     });
+</script>
+<script>
+    function habilitarMetodoPago(habilitar) {
+        const metodoPago = document.getElementById("metodoPago");
+        metodoPago.disabled = !habilitar;
+
+        if (!habilitar) {
+            metodoPago.value = ""; // Limpia la selección si es pagar después
+        }
+    }
 </script>
 </body>
 </html>

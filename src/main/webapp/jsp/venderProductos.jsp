@@ -7,6 +7,8 @@
 <%@ page import="development.team.hoteltransylvania.Model.Reservation" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionReservation" %>
 <%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
+<%@ page import="development.team.hoteltransylvania.Model.PaymentMethod" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionMetodosPago" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -38,6 +40,8 @@
 
     List<Product> productsInList = GestionProduct.getAllProducts().
             stream().filter(p -> p.getStatus() == 1).collect(Collectors.toUnmodifiableList());
+    List<PaymentMethod> paymentMethodsActive = GestionMetodosPago.getAllMethodPayments()
+            .stream().filter(method -> method.getStatus() == 1).collect(Collectors.toUnmodifiableList());
 %>
 
 <!-- Sección de datos -->
@@ -48,12 +52,15 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-6">
-                        <p><strong>Número:</strong> <%= room.getNumber() %></p>
+                        <p><strong>Número:</strong> <%= room.getNumber() %>
+                        </p>
                         <p><strong>Costo:</strong> <span class="text-primary">S/ <%= room.getPrice() %></span></p>
-                        <p><strong>Tipo:</strong> <%= room.getTypeRoom().getName().toUpperCase() %></p>
+                        <p><strong>Tipo:</strong> <%= room.getTypeRoom().getName().toUpperCase() %>
+                        </p>
                     </div>
                     <div class="col-6">
-                        <p><strong>Estado:</strong> <%= room.getTypeRoom().getName() %></p>
+                        <p><strong>Estado:</strong> <%= room.getTypeRoom().getName() %>
+                        </p>
                         <p><strong>Tarifa:</strong> 24Hr.</p>
                     </div>
                 </div>
@@ -64,9 +71,12 @@
         <div class="card">
             <div class="card-header bg-light"><strong>Datos del Cliente</strong></div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> <%=reservation.getClientName()+" "+reservation.getClientApellidos()%></p>
-                <p><strong>Documento:</strong> <%=reservation.getDocumentNumber()%></p>
-                <p><strong>Fecha entrada:</strong> <%=reservation.getFecha_ingreso()%></p>
+                <p><strong>Nombre:</strong> <%=reservation.getClientName() + " " + reservation.getClientApellidos()%>
+                </p>
+                <p><strong>Documento:</strong> <%=reservation.getDocumentNumber()%>
+                </p>
+                <p><strong>Fecha entrada:</strong> <%=reservation.getFecha_ingreso()%>
+                </p>
             </div>
         </div>
     </div>
@@ -80,7 +90,9 @@
                 <select class="form-select" id="selectProducto">
                     <option selected>Seleccione una opción</option>
                     <%for (Product product : productsInList) {%>
-                    <option value="<%=product.getId()%>">Nombre: <%=product.getName()%> | Precio: <%=product.getPrice()%></option>
+                    <option value="<%=product.getId()%>">Nombre: <%=product.getName()%> |
+                        Precio: <%=product.getPrice()%>
+                    </option>
                     <%}%>
                 </select>
                 <button class="btn btn-primary" onclick="agregarProducto()">Agregar</button>
@@ -115,24 +127,23 @@
 
         <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
             <div class="form-check me-3 mb-2 mb-md-0">
-                <input class="form-check-input" type="radio" name="pago" id="pagarAhora">
+                <input class="form-check-input" type="radio" name="pago" id="pagarAhora" onclick="habilitarMetodoPago(true)">
                 <label class="form-check-label" for="pagarAhora">Pagar Ahora</label>
             </div>
 
             <div class="input-group my-3 my-md-0" id="metodoPagoGroup" style="max-width: 300px;">
                 <label class="input-group-text" for="metodoPago"><i class="fa-solid fa-money-bill-wave"></i></label>
-                <select class="form-select" id="metodoPago" name="metodoPago" required>
+                <select class="form-select" id="metodoPago" name="metodoPago" required disabled>
                     <option value="" selected disabled>Método de Pago</option>
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Transferencia">Transferencia</option>
-                    <option value="Tarjeta">Tarjeta</option>
-                    <option value="Yape / Plin">Yape / Plin</option>
+                    <%for (PaymentMethod paymentMethod : paymentMethodsActive) {%>
+                    <option value="<%=paymentMethod.getId()%>"><%=paymentMethod.getNameMethod()%></option>
+                    <%}%>
                 </select>
             </div>
         </div>
 
         <div class="form-check mt-2">
-            <input class="form-check-input" type="radio" name="pago" id="pagarDespues">
+            <input class="form-check-input" type="radio" name="pago" id="pagarDespues" onclick="habilitarMetodoPago(false)" checked>
             <label class="form-check-label" for="pagarDespues">Pagar Después</label>
         </div>
     </div>
