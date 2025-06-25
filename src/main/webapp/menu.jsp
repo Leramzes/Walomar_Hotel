@@ -253,7 +253,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item <%=mod%>">
-                        <a href="#" class="sidebar-link" data-pagina="metodos_pago" onclick="cargarPagina('jsp/metodosPago.jsp')">
+                        <a href="#" class="sidebar-link" data-pagina="metodosPago" onclick="cargarPagina('jsp/metodosPago.jsp')">
                             <i class="fa-solid fa-gears me-2"></i>
                             Metodos de Pago
                         </a>

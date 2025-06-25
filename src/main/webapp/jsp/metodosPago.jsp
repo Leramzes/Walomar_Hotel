@@ -21,7 +21,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb mb-0">
       <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/menu.jsp">Configuración</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Habitaciones</li>
+      <li class="breadcrumb-item active" aria-current="page">Métodos de pago</li>
     </ol>
   </nav>
 </div>
