@@ -6,6 +6,7 @@ public class TableReservationDTO {
     private int idReservation;
     private int idClient;
     private String clientName;
+    private String clientApellidos;
     private String documentType;
     private String documentNumber;
     private int idRoom;
@@ -237,6 +238,14 @@ public class TableReservationDTO {
 
     public void setRoomTypeId(int roomTypeId) {
         this.roomTypeId = roomTypeId;
+    }
+
+    public String getClientApellidos() {
+        return clientApellidos;
+    }
+
+    public void setClientApellidos(String clientApellidos) {
+        this.clientApellidos = clientApellidos;
     }
 
     @Override

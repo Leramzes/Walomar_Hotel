@@ -1,9 +1,9 @@
 <%@ page import="development.team.hoteltransylvania.Model.Floor" %>
-<%@ page import="development.team.hoteltransylvania.Model.Room" %>
 <%@ page import="java.util.List" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionRoom" %>
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.stream.Collectors" %>
+<%@ page import="development.team.hoteltransylvania.DTO.AllInfoRoom" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -13,7 +13,7 @@
     <title>Habitaciones para realizar ventas</title>
 </head>
 <%
-    List<Room> rooms = GestionRoom.getAllRoomsOcupied();
+    List<AllInfoRoom> allInfoRooms = GestionRoom.getAllInfoFromRoomsOcupied();
     List<Floor> floors = GestionRoom.quantityFloorsEnabled().stream()
             .sorted(Comparator.comparing(Floor::getId))
             .toList();
@@ -29,6 +29,16 @@
         </ol>
     </nav>
 </div>
+
+<% if (allInfoRooms.isEmpty()) { %>
+<div class="col-12">
+    <div class="tab-content mt-3">
+        <div class="alert alert-danger text-center">
+            No hay habitaciones ocupadas por mostrar.
+        </div>
+    </div>
+</div>
+<% } else {%>
 
 <ul class="nav nav-tabs mt-4">
     <li class="nav-item">
@@ -57,35 +67,26 @@
 <div class="tab-content mt-3">
 
     <% if (hayPisoActivo) { %>
-    <!-- Aquí renderiza todo el código actual de las habitaciones y los pisos -->
+
+    <!-- TAB: Mostrar todas las habitaciones -->
     <div id="todos" class="tab-pane fade show active">
         <div class="row">
-            <%
-                for (Room room : rooms) {
-                    String colorOfStatus;
-                    switch (room.getStatusRoom().getValue()) {
-                        case 2:
-                            colorOfStatus = "occupied";
-                            break;
-                        case 3:
-                            colorOfStatus = "warning";
-                            break;
-                        case 4:
-                            colorOfStatus = "reserved";
-                            break;
-                        default:
-                            colorOfStatus = "available";
-                    }
-                    // Convertir el nombre del estado en tipo oración
-                    String statusName = room.getStatusRoom().getName().toLowerCase();
-                    statusName = statusName.substring(0, 1).toUpperCase() + statusName.substring(1);
+            <% for (AllInfoRoom room : allInfoRooms) {
+                String colorOfStatus;
+                switch (room.getIdRoomStatus()) {
+                    case 2: colorOfStatus = "occupied"; break;
+                    case 3: colorOfStatus = "warning"; break;
+                    case 4: colorOfStatus = "reserved"; break;
+                    default: colorOfStatus = "available";
+                }
+                String statusName = room.getStatusRoom().toLowerCase();
+                statusName = statusName.substring(0, 1).toUpperCase() + statusName.substring(1);
             %>
             <div class="col-md-3">
                 <button class="room-card <%= colorOfStatus %>"
-                        onclick="cargarPagina('jsp/venderProductos.jsp?id=<%= room.getId() %>')">
-                    <h5><%= room.getNumber() %>
-                    </h5>
-                    <span><%= room.getTypeRoom().getName().toUpperCase() %></span>
+                        onclick="cargarPagina('jsp/venderProductos.jsp?id=<%= room.getIdReservation() %>')">
+                    <h5><%= room.getNumberRoom() %></h5>
+                    <span><%= room.getTypeRoom().toUpperCase() %></span>
                     <i class="fas fa-bed room-icon"></i>
                     <div class="room-status">
                         <span><%= statusName %></span>
@@ -97,41 +98,41 @@
         </div>
     </div>
 
+    <!-- TAB: Por cada piso activo -->
     <% for (Floor floor : floors) {
-        if (!floor.getStatus().equals("Activo")) continue; // Solo mostrar si está activo
+        if (!floor.getStatus().equals("Activo")) continue;
     %>
-
     <div id="<%=floor.getId()%>-nivel" class="tab-pane fade show">
         <div class="row">
             <%
-                List<Room> roomsFloor = rooms.stream()
-                        .filter(room -> room.getFloor() == floor.getId())
+                List<AllInfoRoom> roomsFloor = allInfoRooms.stream()
+                        .filter(room -> room.getIdFloor() == floor.getId())
                         .collect(Collectors.toList());
-                for (Room room : roomsFloor) {
+
+                if (roomsFloor.isEmpty()) {
+            %>
+            <div class="col-12">
+                <div class="alert alert-danger text-center">
+                    No hay habitaciones ocupadas en este piso.
+                </div>
+            </div>
+            <% } else {
+                for (AllInfoRoom room : roomsFloor) {
                     String colorOfStatus;
-                    switch (room.getStatusRoom().getValue()) {
-                        case 2:
-                            colorOfStatus = "occupied";
-                            break;
-                        case 3:
-                            colorOfStatus = "warning";
-                            break;
-                        case 4:
-                            colorOfStatus = "reserved";
-                            break;
-                        default:
-                            colorOfStatus = "available";
+                    switch (room.getIdRoomStatus()) {
+                        case 2: colorOfStatus = "occupied"; break;
+                        case 3: colorOfStatus = "warning"; break;
+                        case 4: colorOfStatus = "reserved"; break;
+                        default: colorOfStatus = "available";
                     }
-                    // Convertir el nombre del estado en tipo oración
-                    String statusName = room.getStatusRoom().getName().toLowerCase();
+                    String statusName = room.getStatusRoom().toLowerCase();
                     statusName = statusName.substring(0, 1).toUpperCase() + statusName.substring(1);
             %>
             <div class="col-md-3">
                 <button class="room-card <%= colorOfStatus %>"
-                        onclick="cargarPagina('jsp/venderProductos.jsp?id=<%= room.getId() %>')">
-                    <h5><%= room.getNumber() %>
-                    </h5>
-                    <span><%= room.getTypeRoom().getName().toUpperCase() %></span>
+                        onclick="cargarPagina('jsp/venderProductos.jsp?id=<%= room.getIdReservation() %>')">
+                    <h5><%= room.getNumberRoom() %></h5>
+                    <span><%= room.getTypeRoom().toUpperCase() %></span>
                     <i class="fas fa-bed room-icon"></i>
                     <div class="room-status">
                         <span><%= statusName %></span>
@@ -139,7 +140,7 @@
                     </div>
                 </button>
             </div>
-            <% } %>
+            <% } } %>
         </div>
     </div>
     <% } %>
@@ -152,5 +153,5 @@
     <% } %>
 
 </div>
-
+<%}%>
 </body>

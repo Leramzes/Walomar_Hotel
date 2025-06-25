@@ -1,5 +1,6 @@
 package development.team.hoteltransylvania.Business;
 
+import development.team.hoteltransylvania.DTO.AllInfoRoom;
 import development.team.hoteltransylvania.DTO.usersEmployeeDTO;
 import development.team.hoteltransylvania.Model.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
@@ -314,25 +315,30 @@ public class GestionRoom {
                 .sorted(Comparator.comparing((Room room) -> Integer.parseInt(room.getNumber())))
                 .collect(Collectors.toList());
     }
-    public static List<Room> getAllRoomsOcupied() {
-        String sql = "SELECT " +
-                "    h.id, " +
-                "    h.numero, " +
-                "    h.piso_id, " +
-                "    p.nombre AS nombre_piso, " +
-                "    h.tipo_id, " +
-                "    t.nombre AS tipo_nombre, t.estatus AS estado_tipo, " +
-                "    h.precio, " +
-                "    h.estado_id, " +
-                "    e.estado AS estado_nombre, " +
-                "    h.disponible " +
-                "FROM habitaciones h " +
-                "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
-                "JOIN estado_habitacion e ON h.estado_id = e.id " +
-                "JOIN pisos p ON p.id = h.piso_id " +  // Paginación aplicada
-                "WHERE h.estado_id=2";
+    public static List<AllInfoRoom> getAllInfoFromRoomsOcupied() {
+        String sql = "SELECT\n" +
+                "    r.id AS reserva_id,\n" +
+                "    r.cliente_id,\n" +
+                "    h.id AS habitacion_id,\n" +
+                "    h.numero,\n" +
+                "    h.piso_id,\n" +
+                "    p.nombre AS nombre_piso,\n" +
+                "    h.tipo_id,\n" +
+                "    t.nombre AS tipo_nombre,\n" +
+                "    t.estatus AS estado_tipo,\n" +
+                "    h.precio,\n" +
+                "    h.estado_id,\n" +
+                "    e.estado AS estado_nombre,\n" +
+                "    h.disponible\n" +
+                "FROM habitaciones h\n" +
+                "         JOIN tipo_habitacion t ON h.tipo_id = t.id\n" +
+                "         JOIN estado_habitacion e ON h.estado_id = e.id\n" +
+                "         JOIN pisos p ON p.id = h.piso_id\n" +
+                "         JOIN detalle_habitacion dh ON dh.habitacion_id = h.id\n" +
+                "         JOIN reservas r ON r.id = dh.reserva_id\n" +
+                "WHERE h.estado_id = 2;";
 
-        List<Room> rooms = new ArrayList<>();
+        List<AllInfoRoom> allInfoRooms = new ArrayList<>();
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql)) {
@@ -340,32 +346,28 @@ public class GestionRoom {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String number = rs.getString("numero");
-                int typeId = rs.getInt("tipo_id");
-                String typeName = rs.getString("tipo_nombre");
-                String statusTypeRoom = rs.getString("estado_tipo");
-                int statusId = rs.getInt("estado_id");
-                double price = rs.getDouble("precio");
-                int floorId = rs.getInt("piso_id");
-                int disponible = rs.getInt("disponible");
-
-                // Se obtiene el enum directamente por ID
-                StatusRoom statusRoom = StatusRoom.fromId(statusId);
-
-                // Se crea el objeto TypeRoom directamente sin consulta extra
-                TypeRoom typeRoom = new TypeRoom(typeId, typeName, statusTypeRoom);
-
-                rooms.add(new Room(id, number, typeRoom, statusRoom, price, floorId, disponible));
+                AllInfoRoom allInfoRoom = new AllInfoRoom();
+                allInfoRoom.setIdReservation(rs.getInt("reserva_id"));
+                allInfoRoom.setIdClient(rs.getInt("cliente_id"));
+                allInfoRoom.setIdRoom(rs.getInt("habitacion_id"));
+                allInfoRoom.setNumberRoom(rs.getString("numero"));
+                allInfoRoom.setIdFloor(rs.getInt("piso_id"));
+                allInfoRoom.setFloor(rs.getString("nombre_piso"));
+                allInfoRoom.setIdTypeRoom(rs.getInt("tipo_id"));
+                allInfoRoom.setTypeRoom(rs.getString("tipo_nombre"));
+                allInfoRoom.setStatusRoom(rs.getString("estado_tipo"));
+                allInfoRoom.setPriceRoom(rs.getDouble("precio"));
+                allInfoRoom.setIdRoomStatus(rs.getInt("estado_id"));
+                allInfoRoom.setStatusRoom(rs.getString("estado_nombre"));
+                allInfoRoom.setAvailabilityRoom(rs.getInt("disponible"));
+                allInfoRooms.add(allInfoRoom);
             }
 
         } catch (SQLException e) {
             LOGGER.severe("Error retrieving Rooms: " + e.getMessage());
         }
 
-        return rooms.stream()
-                .sorted(Comparator.comparing((Room room) -> Integer.parseInt(room.getNumber())))
-                .collect(Collectors.toList());
+        return allInfoRooms;
     }
     public static List<Room> getRoomsPaginated(int page, int pageSize) {
         String sql = "SELECT " +

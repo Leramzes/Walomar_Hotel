@@ -26,6 +26,7 @@ public class GestionReservation {
                 "    r.id,\n" +
                 "    cl.id AS id_cliente,\n" +
                 "    cl.nombre,\n" +
+                "    CONCAT(cl.ap_paterno, ' ', cl.ap_materno) AS apellidos,\n" +
                 "    cl.tipo_documento,\n" +
                 "    cl.numero_documento,\n" +
                 "    cl.email,\n" +
@@ -65,6 +66,7 @@ public class GestionReservation {
                 reservation.setIdReservation(rs.getInt("id"));
                 reservation.setIdClient(rs.getInt("id_cliente"));
                 reservation.setClientName(rs.getString("nombre"));
+                reservation.setClientApellidos(rs.getString("apellidos"));
                 reservation.setDocumentType(rs.getString("tipo_documento"));
                 reservation.setDocumentNumber(rs.getString("numero_documento"));
                 reservation.setEmail(rs.getString("email"));

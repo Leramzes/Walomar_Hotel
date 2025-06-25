@@ -4,6 +4,9 @@
 <%@ page import="development.team.hoteltransylvania.Model.Product" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionProduct" %>
 <%@ page import="java.util.stream.Collectors" %>
+<%@ page import="development.team.hoteltransylvania.Model.Reservation" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionReservation" %>
+<%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -30,7 +33,8 @@
 
 <%
     int idParam = Integer.parseInt(request.getParameter("id"));
-    Room room = GestionRoom.getRoomById(idParam);
+    TableReservationDTO reservation = GestionReservation.getReservationById(idParam);
+    Room room = GestionRoom.getRoomById(reservation.getIdRoom());
 
     List<Product> productsInList = GestionProduct.getAllProducts().
             stream().filter(p -> p.getStatus() == 1).collect(Collectors.toUnmodifiableList());
@@ -42,11 +46,17 @@
         <div class="card">
             <div class="card-header bg-light"><strong>Datos de la Habitación</strong></div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> <%=room.getNumber()%>
-                </p>
-                <p><strong>Tipo:</strong> <%=room.getTypeRoom().getName().toUpperCase()%>
-                </p>
-                <p><strong>Costo:</strong> <span class="text-primary">S/ <%=room.getPrice()%></span></p>
+                <div class="row">
+                    <div class="col-6">
+                        <p><strong>Número:</strong> <%= room.getNumber() %></p>
+                        <p><strong>Costo:</strong> <span class="text-primary">S/ <%= room.getPrice() %></span></p>
+                        <p><strong>Tipo:</strong> <%= room.getTypeRoom().getName().toUpperCase() %></p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>Estado:</strong> <%= room.getTypeRoom().getName() %></p>
+                        <p><strong>Tarifa:</strong> 24Hr.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -54,9 +64,9 @@
         <div class="card">
             <div class="card-header bg-light"><strong>Datos del Cliente</strong></div>
             <div class="card-body">
-                <p><strong>Nombre:</strong> Gonashi 🤑</p>
-                <p><strong>Documento:</strong> 69696969</p>
-                <p><strong>Fecha entrada:</strong> 14-02-2025</p>
+                <p><strong>Nombre:</strong> <%=reservation.getClientName()+" "+reservation.getClientApellidos()%></p>
+                <p><strong>Documento:</strong> <%=reservation.getDocumentNumber()%></p>
+                <p><strong>Fecha entrada:</strong> <%=reservation.getFecha_ingreso()%></p>
             </div>
         </div>
     </div>
