@@ -37,7 +37,7 @@
 
 <body>
 <div class="d-flex justify-content-between align-items-center">
-    <h4><i class="fa-solid fa-gears me-2"></i> Niveles / Pisos</h4>
+    <h4><i class="fa-solid fa-building me-2"></i> Niveles / Pisos</h4>
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
