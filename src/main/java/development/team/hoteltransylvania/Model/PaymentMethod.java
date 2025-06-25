@@ -3,6 +3,7 @@ package development.team.hoteltransylvania.Model;
 public class PaymentMethod {
     private int id;
     private String nameMethod;
+    private int status;
 
     public PaymentMethod() {
     }
@@ -10,6 +11,11 @@ public class PaymentMethod {
     public PaymentMethod(int id, String nameMethod) {
         this.id = id;
         this.nameMethod = nameMethod;
+    }
+
+    public PaymentMethod(String nameMethod, int status) {
+        this.nameMethod = nameMethod;
+        this.status = status;
     }
 
     public int getId() {
@@ -28,11 +34,20 @@ public class PaymentMethod {
         this.nameMethod = nameMethod;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "PaymentMethod{" +
                 "id=" + id +
                 ", nameMethod='" + nameMethod + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

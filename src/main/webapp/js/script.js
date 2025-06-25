@@ -562,7 +562,8 @@ document.addEventListener("DOMContentLoaded", function () {
         venderServicios: "jsp/venderServicios.jsp",
         catalogoServicios: "jsp/catalagoServicios.jsp",
         habitacionesServicio: "jsp/habitacionesServicio.jsp",
-        reservaCalendario: "jsp/reservaCalendario.jsp"
+        reservaCalendario: "jsp/reservaCalendario.jsp",
+        metodosPago: "jsp/metodosPago.jsp"
 
     };
 
@@ -598,7 +599,8 @@ document.addEventListener("DOMContentLoaded", function () {
         informacionHotelera: "configuracion",
         habitaciones: "configuracion",
         habitacionesTipo: "configuracion",
-        pisos: "configuracion"
+        pisos: "configuracion",
+        metodosPago: "configuracion"
     };
 
     if (expandirMenu[view]) {
