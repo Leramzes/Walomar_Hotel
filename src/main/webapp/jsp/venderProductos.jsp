@@ -67,13 +67,13 @@
     <div class="card-header text-white">
         <div class="row align-items-center">
             <div class="col-9 d-flex gap-2">
-                <select class="form-select">
+                <select class="form-select" id="selectProducto">
                     <option selected>Seleccione una opción</option>
                     <%for (Product product : productsInList) {%>
                     <option value="<%=product.getId()%>">Nombre: <%=product.getName()%> | Precio: <%=product.getPrice()%></option>
                     <%}%>
                 </select>
-                <button class="btn btn-primary">Agregar</button>
+                <button class="btn btn-primary" onclick="agregarProducto()">Agregar</button>
             </div>
             <div class="col-3 text-end">
                 <button class="btn btn-success" onclick="cargarPagina('jsp/habitacionesVenta.jsp')">Terminar venta
@@ -83,31 +83,19 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+            <table id="detalleProductos" class="table table-bordered align-middle">
                 <thead class="table-warning">
                 <tr>
                     <th>Nombre</th>
-                    <th>Tipo</th>
                     <th>Cantidad</th>
                     <th>Precio Unit.</th>
                     <th>Precio Total</th>
                     <th>Eliminar</th>
                 </tr>
                 </thead>
-                <tbody id="tablaVenderProductos">
+                <tbody>
                 <tr>
-                    <td>Agua</td>
-                    <td>Producto</td>
-                    <td><label>
-                        <input type="number" class="form-control" value="2">
-                    </label></td>
-                    <td>S/.15</td>
-                    <td>S/.30</td>
-                    <td class="align-middle text-center">
-                        <div class="d-flex justify-content-center align-items-center gap-1">
-                            <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </td>
+                    <td colspan="5" class="text-center text-muted">Agrega productos</td>
                 </tr>
                 </tbody>
             </table>

@@ -987,3 +987,15 @@ function abrirModalClave() {
         }
     });
 }
+function agregarProducto() {
+    var nameFilter = $("#selectProducto").val();
+
+    $.ajax({
+        url: "addTableProduct",
+        data: {filter: nameFilter},
+        success: function (result) {
+            // Insertar la tabla filtrada
+            $("#detalleProductos").find("tbody").html(result);
+        }
+    });
+}

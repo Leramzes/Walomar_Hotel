@@ -1,0 +1,41 @@
+package development.team.hoteltransylvania.Controller;
+
+import development.team.hoteltransylvania.Business.GestionClient;
+import development.team.hoteltransylvania.Business.GestionProduct;
+import development.team.hoteltransylvania.Model.Client;
+import development.team.hoteltransylvania.Model.Product;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+@WebServlet(name = "addTableProduct", urlPatterns = {"/addTableProduct"})
+public class addTableProduct extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = resp.getWriter()) {
+            Product product = GestionProduct.getProductById(Integer.parseInt(req.getParameter("filter")));
+            out.println("<tr>");
+            out.println("    <td>" + product.getName() + "</td>");
+            out.println(" <td><label>\n" +
+                    "                        <input type=\"number\" class=\"form-control\" value=\"1\">\n" +
+                    "                    </label></td>");
+            out.println("    <td>" + product.getPrice() + "</td>");
+            out.println("    <td>" + product.getPrice() + "</td>");
+            out.println("    <td class='align-middle text-center'>");
+            out.println("        <div class=\"d-flex justify-content-center align-items-center gap-1\">");
+            out.println("            <button class=\"btn btn-danger\"><i class=\"fas fa-trash\"></i></button>");
+            out.println("        </div>");
+            out.println("    </td>");
+            out.println("</tr>");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
