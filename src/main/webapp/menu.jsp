@@ -1154,5 +1154,17 @@
         }
     });
 </script>
+<script>
+    // Delegado porque los botones se agregan dinámicamente
+    $(document).on("click", ".btn-eliminar-producto", function () {
+        $(this).closest("tr").remove();
+        recalcularTotalProducto();
+        // Verificar si ya no hay productos en la tabla
+        const tbody = $("#detalleProductos").find("tbody");
+        if (tbody.find("tr").length === 0) {
+            tbody.append('<tr><td colspan="5" class="text-center text-muted">Agrega productos</td></tr>');
+        }
+    });
+</script>
 </body>
 </html>

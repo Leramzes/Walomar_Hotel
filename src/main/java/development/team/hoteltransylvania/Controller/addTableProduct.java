@@ -21,16 +21,16 @@ public class addTableProduct extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = resp.getWriter()) {
             Product product = GestionProduct.getProductById(Integer.parseInt(req.getParameter("filter")));
-            out.println("<tr>");
+            out.println("<tr data-id='" + product.getId() + "'>");
             out.println("    <td>" + product.getName() + "</td>");
-            out.println(" <td><label>\n" +
-                    "                        <input type=\"number\" class=\"form-control\" value=\"1\">\n" +
-                    "                    </label></td>");
-            out.println("    <td>" + product.getPrice() + "</td>");
-            out.println("    <td>" + product.getPrice() + "</td>");
+            out.println(" <td><label>");
+            out.println("     <input type='number' class='form-control cantidad-producto' value='1'>");
+            out.println("</label></td>");
+            out.println("    <td class='precio-unit'> S/. " + product.getPrice() + "</td>");
+            out.println("    <td class='precio-total'> S/. " + product.getPrice() + "</td>");
             out.println("    <td class='align-middle text-center'>");
-            out.println("        <div class=\"d-flex justify-content-center align-items-center gap-1\">");
-            out.println("            <button class=\"btn btn-danger\"><i class=\"fas fa-trash\"></i></button>");
+            out.println("        <div class='d-flex justify-content-center align-items-center gap-1'>");
+            out.println("            <button class='btn btn-danger btn-eliminar-producto'><i class='fas fa-trash'></i></button>");
             out.println("        </div>");
             out.println("    </td>");
             out.println("</tr>");

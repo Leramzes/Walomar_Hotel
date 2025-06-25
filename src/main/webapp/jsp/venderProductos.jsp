@@ -111,7 +111,7 @@
             </table>
         </div>
 
-        <p class="fw-bold mt-3 mt-sm-3">TOTAL: S/.30</p>
+        <p id="totalGeneral" class="fw-bold mt-3 mt-sm-3">TOTAL: S/.0</p>
 
         <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
             <div class="form-check me-3 mb-2 mb-md-0">
