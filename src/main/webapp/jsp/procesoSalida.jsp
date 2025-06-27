@@ -1,3 +1,14 @@
+<%@ page import="development.team.hoteltransylvania.DTO.TableReservationDTO" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionReservation" %>
+<%@ page import="development.team.hoteltransylvania.Model.Room" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionRoom" %>
+<%@ page import="development.team.hoteltransylvania.Model.PaymentMethod" %>
+<%@ page import="java.util.List" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionMetodosPago" %>
+<%@ page import="java.util.stream.Collectors" %>
+<%@ page import="development.team.hoteltransylvania.Model.Employee" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionEmployee" %>
+<%@ page import="development.team.hoteltransylvania.DTO.usersEmployeeDTO" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -20,16 +31,30 @@
   </nav>
 </div>
 
+<%
+  int idParam = Integer.parseInt(request.getParameter("id"));
+  TableReservationDTO reservation = GestionReservation.getReservationById(idParam);
+  Room room = GestionRoom.getRoomById(reservation.getIdRoom());
+  GestionEmployee employeeObject = new GestionEmployee();
+  usersEmployeeDTO employee = employeeObject.getEmployeeById(reservation.getEmpleadoId());
+  String fullName = employee.getName_employee();
+  String[] parts = fullName.trim().split("\\s+"); // divide por espacios múltiples
+  String onlyFirstName = parts[0];
+
+  List<PaymentMethod> paymentMethodsActive = GestionMetodosPago.getAllMethodPayments()
+          .stream().filter(method -> method.getStatus() == 1).collect(Collectors.toUnmodifiableList());
+%>
+
 <!-- Sección de Información -->
 <div class="row mt-4">
-  <div class="col-lg-4 col-md-4 col-sm-12">
+  <div class="col-lg-4 col-md-4 col-sm-12 mt-4 mt-md-0">
     <div class="card">
       <div class="card-header bg-light"><strong>Datos de la Habitación</strong></div>
       <div class="card-body">
-        <p><strong>Nombre:</strong> 101</p>
-        <p><strong>Tipo:</strong> SENCILLA</p>
-        <p><strong>Costo:</strong> <span class="text-primary">S/.200</span></p>
-        <p><strong>Descuento:</strong> <span>Ninguno</span></p>
+        <p><strong>Nombre:</strong> <%= room.getNumber() %></p>
+        <p><strong>Tipo:</strong> <%= room.getTypeRoom().getName().toUpperCase() %></p>
+        <p><strong>Costo:</strong> <span class="text-primary"><%= room.getPrice() %></span></p>
+        <p><strong>Descuento:</strong> <span><%= reservation.getDsct() %></span></p>
       </div>
     </div>
   </div>
@@ -37,10 +62,10 @@
     <div class="card">
       <div class="card-header bg-light"><strong>Datos del Cliente</strong></div>
       <div class="card-body">
-        <p><strong>Nombre:</strong> Gonashi 🤑</p>
-        <p><strong>Documento:</strong> 69696969</p>
-        <p><strong>Teléfono:</strong> 987654321</p>
-        <p><strong>Correo:</strong> gonashi@gmail.com</p>
+        <p><strong>Nombre:</strong> <%=reservation.getClientName() + " " + reservation.getClientApellidos()%></p>
+        <p><strong>Documento:</strong> <%=reservation.getDocumentNumber()%></p>
+        <p><strong>Teléfono:</strong> <%=reservation.getPhone()%></p>
+        <p><strong>Correo:</strong> <%=reservation.getEmail()%></p>
       </div>
     </div>
   </div>
@@ -48,10 +73,20 @@
     <div class="card">
       <div class="card-header bg-light"><strong>Datos del Hospedaje</strong></div>
       <div class="card-body">
-        <p><strong>Fecha de Entrada:</strong> 18-02-25 13:05</p>
-        <p><strong>Fecha de Salida:</strong> 19-02-25 12:05</p>
-        <p><strong>Tiempo Estimado:</strong> 1 día 0 horas 0 minutos</p>
-        <p><strong>Tiempo Rebasado:</strong> <span class="text-danger">0 días 4 horas 15 minutos</span></p>
+        <div class="row">
+          <!-- Columna izquierda -->
+          <div class="col-6">
+            <p><strong>Fecha de Entrada Programada:</strong> <%= reservation.getCheckInDate() %></p>
+            <p><strong>Fecha de Ingreso:</strong> <%= reservation.getFecha_ingreso() %></p>
+            <p><strong>Fecha de Salida:</strong> <%= reservation.getCheckOutDate() %></p>
+          </div>
+
+          <!-- Columna derecha -->
+          <div class="col-6">
+            <p><strong>Tiempo Estimado:</strong> <%= reservation.getTiempoEstimado() %></p>
+            <p><strong>Tiempo Rebasado:</strong> <span class="text-danger"><%= reservation.getTiempoRebasado() %></span></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -77,14 +112,14 @@
         </thead>
         <tbody id="tablaProcesoSalida">
         <tr>
-          <td>S/.0</td>
-          <td>S/.0</td>
-          <td>S/.0</td>
+          <td><%= reservation.getCobro_extra() %></td>
+          <td><%= reservation.getPago_total() %></td>
+          <td><%= reservation.getAdelanto() %></td>
           <td>
             <input type="number" class="form-control" value="0">
           </td>
-          <td>S/.0</td>
-          <td>Felipe</td>
+          <td><%= reservation.getPago_total() %></td>
+          <td><%= onlyFirstName %></td>
         </tr>
         </tbody>
       </table>
@@ -129,18 +164,17 @@
       <label class="input-group-text" for="metodoPago"><i class="fa-solid fa-money-bill-wave"></i></label>
       <select class="form-select" id="metodoPago" name="metodoPago" required>
         <option value="" selected disabled>Método de Pago</option>
-        <option value="Efectivo">Efectivo</option>
-        <option value="Transferencia">Transferencia</option>
-        <option value="Tarjeta">Tarjeta</option>
-        <option value="Yape / Plin">Yape / Plin</option>
+        <%for (PaymentMethod paymentMethod : paymentMethodsActive) {%>
+        <option value="<%=paymentMethod.getId()%>"><%=paymentMethod.getNameMethod()%></option>
+        <%}%>
       </select>
     </div>
 
     <!-- Botones -->
     <div class="d-flex flex-column flex-md-row justify-content-between mt-2">
       <div class="d-flex flex-column flex-md-row justify-content-start gap-1">
-        <button class="btn btn-danger w-auto w-sm-100" onclick="cargarPagina('jsp/VerificacionSalidas.jsp')"> Regresar </button>
-        <button class="btn btn-primary w-auto w-sm-100 mt-2 mt-md-0" onclick="cargarPagina('jsp/VerificacionSalidas.jsp')"> Realizar Limpieza Intermedia </button>
+        <button class="btn btn-danger w-auto w-sm-100" onclick="cargarPagina('jsp/verificacionSalidas.jsp')"> Regresar </button>
+        <%--<button class="btn btn-primary w-auto w-sm-100 mt-2 mt-md-0" onclick="cargarPagina('jsp/VerificacionSalidas.jsp')"> Realizar Limpieza Intermedia </button>--%>
       </div>
       <button class="btn btn-success w-auto w-sm-100 mt-2 mt-md-0" onclick="cargarPagina('jsp/VerificacionSalidas.jsp')"> Culminar y Limpiar Habitación </button>
     </div>

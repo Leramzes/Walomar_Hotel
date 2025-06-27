@@ -31,6 +31,7 @@ public class GestionReservation {
                 "    cl.numero_documento,\n" +
                 "    cl.email,\n" +
                 "    cl.telefono,\n" +
+                "    em.id AS id_empleado,\n" +
                 "    h.id AS id_habitacion,\n" +
                 "    h.numero,\n" +
                 "    h.tipo_id,\n" +
@@ -38,12 +39,14 @@ public class GestionReservation {
                 "    r.fecha_inicio,\n" +
                 "    r.fecha_fin,\n" +
                 "    r.fecha_ingreso,\n" +
+                "    r.cant_dias,\n" +
                 "    r.descuento,\n" +
                 "    r.cobro_extra,\n" +
                 "    r.adelanto,\n" +
                 "    dh.pago_total,\n" +
                 "    er.estado\n" +
                 "FROM reservas r\n" +
+                "         INNER JOIN empleados em ON em.id = r.empleado_id\n" +
                 "         INNER JOIN estado_reserva er ON er.id = r.estado_id\n" +
                 "         INNER JOIN clientes cl ON r.cliente_id = cl.id\n" +
                 "         INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
@@ -71,12 +74,14 @@ public class GestionReservation {
                 reservation.setDocumentNumber(rs.getString("numero_documento"));
                 reservation.setEmail(rs.getString("email"));
                 reservation.setPhone(rs.getString("telefono"));
+                reservation.setEmpleadoId(rs.getInt("id_empleado"));
                 reservation.setIdRoom(rs.getInt("id_habitacion"));
                 reservation.setNumberRoom(rs.getString("numero"));
                 reservation.setRoomType(rs.getString("tipo_habitacion"));
                 reservation.setCheckInDate(rs.getTimestamp("fecha_inicio"));
                 reservation.setCheckOutDate(rs.getTimestamp("fecha_fin"));
                 reservation.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
+                reservation.setCantDays(rs.getInt("cant_dias"));
                 reservation.setDsct(rs.getInt("descuento"));
                 reservation.setCobro_extra(rs.getDouble("cobro_extra"));
                 reservation.setAdelanto(rs.getDouble("adelanto"));

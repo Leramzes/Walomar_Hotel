@@ -16,6 +16,7 @@ public class TableReservationDTO {
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
     private Timestamp fecha_ingreso;
+    private int cantDays;
     private String reservationStatus;
     private int reservationStatusId;
     private String email;
@@ -25,6 +26,7 @@ public class TableReservationDTO {
     private double cobro_extra;
     private double adelanto;
     private double pago_total;
+    private int empleadoId;
 
     public TableReservationDTO() {
     }
@@ -248,6 +250,46 @@ public class TableReservationDTO {
         this.clientApellidos = clientApellidos;
     }
 
+    public int getCantDays() {
+        return cantDays;
+    }
+
+    public void setCantDays(int cantDays) {
+        this.cantDays = cantDays;
+    }
+
+    public int getEmpleadoId() {
+        return empleadoId;
+    }
+
+    public void setEmpleadoId(int empleadoId) {
+        this.empleadoId = empleadoId;
+    }
+
+    public String getTiempoEstimado() {
+        long milis = checkOutDate.getTime() - checkInDate.getTime();
+
+        long minutos = milis / (1000 * 60);
+        long dias = minutos / (60 * 24);
+        long horas = (minutos % (60 * 24)) / 60;
+        long mins = minutos % 60;
+
+        return dias + " días " + horas + " horas " + mins + " minutos";
+    }
+    public String getTiempoRebasado() {
+        if (fecha_ingreso == null || fecha_ingreso.before(checkOutDate)) {
+            return "0 días 0 horas 0 minutos";
+        }
+
+        long milis = fecha_ingreso.getTime() - checkOutDate.getTime();
+
+        long minutos = milis / (1000 * 60);
+        long dias = minutos / (60 * 24);
+        long horas = (minutos % (60 * 24)) / 60;
+        long mins = minutos % 60;
+
+        return dias + " días " + horas + " horas " + mins + " minutos";
+    }
     @Override
     public String toString() {
         return "TableReservationDTO{" +
