@@ -95,7 +95,7 @@
                     </option>
                     <%}%>
                 </select>
-                <button class="btn btn-primary" onclick="agregarProducto()">Agregar</button>
+                <button class="btn btn-primary" onclick="agregarProducto('#detalleProductos')">Agregar</button>
             </div>
             <div class="col-3 text-end">
                 <button class="btn btn-success" onclick="cargarPagina('jsp/habitacionesVenta.jsp')">Terminar venta

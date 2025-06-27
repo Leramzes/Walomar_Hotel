@@ -35,7 +35,7 @@
     <div class="row align-items-center">
       <div class="col-9 d-flex gap-2">
 
-        <select class="form-select">
+        <select class="form-select" id="selectProducto">
           <option selected>Open this select menu</option>
           <%for (Product product : productsInList) {%>
           <option value="<%=product.getId()%>">Nombre: <%=product.getName()%> |
@@ -44,7 +44,7 @@
           <%}%>
         </select>
 
-        <button class="btn btn-primary">Agregar</button>
+        <button class="btn btn-primary" onclick="agregarProducto('#detalleVentaDirecta')">Agregar</button>
       </div>
 
     </div>
@@ -52,7 +52,7 @@
 
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-bordered align-middle">
+      <table class="table table-bordered align-middle" id="detalleVentaDirecta">
         <thead class="table-warning">
         <tr>
           <th>Nombre</th>
@@ -70,7 +70,7 @@
       </table>
     </div>
 
-    <p class="fw-bold">TOTAL: S/.30</p>
+    <p id="totalGeneral" class="fw-bold mt-3 mt-sm-3">TOTAL: S/.0</p>
 
     <div class="my-3 my-md-0" style="max-width: 100%;">
       <div class="d-flex justify-content-between align-items-center flex-column flex-md-row gap-2">

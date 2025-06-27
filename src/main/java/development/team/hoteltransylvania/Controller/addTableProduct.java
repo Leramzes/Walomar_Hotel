@@ -24,7 +24,7 @@ public class addTableProduct extends HttpServlet {
             out.println("<tr data-id='" + product.getId() + "'>");
             out.println("    <td>" + product.getName() + "</td>");
             out.println(" <td><label>");
-            out.println("     <input type='number' class='form-control cantidad-producto' value='1'>");
+            out.println("     <input type='number' class='form-control cantidad-producto' value='1' min='1' data-precio='" + product.getPrice() + "'>");
             out.println("</label></td>");
             out.println("    <td class='precio-unit'> S/. " + product.getPrice() + "</td>");
             out.println("    <td class='precio-total'> S/. " + product.getPrice() + "</td>");

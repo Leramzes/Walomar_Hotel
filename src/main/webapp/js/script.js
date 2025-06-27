@@ -989,49 +989,44 @@ function abrirModalClave() {
         }
     });
 }
-function agregarProducto() {
+function agregarProducto(idTabla) {
     var productId = $("#selectProducto").val();
 
-    // Verificar si ya está en la tabla
-    var filaExistente = $("#detalleProductos").find("tbody").find("tr[data-id='" + productId + "']");
+    // Buscar si ya existe en la tabla
+    var filaExistente = $(idTabla).find("tbody").find("tr[data-id='" + productId + "']");
 
     if (filaExistente.length > 0) {
-        // Obtener el input de cantidad y aumentar en 1
         var inputCantidad = filaExistente.find("input.cantidad-producto");
         var cantidadActual = parseInt(inputCantidad.val()) || 0;
         inputCantidad.val(cantidadActual + 1);
 
-        // (Opcional) Actualizar precio total
         var precioUnit = parseFloat(filaExistente.find("td:nth-child(3)").text().replace("S/.", "").trim()) || 0;
         filaExistente.find("td:nth-child(4)").text("S/. " + ((cantidadActual + 1) * precioUnit).toFixed(2));
 
-        //Recalcular total general después de actualizar
-        recalcularTotalProducto();
+        // Recalcular total
+        recalcularTotalProducto(idTabla);
     } else {
-        // Si no existe, agregarlo con AJAX
         $.ajax({
             url: "addTableProduct",
             data: { filter: productId },
             success: function (result) {
-                // Elimina el mensaje inicial si existe
-                const tbody = $("#detalleProductos").find("tbody");
+                const tbody = $(idTabla).find("tbody");
                 tbody.find("td.text-muted").parent().remove();
 
-                // Agrega el nuevo producto
                 tbody.append(result);
-                recalcularTotalProducto();
+                recalcularTotalProducto(idTabla);
             }
         });
     }
 }
-function recalcularTotalProducto() {
+function recalcularTotalProducto(idTabla) {
     let total = 0;
-    $("#detalleProductos tbody tr").each(function () {
+    $(idTabla + " tbody tr").each(function () {
         const totalTexto = $(this).find(".precio-total").text().replace("S/.", "").trim();
         if (totalTexto) {
             total += parseFloat(totalTexto);
         }
     });
 
-    $("#totalGeneral").text("TOTAL: S/." + total.toFixed(2));
+    $("#totalGeneral").text("TOTAL: S/. " + total.toFixed(2));
 }

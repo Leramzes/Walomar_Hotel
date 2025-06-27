@@ -1164,13 +1164,31 @@
     //Eliminar productos del carrito en venta
     // Delegado porque los botones se agregan dinámicamente
     $(document).on("click", ".btn-eliminar-producto", function () {
+        const tabla = $(this).closest("table");
         $(this).closest("tr").remove();
-        recalcularTotalProducto();
-        // Verificar si ya no hay productos en la tabla
-        const tbody = $("#detalleProductos").find("tbody");
+        recalcularTotalProducto("#" + tabla.attr("id"));
+
+        const tbody = tabla.find("tbody");
         if (tbody.find("tr").length === 0) {
             tbody.append('<tr><td colspan="5" class="text-center text-muted">Agrega productos</td></tr>');
         }
+    });
+
+    //Cambios de cantidad
+    $(document).on("input", ".cantidad-producto", function () {
+        const input = $(this);
+        const cantidad = parseInt(input.val()) || 0;
+        const precioUnitario = parseFloat(input.data("precio")) || 0;
+
+        const fila = input.closest("tr");
+        const totalPorProducto = (cantidad * precioUnitario).toFixed(2);
+
+        // Actualiza el total individual
+        fila.find(".precio-total").text("S/. " + totalPorProducto);
+
+        // Actualiza el total general
+        const tablaId = "#" + fila.closest("table").attr("id");
+        recalcularTotalProducto(tablaId);
     });
 </script>
 <script>
