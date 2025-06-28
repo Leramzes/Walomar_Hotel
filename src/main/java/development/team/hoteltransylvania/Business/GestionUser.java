@@ -299,6 +299,35 @@ import java.util.logging.Logger;
 
             return employee;
         }
+        public static Employee getEmployeeIdByUserId(int userId) {
+            String sql = "SELECT e.id, e.nombre, e.rol_id, e.correo\n" +
+                    "FROM empleados e\n" +
+                    "INNER JOIN usuarios u on e.id = u.empleado_id\n" +
+                    "WHERE u.id = ?";
+            Employee employee = null;
+
+            try (Connection cnn = dataSource.getConnection();
+                 PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+                ps.setInt(1, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        employee = new Employee();
+                        employee.setId(rs.getInt("id"));
+                        employee.setName(rs.getString("nombre"));
+                        employee.setPosition(String.valueOf(rs.getInt("rol_id")));
+                        employee.setEmail(rs.getString("correo"));
+
+                    } else {
+                        LOGGER.warning("No se encontró ningún empleado con el ID: " + userId);
+                    }
+                }
+            } catch (SQLException e) {
+                LOGGER.severe("Error al obtener el empleado con ID " + userId + ": " + e.getMessage());
+            }
+
+            return employee;
+        }
         public static List<User> getAllUsers() {
             String sql = "SELECT id, username, empleado_id, estado FROM usuarios";
             List<User> lista = new ArrayList<>();

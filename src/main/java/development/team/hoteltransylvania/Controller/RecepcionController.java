@@ -80,7 +80,7 @@ public class RecepcionController extends HttpServlet {
         }
 
         User user = (User) session.getAttribute("usuario");
-        Employee employee1 = GestionUser.obtenerEmpleadoPorId(user.getId()); //empleado en sesion
+        Employee employee1 = GestionUser.getEmployeeIdByUserId(user.getId()); //empleado en sesion
         String idCLiente = req.getParameter("idClienteProcesar");//cliente
         String fecEntrada = req.getParameter("fechaEntradaRecep");//fecha de entrada reservada
         String fecSalida = req.getParameter("fechaSalidaRecep");//fecga de salida (ingresada)

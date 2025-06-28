@@ -64,7 +64,7 @@ public class ReservationController extends HttpServlet {
         * */
         String idCLiente = req.getParameter("idCLiente");
         User user = (User) session.getAttribute("usuario");
-        Employee employee1 = GestionUser.obtenerEmpleadoPorId(user.getId());
+        Employee employee1 = GestionUser.getEmployeeIdByUserId(user.getId());
         String nombre = req.getParameter("nombre");
         String tipoDocumento = req.getParameter("tipoDocumento");
         String fechaEntradaStr = (req.getParameter("fechaEntrada"));
