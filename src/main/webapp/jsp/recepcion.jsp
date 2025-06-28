@@ -109,7 +109,7 @@
 
     <div id="<%=floor.getId()%>-nivel" class="tab-pane fade show">
         <div class="row">
-            <%
+            <%--<%
                 List<Room> roomsFloor = rooms.stream()
                         .filter(room -> room.getFloor() == floor.getId())
                         .collect(Collectors.toList());
@@ -144,7 +144,44 @@
                     </div>
                 </button>
             </div>
-            <% } %>
+            <% } %>--%>
+                <%
+                    List<Room> roomsFloor = rooms.stream()
+                            .filter(room -> room.getFloor() == floor.getId())
+                            .collect(Collectors.toList());
+
+                    if (roomsFloor.isEmpty()) {
+                %>
+                <div class="col-12">
+                    <div class="alert alert-danger text-center">
+                        No hay habitaciones en este piso.
+                    </div>
+                </div>
+                <% } else {
+                    for (Room room : roomsFloor) {
+                        String colorOfStatus;
+                        switch (room.getStatusRoom().getValue()) {
+                            case 2: colorOfStatus = "occupied"; break;
+                            case 3: colorOfStatus = "warning"; break;
+                            case 4: colorOfStatus = "reserved"; break;
+                            default: colorOfStatus = "available";
+                        }
+                        String statusName = room.getStatusRoom().getName().toLowerCase();
+                        statusName = statusName.substring(0, 1).toUpperCase() + statusName.substring(1);
+                %>
+                <div class="col-md-3">
+                    <button class="room-card <%= colorOfStatus %>" onclick="cargarPagina('jsp/procesarHabitacion.jsp?id=<%= room.getId() %>')">
+                        <h5><%= room.getNumber() %>
+                        </h5>
+                        <span><%= room.getTypeRoom().getName().toUpperCase() %></span>
+                        <i class="fas fa-bed room-icon"></i>
+                        <div class="room-status">
+                            <span><%= statusName %></span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </button>
+                </div>
+                <% } } %>
         </div>
     </div>
     <% } %>
