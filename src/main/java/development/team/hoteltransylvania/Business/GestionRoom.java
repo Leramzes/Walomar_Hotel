@@ -211,7 +211,7 @@ public class GestionRoom {
                 "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
                 "JOIN estado_habitacion e ON h.estado_id = e.id " +
                 "JOIN pisos p ON p.id = h.piso_id " +
-                "WHERE p.estatus = 'Activo' and t.estatus = 'Activo' and h.disponible=1";  // Paginación aplicada
+                "WHERE p.estatus = 'Activo' and t.estatus = 'Activo' and h.disponible=1 AND h.id != 1000000000";
 
         List<Room> rooms = new ArrayList<>();
 
@@ -278,7 +278,8 @@ public class GestionRoom {
                 "FROM habitaciones h " +
                 "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
                 "JOIN estado_habitacion e ON h.estado_id = e.id " +
-                "JOIN pisos p ON p.id = h.piso_id ";  // Paginación aplicada
+                "JOIN pisos p ON p.id = h.piso_id " + // Paginación aplicada
+                "WHERE AND h.id != 1000000000";
 
         List<Room> rooms = new ArrayList<>();
 
@@ -385,7 +386,7 @@ public class GestionRoom {
                 "JOIN tipo_habitacion t ON h.tipo_id = t.id " +
                 "JOIN estado_habitacion e ON h.estado_id = e.id " +
                 "JOIN pisos p ON p.id = h.piso_id " +
-                "WHERE p.estatus='Activo' AND t.estatus='Activo' " +
+                "WHERE p.estatus='Activo' AND t.estatus='Activo' AND h.id != 1000000000 " +
                 "ORDER BY h.numero ASC " +
                 "LIMIT ? OFFSET ?";
 
@@ -454,7 +455,7 @@ public class GestionRoom {
                 ).count();
     }
     public static int getTotalRooms() {
-        String sql = "SELECT COUNT(*) FROM habitaciones";
+        String sql = "SELECT COUNT(*) FROM habitaciones WHERE id != 1000000000";
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -573,7 +574,7 @@ public class GestionRoom {
     public static List<Room> getRoomByTypeRoom(int typeRoomId) {
         String sql = "SELECT * FROM habitaciones h " +
                 "INNER JOIN tipo_habitacion th ON h.tipo_id=th.id " +
-                "WHERE th.id = ? and h.disponible=1";
+                "WHERE th.id = ? and h.disponible=1 AND h.id != 1000000000";
         List<Room> rooms = new ArrayList<>();
 
         try (Connection cnn = dataSource.getConnection();

@@ -48,8 +48,8 @@
     }
 
     List<TableReservationDTO> allReservations = GestionReservation.getReservationPaginated(pagina, pageSize);
-    int totalEmployee = GestionEmployee.getAllEmployees().size();
-    int totalPages = (int) Math.ceil((double) totalEmployee / pageSize);
+    int totalReservas = GestionReservation.getAllReservations().size();
+    int totalPages = (int) Math.ceil((double) totalReservas / pageSize);
 %>
 
 <body>

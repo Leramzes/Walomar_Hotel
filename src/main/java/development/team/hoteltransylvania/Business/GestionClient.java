@@ -20,7 +20,7 @@ public class GestionClient {
     private static final Logger LOGGER = LoggerConfifg.getLogger(GestionClient.class);
 
     public static List<Client> getAllClients() {
-        String sql = "SELECT * FROM clientes";
+        String sql = "SELECT * FROM clientes WHERE id != 1000000000";
         List<Client> allClients = new ArrayList<>();
 
         try (Connection cnn = dataSource.getConnection();
@@ -49,7 +49,7 @@ public class GestionClient {
         return allClients;
     }
     public static List<Client> getAllClientsPaginated(int page, int pageSize) {
-        String sql = "SELECT * FROM clientes "+
+        String sql = "SELECT * FROM clientes WHERE id != 1000000000 "+
                 "LIMIT ? OFFSET ?";
         List<Client> allClients = new ArrayList<>();
 
