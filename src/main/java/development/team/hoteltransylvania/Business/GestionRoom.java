@@ -336,7 +336,7 @@ public class GestionRoom {
                 "         JOIN pisos p ON p.id = h.piso_id\n" +
                 "         JOIN detalle_habitacion dh ON dh.habitacion_id = h.id\n" +
                 "         JOIN reservas r ON r.id = dh.reserva_id\n" +
-                "WHERE h.estado_id = 2;";
+                "WHERE h.estado_id = 2 and r.estado_id=4;";
 
         List<AllInfoRoom> allInfoRooms = new ArrayList<>();
 
