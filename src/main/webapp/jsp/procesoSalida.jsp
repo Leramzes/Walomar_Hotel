@@ -47,7 +47,7 @@
 
 <!-- Sección de Información -->
 <div class="row mt-4">
-  <div class="col-lg-4 col-md-4 col-sm-12 mt-4 mt-md-0">
+  <div class="col-md-4 col-sm-12 mt-4 mt-md-0">
     <div class="card">
       <div class="card-header bg-light"><strong>Datos de la Habitación</strong></div>
       <div class="card-body">
@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-4 col-md-4 col-sm-12 mt-4 mt-md-0">
+  <div class="col-md-4 col-sm-12 mt-4 mt-md-0">
     <div class="card">
       <div class="card-header bg-light"><strong>Datos del Cliente</strong></div>
       <div class="card-body">
@@ -69,7 +69,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-4 col-md-4 col-sm-12 mt-4 mt-md-0">
+  <div class="col-md-4 col-sm-12 mt-4 mt-md-0">
     <div class="card">
       <div class="card-header bg-light"><strong>Datos del Hospedaje</strong></div>
       <div class="card-body">
