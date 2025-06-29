@@ -140,6 +140,7 @@ function abrirModalEditar(id) {
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }
+
 function abrirModalEditarServicio(id) {
     document.getElementById("inputEditarIdServicio").value = id;
     fetch("serviciocontrol?action=get&idservice=" + id)
@@ -196,6 +197,7 @@ function detalleReserva(id) {
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }
+
 function editarReserva(id) {
 
     fetch("reservatioController?action=get&idreserva=" + id)
@@ -336,6 +338,7 @@ function buscarCliente() {
         }
     });
 }
+
 function buscarClienteRecepcion() {
     var numberFilter = $("#busquedaCliente").val();
     $.ajax({
@@ -485,6 +488,7 @@ window.filtrarTablaReserva = function (wordKey1, wordKey2, wordKey3, wordKey4, w
         }
     });
 }
+
 function updatePaginationReserva(totalRecords, currentPage, size, wordKey1, wordKey2, wordKey3, wordKey4, wordKey5, tableSearch, quantitySearch, controller) {
     const totalPages = Math.ceil(totalRecords / size);
     const paginationContainer = $("#pagination");
@@ -637,7 +641,7 @@ document.addEventListener("DOMContentLoaded", function () {
 window.updateTotal = function () {
     let precio = parseFloat($("#habitacion option:selected").attr("data-precio")) || 0;
     let status = parseInt($("#habitacion option:selected").attr("data-status"));
-    const  msj = $("#habitacion option:selected").attr("data-msj") || "";
+    const msj = $("#habitacion option:selected").attr("data-msj") || "";
     let descuento = parseFloat($("#descuento").val()) || 0;
     let cobroExtra = parseFloat($("#cobroExtra").val()) || 0;
     let adelanto = parseFloat($("#adelanto").val()) || 0;
@@ -651,13 +655,13 @@ window.updateTotal = function () {
     document.querySelector("#totalPagar").value = total.toFixed(2);
     document.querySelector("#msjRoom").innerHTML = msj.replace(/\\n/g, "<br>");
 
-    if(status === 2){
+    if (status === 2) {
         document.querySelector("#msjStatus").innerHTML = "Habitación actualmente ocupada.";
         document.querySelector("#msjRoom").innerHTML = "";
-    }else if(status === 3){
+    } else if (status === 3) {
         document.querySelector("#msjStatus").innerHTML = "Habitación actualmente en mantenimiento.";
         document.querySelector("#btnGuardar").disabled = true;
-    }else {
+    } else {
         document.querySelector("#msjStatus").innerHTML = ""; // limpiar o poner otro mensaje si deseas
     }
 };
@@ -723,6 +727,7 @@ function calcularDiasRecep() {
     }
     return 1; // Valor por defecto
 }
+
 function calcularDias() {
     let fechaEntrada = new Date(document.getElementById("fechaEntrada").value);
     let fechaSalida = new Date(document.getElementById("fechaSalida").value);
@@ -918,7 +923,8 @@ function toggleRadioInput() {
     const isLastSelected = document.getElementById("downloadLast").checked;
     document.getElementById("numLast").disabled = !isLastSelected;
 }
-function actDscRecepcion(){
+
+function actDscRecepcion() {
     Swal.fire({
         title: "Ingrese clave de administrador",
         input: "password",
@@ -950,6 +956,7 @@ function actDscRecepcion(){
         }
     });
 }
+
 function abrirModalClave() {
     const modalReservaElement = document.getElementById('modalAgregarReserva');
     const modalReservaExistente = bootstrap.Modal.getInstance(modalReservaElement);
@@ -989,6 +996,7 @@ function abrirModalClave() {
         }
     });
 }
+
 function agregarProducto(idTabla) {
     var productId = $("#selectProducto").val();
 
@@ -1008,7 +1016,7 @@ function agregarProducto(idTabla) {
     } else {
         $.ajax({
             url: "addTableProduct",
-            data: { filter: productId },
+            data: {filter: productId},
             success: function (result) {
                 const tbody = $(idTabla).find("tbody");
                 tbody.find("td.text-muted").parent().remove();
@@ -1019,6 +1027,7 @@ function agregarProducto(idTabla) {
         });
     }
 }
+
 function recalcularTotalProducto(idTabla) {
     let total = 0;
 
@@ -1040,6 +1049,7 @@ function recalcularTotalProducto(idTabla) {
 
     $("#totalGeneral").text("TOTAL: S/. " + total.toFixed(2));
 }
+
 function agregarServicio(idTabla) {
     var serviceId = $("#selectServicio").val();
 
@@ -1059,7 +1069,7 @@ function agregarServicio(idTabla) {
     } else {
         $.ajax({
             url: "addTableService",
-            data: { filter: serviceId },
+            data: {filter: serviceId},
             success: function (result) {
                 const tbody = $(idTabla).find("tbody");
                 tbody.find("td.text-muted").parent().remove();
@@ -1070,6 +1080,7 @@ function agregarServicio(idTabla) {
         });
     }
 }
+
 function recalcularTotalServicio(idTabla) {
     let total = 0;
     $(idTabla + " tbody tr").each(function () {
@@ -1080,4 +1091,58 @@ function recalcularTotalServicio(idTabla) {
     });
 
     $("#totalGeneral").text("TOTAL: S/. " + total.toFixed(2));
+}
+
+function validacionVenta() {
+    const formVenta = document.getElementById("formVentaDirecta");
+
+    formVenta.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const errorBox = document.getElementById("errorMaxStock");
+        errorBox.style.display = "none";
+        let stockInvalido = false;
+        let mensaje = "";
+
+        document.querySelectorAll("input[name='cantProduct[]']").forEach(input => {
+            const cantidad = parseInt(input.value);
+            const stock = parseInt(input.dataset.stock);
+            const nombre = input.dataset.nombre;
+
+            if (cantidad > stock) {
+                stockInvalido = true;
+                mensaje += `• ${nombre} (Cantidad: ${cantidad}, Stock: ${stock})\n`;
+            }
+        });
+
+        if (stockInvalido) {
+            errorBox.style.display = "block";
+            errorBox.innerHTML = `
+                <strong>Stock insuficiente:</strong>
+                <pre style="margin: 0; white-space: pre-wrap;">${mensaje}</pre>
+            `;
+            // Ocultar el div después de 5 segundos (5000 milisegundos)
+            setTimeout(() => {
+                $("#errorMaxStock").fadeOut("slow", function () {
+                    $(this).html(""); // Limpia el contenido al terminar el fadeOut
+                });
+            }, 5000);
+            return;
+        }
+
+        Swal.fire({
+            title: '¿Confirmar venta?',
+            text: '¿Deseas registrar esta venta directa?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#6c757d',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                formVenta.submit();
+            }
+        });
+    });
 }

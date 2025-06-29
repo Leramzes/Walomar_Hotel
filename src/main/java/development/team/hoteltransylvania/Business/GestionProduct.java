@@ -184,18 +184,22 @@ public class GestionProduct {
         return product;
     }
     public static List<Product> filterProducts(String nombre, Integer estado, int page, int size) {
-        List<Product> allProducts = getAllProducts(); // Obtiene todos los registros
+        List<Product> allProducts = getAllProducts();
 
         String nombreLower = nombre.toLowerCase().trim();
 
         List<Product> filteredProducts = allProducts.stream()
                 .filter(product ->
                         (nombreLower.isEmpty() || product.getName().toLowerCase().contains(nombreLower)) &&
-                                (estado == null || product.getStatus() == estado)
+                                (estado == null ||
+                                        (estado == 1 && product.getStatus() == 1) ||
+                                        (estado == 0 && product.getStatus() == 0) ||
+                                        (estado == 3 && product.getQuantity() <= 5 && product.getQuantity() > 0) ||
+                                        (estado == -1 && product.getQuantity() == 0)
+                                )
                 )
                 .collect(Collectors.toList());
 
-        // Paginación: calcular desde qué índice empezar y hasta dónde llegar
         int fromIndex = (page - 1) * size;
         int toIndex = Math.min(fromIndex + size, filteredProducts.size());
 
@@ -203,13 +207,17 @@ public class GestionProduct {
     }
     public static int countFilteredProduct(String nombre, Integer estado) {
         List<Product> allProducts = getAllProducts();
-
         String nombreLower = nombre.toLowerCase().trim();
 
         return (int) allProducts.stream()
                 .filter(product ->
                         (nombreLower.isEmpty() || product.getName().toLowerCase().contains(nombreLower)) &&
-                                (estado == null || product.getStatus() == estado)
+                                (estado == null ||
+                                        (estado == 1 && product.getStatus() == 1) ||
+                                        (estado == 0 && product.getStatus() == 0) ||
+                                        (estado == 3 && product.getQuantity() <= 5 && product.getQuantity() > 0) ||
+                                        (estado == -1 && product.getQuantity() == 0)
+                                )
                 )
                 .count();
     }

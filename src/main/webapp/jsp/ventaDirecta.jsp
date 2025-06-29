@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <title>Venta Directa</title>
 </head>
 <%
     List<Product> productsInList = GestionProduct.getAllProducts().
-            stream().filter(p -> p.getStatus() == 1).collect(Collectors.toUnmodifiableList());
+            stream().filter(p -> p.getStatus() == 1 && p.getQuantity()>0).collect(Collectors.toUnmodifiableList());
     List<PaymentMethod> paymentMethodsActive = GestionMetodosPago.getAllMethodPayments()
             .stream().filter(method -> method.getStatus() == 1).collect(Collectors.toUnmodifiableList());
 %>
@@ -51,7 +52,7 @@
         </div>
     </div>
 
-    <form action="ventacontroller" method="post" id="formVentaDirecta">
+    <form id="formVentaDirecta" action="ventacontroller" method="post">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered align-middle" id="detalleVentaDirecta">
@@ -70,6 +71,9 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <div id="errorMaxStock" class="alert alert-danger mt-3" role="alert" style="display: none;">
             </div>
 
             <p id="totalGeneral" class="fw-bold mt-3 mt-sm-3">TOTAL: S/.0</p>
@@ -95,7 +99,7 @@
                     <!-- Botón de terminar venta -->
                     <div>
                         <input type="hidden" name="actionVenta" value="directa">
-                        <button class="btn btn-success" type="submit">
+                        <button class="btn btn-success" onclick="validacionVenta()">
                             Terminar venta
                         </button>
                     </div>
@@ -104,5 +108,6 @@
         </div>
     </form>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/script.js"></script>
 </body>

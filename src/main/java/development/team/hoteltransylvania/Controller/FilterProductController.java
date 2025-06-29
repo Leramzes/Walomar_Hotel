@@ -38,7 +38,13 @@ public class FilterProductController extends HttpServlet {
 
             int count = 1;
             for (Product product : products) {
-                out.println("<tr>");
+                String clasColor = "";
+                if(product.getQuantity()<=3 && product.getQuantity()>0){
+                    clasColor = "bg-warning";
+                } else if (product.getQuantity()==0) {
+                    clasColor = "bg-danger";
+                }
+                out.println("<tr class='"+clasColor+"'>");
                 out.println("<td>" + count + "</td>");
                 out.println("<td>" + product.getName() + "</td>");
                 out.println("<td>S/. " + product.getPrice() + "</td>");

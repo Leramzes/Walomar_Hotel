@@ -49,6 +49,11 @@
   </nav>
 </div>
 
+<div class="d-flex justify-content-center gap-1">
+  <div class="square bg-warning" title="Stock Mínimo"></div>
+  <div class="square bg-danger" style="background-color: orange;" title="Stock Agotado"></div>
+</div>
+
 <!-- Sección de Catálogo de Productos -->
 <div class="card mt-4">
   <div class="card-header">
@@ -65,6 +70,8 @@
           <option value="">Todos</option>
           <option value="1">Activos</option>
           <option value="0">Inactivos</option>
+          <option value="3">Stock por Terminar</option>
+          <option value="-1">Sin Stock</option>
         </select>
       </div>
     </div>
@@ -161,8 +168,15 @@
         </thead>
         <tbody>
 
-          <%int count=1; for(Product product : productsInCatalogo){%>
-            <tr>
+          <%int count=1; for(Product product : productsInCatalogo){
+            String clasColor = "";
+            if(product.getQuantity()<=3 && product.getQuantity()>0){
+              clasColor = "bg-warning";
+            } else if (product.getQuantity()==0) {
+              clasColor = "bg-danger";
+            }
+          %>
+            <tr class="<%=clasColor%>">
               <td><%=count%></td>
               <td><%=product.getName()%></td>
               <td>S/. <%=product.getPrice()%></td>
