@@ -23,15 +23,16 @@ public class addTableProduct extends HttpServlet {
             Product product = GestionProduct.getProductById(Integer.parseInt(req.getParameter("filter")));
             out.println("<tr data-id='" + product.getId() + "'>");
             out.println("    <td>" + product.getName() + "</td>");
-            out.println(" <td><label>");
-            out.println("     <input type='number' class='form-control cantidad-producto' value='1' min='1' data-precio='" + product.getPrice() + "'>");
-            out.println("</label></td>");
-            out.println("    <td class='precio-unit'> S/. " + product.getPrice() + "</td>");
-            out.println("    <td class='precio-total'> S/. " + product.getPrice() + "</td>");
+            out.println("    <td>");
+            out.println("        <input type='number' name='cantProduct[]' class='form-control cantidad-producto' value='1' min='1' data-precio='" + product.getPrice() + "'>");
+            out.println("        <input type='hidden' name='idProduct[]' value='" + product.getId() + "'>");
+            out.println("        <input type='hidden' name='precioUnitProduct[]' value='" + product.getPrice() + "'>");
+            out.println("        <input type='hidden' name='precioTotalProduct[]' class='input-precio-total' value='" + product.getPrice() + "'>");
+            out.println("    </td>");
+            out.println("    <td class='precio-unit'>S/. " + product.getPrice() + "</td>");
+            out.println("    <td class='precio-total'>S/. " + product.getPrice() + "</td>");
             out.println("    <td class='align-middle text-center'>");
-            out.println("        <div class='d-flex justify-content-center align-items-center gap-1'>");
-            out.println("            <button class='btn btn-danger btn-eliminar-producto'><i class='fas fa-trash'></i></button>");
-            out.println("        </div>");
+            out.println("        <button class='btn btn-danger btn-eliminar-producto'><i class='fas fa-trash'></i></button>");
             out.println("    </td>");
             out.println("</tr>");
         } catch (Exception e) {

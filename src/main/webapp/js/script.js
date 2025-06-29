@@ -1021,11 +1021,21 @@ function agregarProducto(idTabla) {
 }
 function recalcularTotalProducto(idTabla) {
     let total = 0;
+
     $(idTabla + " tbody tr").each(function () {
-        const totalTexto = $(this).find(".precio-total").text().replace("S/.", "").trim();
-        if (totalTexto) {
-            total += parseFloat(totalTexto);
-        }
+        const fila = $(this);
+        const inputCantidad = fila.find("input.cantidad-producto");
+        const cantidad = parseInt(inputCantidad.val()) || 0;
+        const precioUnitario = parseFloat(inputCantidad.data("precio")) || 0;
+        const subtotal = cantidad * precioUnitario;
+
+        // Actualizar visual
+        fila.find("td.precio-total").text("S/. " + subtotal.toFixed(2));
+
+        // Actualizar el input hidden
+        fila.find("input[name='precioTotalProduct[]']").val(subtotal.toFixed(2));
+
+        total += subtotal;
     });
 
     $("#totalGeneral").text("TOTAL: S/. " + total.toFixed(2));

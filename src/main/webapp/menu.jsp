@@ -1032,6 +1032,13 @@
             text: 'El archivo suido no es una imagen válida.',
         });
     }
+    if (params.get("succes") === "ventadirectarealizada") {
+        Swal.fire({
+            title: "Venta Realizada Correctamente",
+            icon: "success",
+            draggable: true
+        });
+    }
 </script>
 
 <script>

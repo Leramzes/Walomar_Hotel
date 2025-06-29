@@ -3,8 +3,11 @@ package development.team.hoteltransylvania.Model;
 public class ConsumeProduct {
     private int id;
     private Reservation reservation;
+    private Room room;
     private Product product;
     private int quantity;
+    private double priceUnit;
+    private double priceTotal;
 
     public ConsumeProduct(int id, Reservation reservation, Product product, int quantity) {
         this.id = id;
@@ -46,6 +49,30 @@ public class ConsumeProduct {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public double getPriceUnit() {
+        return priceUnit;
+    }
+
+    public void setPriceUnit(double priceUnit) {
+        this.priceUnit = priceUnit;
+    }
+
+    public double getPriceTotal() {
+        return priceTotal;
+    }
+
+    public void setPriceTotal(double priceTotal) {
+        this.priceTotal = priceTotal;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     @Override
