@@ -214,7 +214,7 @@ public class GestionVentas {
 
         return result;
     }
-    public static int registrarComprobante(int reservaId, Voucher voucher) throws SQLException {
+    public static int registrarComprobante(int reservaId, Voucher voucher) {
         String sql = "INSERT INTO comprobantes (reserva_id, tipo_comprobante_id, metodo_pago_id, total, subtotal_productos, subtotal_servicios, subtotal_penalidad, fecha_emision) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
@@ -236,6 +236,8 @@ public class GestionVentas {
             } else {
                 throw new SQLException("No se pudo registrar el comprobante.");
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     public static double getAmuntTotalVentaDirecta(){
@@ -281,30 +283,62 @@ public class GestionVentas {
     }
 
     public static boolean registrarVenta(int idReserva, int idRoom, ConsumeProduct consumeProduct) {
-        String sql = "INSERT INTO consumo_productos " +
+        String selectStockSql = "SELECT cantidad FROM productos WHERE id = ?";
+        String insertSql = "INSERT INTO consumo_productos " +
                 "(reserva_id, habitacion_id, producto_id, cantidad, precio_unitario, total, estado_pago) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String updateStockSql = "UPDATE productos SET cantidad = cantidad - ? WHERE id = ?";
 
         boolean result = false;
-        try (Connection cnn = dataSource.getConnection();
-             PreparedStatement ps = cnn.prepareStatement(sql)) {
 
-            ps.setInt(1, idReserva);
-            ps.setInt(2, idRoom);
-            ps.setInt(3, consumeProduct.getProduct().getId());
-            ps.setDouble(4, consumeProduct.getQuantity());
-            ps.setDouble(5, consumeProduct.getPriceUnit());
-            ps.setDouble(6, consumeProduct.getPriceTotal());
-            ps.setString(7, consumeProduct.getEstado_pago());
+        try (Connection cnn = dataSource.getConnection()) {
+            cnn.setAutoCommit(false); // Iniciar transacción
 
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0) {
-                LOGGER.info("venta registered successfully");
-                result = true;
+            // Validar stock
+            try (PreparedStatement psSelect = cnn.prepareStatement(selectStockSql)) {
+                psSelect.setInt(1, consumeProduct.getProduct().getId());
+                ResultSet rs = psSelect.executeQuery();
+
+                if (!rs.next()) {
+                    System.out.println("Producto no encontrado.");
+                    cnn.rollback();
+                    return false;
+                }
+
+                int stockDisponible = rs.getInt("cantidad");
+                if (consumeProduct.getQuantity() > stockDisponible) {
+                    System.out.println("Stock insuficiente para el producto ID: " + consumeProduct.getProduct().getId());
+                    cnn.rollback();
+                    return false;
+                }
             }
+
+            // Registrar consumo del producto
+            try (PreparedStatement psInsert = cnn.prepareStatement(insertSql)) {
+                psInsert.setInt(1, idReserva);
+                psInsert.setInt(2, idRoom);
+                psInsert.setInt(3, consumeProduct.getProduct().getId());
+                psInsert.setDouble(4, consumeProduct.getQuantity());
+                psInsert.setDouble(5, consumeProduct.getPriceUnit());
+                psInsert.setDouble(6, consumeProduct.getPriceTotal());
+                psInsert.setString(7, consumeProduct.getEstado_pago());
+                psInsert.executeUpdate();
+            }
+
+            // Actualizar stock
+            try (PreparedStatement psUpdate = cnn.prepareStatement(updateStockSql)) {
+                psUpdate.setDouble(1, consumeProduct.getQuantity());
+                psUpdate.setInt(2, consumeProduct.getProduct().getId());
+                psUpdate.executeUpdate();
+            }
+
+            cnn.commit(); // Confirmar transacción
+            result = true;
         } catch (SQLException e) {
-            LOGGER.warning("Error when registering the venta: " + e.getMessage());
+            LOGGER.warning("Error registrando venta y actualizando stock: " + e.getMessage());
+            e.printStackTrace();
         }
+
         return result;
     }
 }

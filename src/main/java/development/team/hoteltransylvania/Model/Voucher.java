@@ -96,6 +96,10 @@ public class Voucher {
         this.fecha_emision = fecha_emision;
     }
 
+    public double calcularTotal() { //para verificacion de salidas
+        this.totalAmount = this.subtotalProducts + this.subtotalServices + this.subtotalPenalidad;
+        return this.totalAmount;
+    }
     @Override
     public String toString() {
         return "Voucher{" +

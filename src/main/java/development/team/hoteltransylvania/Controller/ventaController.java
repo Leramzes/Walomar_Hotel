@@ -58,46 +58,38 @@ public class ventaController extends HttpServlet {
                     voucher.setSubtotalPenalidad(0);
                     voucher.setTotalAmount(subtotalProductos);
 
-                    try {
-                        int comprobanteId = GestionVentas.registrarComprobante(1000000000, voucher);
-                        boolean ventaHecha = true;
+                    int comprobanteId = GestionVentas.registrarComprobante(1000000000, voucher);
+                    boolean ventaHecha = true;
 
-                        for (int i = 0; i < idsProductos.length; i++) {
-                            ConsumeProduct cp = new ConsumeProduct();
-                            cp.setProduct(GestionProduct.getProductById(Integer.parseInt(idsProductos[i])));
-                            cp.setQuantity(Integer.parseInt(cantProducts[i]));
-                            cp.setPriceUnit(Float.parseFloat(preciosUnit[i]));
-                            cp.setPriceTotal(Float.parseFloat(preciosTotal[i]));
+                    for (int i = 0; i < idsProductos.length; i++) {
+                        ConsumeProduct cp = new ConsumeProduct();
+                        cp.setProduct(GestionProduct.getProductById(Integer.parseInt(idsProductos[i])));
+                        cp.setQuantity(Integer.parseInt(cantProducts[i]));
+                        cp.setPriceUnit(Float.parseFloat(preciosUnit[i]));
+                        cp.setPriceTotal(Float.parseFloat(preciosTotal[i]));
 
-                            boolean exito = GestionVentas.registrarLineaVentaDirecta(comprobanteId, employee.getId(), cp);
-                            if (!exito) {
-                                ventaHecha = false;
-                                break;
-                            }
+                        boolean exito = GestionVentas.registrarLineaVentaDirecta(comprobanteId, employee.getId(), cp);
+                        if (!exito) {
+                            ventaHecha = false;
+                            break;
                         }
-
-                        if (ventaHecha) {
-                            resp.sendRedirect("menu.jsp?view=ventaDirecta&succes=ventadirectarealizada");
-                        }
-
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
                     }
+
+                    if (ventaHecha) {
+                        resp.sendRedirect("menu.jsp?view=ventaDirecta&succes=ventadirectarealizada");
+                    }
+
 
                 } else {
                     System.out.println("No se recibieron productos o método de pago.");
                 }
                 break;
+
             case "ventaProducto":
 
-                String opcionPago = req.getParameter("pago"); // "ahora" o "despues"
-
-                String metodoPagoStr = req.getParameter("metodoPago"); // puede ser null si eligió "despues"
-                Integer metodoPago = null;
-
-                if ("ahora".equals(opcionPago) && metodoPagoStr != null) {
-                    metodoPago = Integer.parseInt(metodoPagoStr);
-                }
+                String opcionPago = req.getParameter("pago");
+                int comprobanteIdGenerate = -1;
+                boolean ventasOk = true;
 
                 for (int i = 0; i < idsProductos.length; i++) {
                     ConsumeProduct cp = new ConsumeProduct();
@@ -106,13 +98,45 @@ public class ventaController extends HttpServlet {
                     cp.setPriceUnit(Float.parseFloat(preciosUnit[i]));
                     cp.setPriceTotal(Float.parseFloat(preciosTotal[i]));
 
-                    String estadoPago = (metodoPago == null) ? "Pendiente" : "Pagado";
+                    String estadoPago = opcionPago.equalsIgnoreCase("ahora") ? "Pagado" : "Pendiente";
                     cp.setEstado_pago(estadoPago);
 
-                    boolean val = GestionVentas.registrarVenta(reservaId, roomId, cp);
-                    if (val) System.out.println("se registro");
-
+                    boolean ventaExitosa = GestionVentas.registrarVenta(reservaId, roomId, cp);
+                    if (!ventaExitosa) {
+                        ventasOk = false;
+                        break;
+                    }
                 }
+
+                if (ventasOk && "ahora".equalsIgnoreCase(opcionPago)) {
+                    String metodoPagoStr = req.getParameter("metodoPago");
+                    if (metodoPagoStr == null || metodoPagoStr.isEmpty()) {
+                        resp.sendRedirect("menu.jsp?view=habitacionesVenta&error=faltamodopago");
+                        return;
+                    }
+
+                    float subtotalProductos = 0;
+                    for (String total : preciosTotal) {
+                        subtotalProductos += Float.parseFloat(total);
+                    }
+
+                    Voucher voucher = new Voucher();
+                    voucher.setTypeVoucher(new TypeVoucher(1, "Boleta"));
+                    voucher.setPaymentMethod(GestionMetodosPago.getMethodPaymentById(Integer.parseInt(metodoPagoStr)));
+                    voucher.setSubtotalProducts(subtotalProductos);
+                    voucher.setSubtotalServices(0);
+                    voucher.setSubtotalPenalidad(0);
+                    voucher.setTotalAmount(subtotalProductos);
+
+                    comprobanteIdGenerate = GestionVentas.registrarComprobante(reservaId, voucher);
+                }
+
+                if (ventasOk && ("despues".equalsIgnoreCase(opcionPago) || comprobanteIdGenerate > 0)) {
+                    resp.sendRedirect("menu.jsp?view=habitacionesVenta&succes=ventadirectarealizada");
+                } else {
+                    resp.sendRedirect("menu.jsp?view=habitacionesVenta&error=falloregistro");
+                }
+
                 break;
 
         }

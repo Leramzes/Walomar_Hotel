@@ -99,7 +99,7 @@
             </div>
         </div>
     </div>
-    <form id="formVentaProducto" action="ventacontroller" method="post">
+    <form id="formVentaDirecta" action="ventacontroller" method="post">
         <div class="card-body">
             <div class="table-responsive">
                 <table id="detalleProductos" class="table table-bordered align-middle">
@@ -127,7 +127,7 @@
 
             <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
                 <div class="form-check me-3 mb-2 mb-md-0">
-                    <input class="form-check-input" type="radio" name="pago" id="pagarAhora" onclick="habilitarMetodoPago(true)">
+                    <input class="form-check-input" type="radio" name="pago" id="pagarAhora" value="ahora" onclick="habilitarMetodoPago(true)">
                     <label class="form-check-label" for="pagarAhora">Pagar Ahora</label>
                 </div>
 
@@ -143,14 +143,14 @@
             </div>
 
             <div class="form-check mt-2">
-                <input class="form-check-input" type="radio" name="pago" id="pagarDespues" onclick="habilitarMetodoPago(false)" checked>
+                <input class="form-check-input" type="radio" name="pago" id="pagarDespues" value="despues" onclick="habilitarMetodoPago(false)" checked>
                 <label class="form-check-label" for="pagarDespues">Pagar Después</label>
             </div>
             <div class="d-flex justify-content-end mt-3">
                 <input type="hidden" name="actionVenta" value="ventaProducto">
                 <input type="hidden" name="reservaId" value="<%=reservation.getIdReservation()%>">
                 <input type="hidden" name="roomId" value="<%=reservation.getIdRoom()%>">
-                <button class="btn btn-success" <%--onclick="validacionVenta()"--%>>
+                <button class="btn btn-success" onclick="validacionVenta()">
                     Terminar venta
                 </button>
             </div>
