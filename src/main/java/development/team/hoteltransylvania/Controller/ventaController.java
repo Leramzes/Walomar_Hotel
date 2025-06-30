@@ -138,7 +138,9 @@ public class ventaController extends HttpServlet {
                 }
 
                 break;
-
+            case "ventaServicio":
+                System.out.println("entro a controller venta de servicio");
+                break;
         }
 
     }

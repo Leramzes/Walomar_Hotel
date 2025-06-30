@@ -1053,36 +1053,37 @@ function recalcularTotalProducto(idTabla) {
 function agregarServicio(idTabla) {
     var serviceId = $("#selectServicio").val();
 
-    // Buscar si ya existe en la tabla
+    // Verificar si ya está en la tabla
     var filaExistente = $(idTabla).find("tbody").find("tr[data-id='" + serviceId + "']");
 
     if (filaExistente.length > 0) {
-        var inputCantidad = filaExistente.find("input.cantidad-servicio");
-        var cantidadActual = parseInt(inputCantidad.val()) || 0;
-        inputCantidad.val(cantidadActual + 1);
-
-        var precioUnit = parseFloat(filaExistente.find("td:nth-child(3)").text().replace("S/.", "").trim()) || 0;
-        filaExistente.find("td:nth-child(4)").text("S/. " + ((cantidadActual + 1) * precioUnit).toFixed(2));
-
-        // Recalcular total
-        recalcularTotalServicio(idTabla);
-    } else {
-        $.ajax({
-            url: "addTableService",
-            data: {filter: serviceId},
-            success: function (result) {
-                const tbody = $(idTabla).find("tbody");
-                tbody.find("td.text-muted").parent().remove();
-
-                tbody.append(result);
-                recalcularTotalServicio(idTabla);
-            }
-        });
+        // Si ya está, no hacer nada (o mostrar un aviso si quieres)
+        console.log("Servicio ya agregado.");
+        return;
     }
+
+    // Si no está, hacer petición AJAX y agregar la fila
+    $.ajax({
+        url: "addTableService",
+        data: {filter: serviceId},
+        success: function (result) {
+            const tbody = $(idTabla).find("tbody");
+
+            // Quitar mensaje de "agrega productos/servicios"
+            tbody.find("td.text-muted").parent().remove();
+
+            // Añadir nueva fila
+            tbody.append(result);
+
+            // Recalcular total
+            recalcularTotalServicio(idTabla);
+        }
+    });
 }
 
 function recalcularTotalServicio(idTabla) {
     let total = 0;
+
     $(idTabla + " tbody tr").each(function () {
         const totalTexto = $(this).find(".precio-total").text().replace("S/.", "").trim();
         if (totalTexto) {
@@ -1098,6 +1099,13 @@ function validacionVenta() {
 
     formVenta.addEventListener("submit", function (event) {
         event.preventDefault();
+
+        if (!validarTablaTieneItems(
+            "#detalleProductos",
+            "Agrega productos",
+            "No hay productos agregados",
+            "Por favor, agrega al menos un producto antes de continuar."
+        )) return;
 
         const errorBox = document.getElementById("errorMaxStock");
         errorBox.style.display = "none";
@@ -1145,4 +1153,108 @@ function validacionVenta() {
             }
         });
     });
+}
+function validacionVentaDirecta() {
+    const formVenta = document.getElementById("formVentaDirecta");
+
+    formVenta.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (!validarTablaTieneItems(
+            "#detalleProductos",
+            "Agrega productos",
+            "No hay productos agregados",
+            "Por favor, agrega al menos un producto antes de continuar."
+        )) return;
+
+        const errorBox = document.getElementById("errorMaxStock");
+        errorBox.style.display = "none";
+        let stockInvalido = false;
+        let mensaje = "";
+
+        document.querySelectorAll("input[name='cantProduct[]']").forEach(input => {
+            const cantidad = parseInt(input.value);
+            const stock = parseInt(input.dataset.stock);
+            const nombre = input.dataset.nombre;
+
+            if (cantidad > stock) {
+                stockInvalido = true;
+                mensaje += `• ${nombre} (Cantidad: ${cantidad}, Stock: ${stock})\n`;
+            }
+        });
+
+        if (stockInvalido) {
+            errorBox.style.display = "block";
+            errorBox.innerHTML = `
+                <strong>Stock insuficiente:</strong>
+                <pre style="margin: 0; white-space: pre-wrap;">${mensaje}</pre>
+            `;
+            // Ocultar el div después de 5 segundos (5000 milisegundos)
+            setTimeout(() => {
+                $("#errorMaxStock").fadeOut("slow", function () {
+                    $(this).html(""); // Limpia el contenido al terminar el fadeOut
+                });
+            }, 5000);
+            return;
+        }
+
+        Swal.fire({
+            title: '¿Confirmar venta?',
+            text: '¿Deseas registrar esta venta directa?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#6c757d',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                formVenta.submit();
+            }
+        });
+    });
+}
+function validacionVentaServicio() {
+    const formVenta = document.getElementById("formVentaServicio");
+
+    formVenta.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (!validarTablaTieneItems(
+            "#detalleServicios",
+            "Agregar servicios",
+            "No hay servicios agregados",
+            "Por favor, agrega al menos un servicio antes de continuar."
+        )) return;
+
+        Swal.fire({
+            title: '¿Confirmar venta?',
+            text: '¿Deseas registrar esta venta de servicio?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#6c757d',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                formVenta.submit();
+            }
+        });
+    });
+}
+
+function validarTablaTieneItems(idTabla, textoPlaceholder, tituloAlerta, mensajeAlerta) {
+    const tbody = document.querySelector(`${idTabla} tbody`);
+    const filas = tbody.querySelectorAll("tr");
+
+    if (filas.length === 1 && filas[0].textContent.includes(textoPlaceholder)) {
+        Swal.fire({
+            icon: 'warning',
+            title: tituloAlerta,
+            text: mensajeAlerta
+        });
+        return false;
+    }
+    return true;
 }

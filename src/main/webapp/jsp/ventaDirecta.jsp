@@ -99,7 +99,7 @@
                     <!-- Botón de terminar venta -->
                     <div>
                         <input type="hidden" name="actionVenta" value="directa">
-                        <button class="btn btn-success" onclick="validacionVenta()">
+                        <button class="btn btn-success" onclick="validacionVentaDirecta()">
                             Terminar venta
                         </button>
                     </div>
