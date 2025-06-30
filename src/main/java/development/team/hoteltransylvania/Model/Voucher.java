@@ -1,11 +1,17 @@
 package development.team.hoteltransylvania.Model;
 
+import java.sql.Timestamp;
+
 public class Voucher {
     private int id;
     private Reservation reservation;
     private TypeVoucher typeVoucher;
     private PaymentMethod paymentMethod;
     private double totalAmount;
+    private double subtotalProducts;
+    private double subtotalServices;
+    private double subtotalPenalidad;
+    private Timestamp fecha_emision;
 
     public Voucher(int id, Reservation reservation, TypeVoucher typeVoucher, PaymentMethod paymentMethod, double totalAmount) {
         this.id = id;
@@ -58,6 +64,38 @@ public class Voucher {
         this.totalAmount = totalAmount;
     }
 
+    public double getSubtotalProducts() {
+        return subtotalProducts;
+    }
+
+    public void setSubtotalProducts(double subtotalProducts) {
+        this.subtotalProducts = subtotalProducts;
+    }
+
+    public double getSubtotalServices() {
+        return subtotalServices;
+    }
+
+    public void setSubtotalServices(double subtotalServices) {
+        this.subtotalServices = subtotalServices;
+    }
+
+    public double getSubtotalPenalidad() {
+        return subtotalPenalidad;
+    }
+
+    public void setSubtotalPenalidad(double subtotalPenalidad) {
+        this.subtotalPenalidad = subtotalPenalidad;
+    }
+
+    public Timestamp getFecha_emision() {
+        return fecha_emision;
+    }
+
+    public void setFecha_emision(Timestamp fecha_emision) {
+        this.fecha_emision = fecha_emision;
+    }
+
     @Override
     public String toString() {
         return "Voucher{" +
@@ -66,6 +104,10 @@ public class Voucher {
                 ", typeVoucher=" + typeVoucher +
                 ", paymentMethod=" + paymentMethod +
                 ", totalAmount=" + totalAmount +
+                ", subtotalProducts=" + subtotalProducts +
+                ", subtotalServices=" + subtotalServices +
+                ", subtotalPenalidad=" + subtotalPenalidad +
+                ", fecha_emision=" + fecha_emision +
                 '}';
     }
 }

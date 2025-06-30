@@ -77,6 +77,29 @@ public class GestionMetodosPago {
 
         return result;
     }
+    public static PaymentMethod getMethodPaymentById(int metodoPagoId) {
+        String sql = "SELECT * FROM metodo_pago WHERE id = ?";
+        PaymentMethod paymentMethod = null;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, metodoPagoId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                paymentMethod = new PaymentMethod();
+                paymentMethod.setId(rs.getInt("id"));
+                paymentMethod.setNameMethod(rs.getString("metodo"));
+                paymentMethod.setStatus(rs.getInt("status"));
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving payment method with ID " + metodoPagoId + ": " + e.getMessage());
+        }
+
+        return paymentMethod;
+    }
     public static List<PaymentMethod> getAllMethodPayments() {
         String sql = "SELECT * FROM metodo_pago";
         List<PaymentMethod> paymentMethods = new ArrayList<>();
