@@ -8,6 +8,7 @@ public class ConsumeProduct {
     private int quantity;
     private double priceUnit;
     private double priceTotal;
+    private String estado_pago;
 
     public ConsumeProduct(int id, Reservation reservation, Product product, int quantity) {
         this.id = id;
@@ -73,6 +74,14 @@ public class ConsumeProduct {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public String getEstado_pago() {
+        return estado_pago;
+    }
+
+    public void setEstado_pago(String estado_pago) {
+        this.estado_pago = estado_pago;
     }
 
     @Override

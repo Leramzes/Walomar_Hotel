@@ -30,15 +30,18 @@ public class ventaController extends HttpServlet {
         User usuario = (User) sessionObj.getAttribute("usuario");
         Employee employee = GestionUser.getEmployeeIdByUserId(usuario.getId());
 
+        String[] cantProducts = req.getParameterValues("cantProduct[]");
+        String[] preciosUnit = req.getParameterValues("precioUnitProduct[]");
+        String[] preciosTotal = req.getParameterValues("precioTotalProduct[]");
+        String[] idsProductos = req.getParameterValues("idProduct[]");
+
+        int reservaId = Integer.parseInt(req.getParameter("reservaId"));
+        int roomId = Integer.parseInt(req.getParameter("roomId"));
+
+
         switch (action) {
             case "directa":
-                String[] cantProducts = req.getParameterValues("cantProduct[]");
-                String[] preciosUnit = req.getParameterValues("precioUnitProduct[]");
-                String[] preciosTotal = req.getParameterValues("precioTotalProduct[]");
-                String[] idsProductos = req.getParameterValues("idProduct[]");
-
                 String metodoPagoId = req.getParameter("metodoPago");
-
                 if (idsProductos != null && metodoPagoId != null) {
                     // Crear el voucher
                     Voucher voucher = new Voucher();
@@ -85,6 +88,33 @@ public class ventaController extends HttpServlet {
                     System.out.println("No se recibieron productos o método de pago.");
                 }
                 break;
+            case "ventaProducto":
+
+                String opcionPago = req.getParameter("pago"); // "ahora" o "despues"
+
+                String metodoPagoStr = req.getParameter("metodoPago"); // puede ser null si eligió "despues"
+                Integer metodoPago = null;
+
+                if ("ahora".equals(opcionPago) && metodoPagoStr != null) {
+                    metodoPago = Integer.parseInt(metodoPagoStr);
+                }
+
+                for (int i = 0; i < idsProductos.length; i++) {
+                    ConsumeProduct cp = new ConsumeProduct();
+                    cp.setProduct(GestionProduct.getProductById(Integer.parseInt(idsProductos[i])));
+                    cp.setQuantity(Integer.parseInt(cantProducts[i]));
+                    cp.setPriceUnit(Float.parseFloat(preciosUnit[i]));
+                    cp.setPriceTotal(Float.parseFloat(preciosTotal[i]));
+
+                    String estadoPago = (metodoPago == null) ? "Pendiente" : "Pagado";
+                    cp.setEstado_pago(estadoPago);
+
+                    boolean val = GestionVentas.registrarVenta(reservaId, roomId, cp);
+                    if (val) System.out.println("se registro");
+
+                }
+                break;
+
         }
 
     }

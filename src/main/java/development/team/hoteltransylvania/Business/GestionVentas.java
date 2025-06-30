@@ -279,4 +279,32 @@ public class GestionVentas {
 
         return total;
     }
+
+    public static boolean registrarVenta(int idReserva, int idRoom, ConsumeProduct consumeProduct) {
+        String sql = "INSERT INTO consumo_productos " +
+                "(reserva_id, habitacion_id, producto_id, cantidad, precio_unitario, total, estado_pago) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        boolean result = false;
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, idReserva);
+            ps.setInt(2, idRoom);
+            ps.setInt(3, consumeProduct.getProduct().getId());
+            ps.setDouble(4, consumeProduct.getQuantity());
+            ps.setDouble(5, consumeProduct.getPriceUnit());
+            ps.setDouble(6, consumeProduct.getPriceTotal());
+            ps.setString(7, consumeProduct.getEstado_pago());
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                LOGGER.info("venta registered successfully");
+                result = true;
+            }
+        } catch (SQLException e) {
+            LOGGER.warning("Error when registering the venta: " + e.getMessage());
+        }
+        return result;
+    }
 }

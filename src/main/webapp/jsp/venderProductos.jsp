@@ -39,7 +39,7 @@
     Room room = GestionRoom.getRoomById(reservation.getIdRoom());
 
     List<Product> productsInList = GestionProduct.getAllProducts().
-            stream().filter(p -> p.getStatus() == 1).collect(Collectors.toUnmodifiableList());
+            stream().filter(p -> p.getStatus() == 1 && p.getQuantity()>0).collect(Collectors.toUnmodifiableList());
     List<PaymentMethod> paymentMethodsActive = GestionMetodosPago.getAllMethodPayments()
             .stream().filter(method -> method.getStatus() == 1).collect(Collectors.toUnmodifiableList());
 %>
@@ -97,55 +97,65 @@
                 </select>
                 <button class="btn btn-primary" onclick="agregarProducto('#detalleProductos')">Agregar</button>
             </div>
-            <div class="col-3 text-end">
-                <button class="btn btn-success" onclick="cargarPagina('jsp/habitacionesVenta.jsp')">Terminar venta
+        </div>
+    </div>
+    <form id="formVentaProducto" action="ventacontroller" method="post">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="detalleProductos" class="table table-bordered align-middle">
+                    <thead class="table-warning">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unit.</th>
+                        <th>Precio Total</th>
+                        <th>Eliminar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">Agrega productos</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="errorMaxStock" class="alert alert-danger mt-3" role="alert" style="display: none;">
+            </div>
+
+            <p id="totalGeneral" class="fw-bold mt-3 mt-sm-3">TOTAL: S/.0</p>
+
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                <div class="form-check me-3 mb-2 mb-md-0">
+                    <input class="form-check-input" type="radio" name="pago" id="pagarAhora" onclick="habilitarMetodoPago(true)">
+                    <label class="form-check-label" for="pagarAhora">Pagar Ahora</label>
+                </div>
+
+                <div class="input-group my-3 my-md-0" id="metodoPagoGroup" style="max-width: 300px;">
+                    <label class="input-group-text" for="metodoPago"><i class="fa-solid fa-money-bill-wave"></i></label>
+                    <select class="form-select" id="metodoPago" name="metodoPago" required disabled>
+                        <option value="" selected disabled>Método de Pago</option>
+                        <%for (PaymentMethod paymentMethod : paymentMethodsActive) {%>
+                        <option value="<%=paymentMethod.getId()%>"><%=paymentMethod.getNameMethod()%></option>
+                        <%}%>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="radio" name="pago" id="pagarDespues" onclick="habilitarMetodoPago(false)" checked>
+                <label class="form-check-label" for="pagarDespues">Pagar Después</label>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <input type="hidden" name="actionVenta" value="ventaProducto">
+                <input type="hidden" name="reservaId" value="<%=reservation.getIdReservation()%>">
+                <input type="hidden" name="roomId" value="<%=reservation.getIdRoom()%>">
+                <button class="btn btn-success" <%--onclick="validacionVenta()"--%>>
+                    Terminar venta
                 </button>
             </div>
         </div>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="detalleProductos" class="table table-bordered align-middle">
-                <thead class="table-warning">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unit.</th>
-                    <th>Precio Total</th>
-                    <th>Eliminar</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td colspan="5" class="text-center text-muted">Agrega productos</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    </form>
 
-        <p id="totalGeneral" class="fw-bold mt-3 mt-sm-3">TOTAL: S/.0</p>
-
-        <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
-            <div class="form-check me-3 mb-2 mb-md-0">
-                <input class="form-check-input" type="radio" name="pago" id="pagarAhora" onclick="habilitarMetodoPago(true)">
-                <label class="form-check-label" for="pagarAhora">Pagar Ahora</label>
-            </div>
-
-            <div class="input-group my-3 my-md-0" id="metodoPagoGroup" style="max-width: 300px;">
-                <label class="input-group-text" for="metodoPago"><i class="fa-solid fa-money-bill-wave"></i></label>
-                <select class="form-select" id="metodoPago" name="metodoPago" required disabled>
-                    <option value="" selected disabled>Método de Pago</option>
-                    <%for (PaymentMethod paymentMethod : paymentMethodsActive) {%>
-                    <option value="<%=paymentMethod.getId()%>"><%=paymentMethod.getNameMethod()%></option>
-                    <%}%>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-check mt-2">
-            <input class="form-check-input" type="radio" name="pago" id="pagarDespues" onclick="habilitarMetodoPago(false)" checked>
-            <label class="form-check-label" for="pagarDespues">Pagar Después</label>
-        </div>
-    </div>
 </div>
 </body>
