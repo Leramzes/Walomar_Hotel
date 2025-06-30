@@ -1,9 +1,7 @@
 package development.team.hoteltransylvania.Business;
 
-import development.team.hoteltransylvania.Model.Client;
-import development.team.hoteltransylvania.Model.ConsumeProduct;
-import development.team.hoteltransylvania.Model.Product;
-import development.team.hoteltransylvania.Model.Voucher;
+import development.team.hoteltransylvania.DTO.usersEmployeeDTO;
+import development.team.hoteltransylvania.Model.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
 
@@ -12,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -237,5 +237,46 @@ public class GestionVentas {
                 throw new SQLException("No se pudo registrar el comprobante.");
             }
         }
+    }
+    public static double getAmuntTotalVentaDirecta(){
+        String sql = "SELECT SUM(total) FROM comprobantes WHERE reserva_id = 1000000000";
+        double total = 0.0;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving get amount total venta_directa with ID " + e.getMessage());
+        }
+
+        return total;
+    }
+    public static double getMontoTotalVentaPorEmpleado(int empleadoId) {
+        String sql = "SELECT SUM(total) FROM venta_directa vd " +
+                "INNER JOIN comprobantes c ON vd.id_comprobante=c.id " +
+                "INNER JOIN empleados e ON e.id=vd.empleado_id " +
+                "WHERE empleado_id = ? and reserva_id = 1000000000";
+        double total = 0.0;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, empleadoId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error al obtener el monto total de ventas por empleado ID " + empleadoId + ": " + e.getMessage());
+        }
+
+        return total;
     }
 }
