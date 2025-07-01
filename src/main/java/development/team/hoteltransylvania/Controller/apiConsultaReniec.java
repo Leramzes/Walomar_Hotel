@@ -36,7 +36,7 @@ public class apiConsultaReniec extends HttpServlet {
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Bearer apis-token-14450.89dFFK5wtOjb14SJuyXGFU65rWPJHkal");
+            con.setRequestProperty("Authorization", "Bearer apis-token-16648.r3irYGVfzYHlHWW0PgE3iP3ms3FvjWcA");
 
             int responseCode = con.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
