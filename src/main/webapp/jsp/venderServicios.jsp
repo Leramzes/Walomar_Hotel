@@ -98,7 +98,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td colspan="5" class="text-center text-muted">Agregar servicios</td>
+                        <td colspan="5" class="text-center text-muted">Agrega servicios</td>
                     </tr>
                     </tbody>
                 </table>

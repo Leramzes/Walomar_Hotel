@@ -1215,14 +1215,14 @@ function validacionVentaDirecta() {
     });
 }
 function validacionVentaServicio() {
-    const formVenta = document.getElementById("formVentaServicio");
+    const formVentaS = document.getElementById("formVentaServicio");
 
-    formVenta.addEventListener("submit", function (event) {
+    formVentaS.addEventListener("submit", function (event) {
         event.preventDefault();
 
         if (!validarTablaTieneItems(
             "#detalleServicios",
-            "Agregar servicios",
+            "Agrega servicios",
             "No hay servicios agregados",
             "Por favor, agrega al menos un servicio antes de continuar."
         )) return;
@@ -1238,7 +1238,7 @@ function validacionVentaServicio() {
             cancelButtonColor: '#6c757d',
         }).then((result) => {
             if (result.isConfirmed) {
-                formVenta.submit();
+                formVentaS.submit();
             }
         });
     });
