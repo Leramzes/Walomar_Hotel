@@ -18,10 +18,6 @@
         return;
     }
     User usuario = (User) sessionObj.getAttribute("usuario");
-    if (usuario.getEmployee().getPosition().equalsIgnoreCase("2")) {
-        response.sendRedirect("inicio.jsp"); //Mensaje: No tienes privilegios
-        return;
-    }
 
     int pagina = 1;
     int pageSize = 10;
