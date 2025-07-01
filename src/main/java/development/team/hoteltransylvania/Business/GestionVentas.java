@@ -1,6 +1,7 @@
 package development.team.hoteltransylvania.Business;
 
 import development.team.hoteltransylvania.DTO.AllInfoTableProdSalida;
+import development.team.hoteltransylvania.DTO.AllInfoTableServSalida;
 import development.team.hoteltransylvania.Model.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
@@ -369,7 +370,7 @@ public class GestionVentas {
 
         return result;
     }
-    public static List<AllInfoTableProdSalida> obtenerVentasProdPorPorReserva(int idReserva) {
+    public static List<AllInfoTableProdSalida> obtenerVentasProdPorReserva(int idReserva) {
         List<AllInfoTableProdSalida> ventas = new ArrayList<>();
 
         String sql = "SELECT cp.id, cp.reserva_id, cp.habitacion_id, cp.producto_id, p.nombre, cp.cantidad, cp.precio_unitario, cp.total, cp.estado_pago\n" +
@@ -395,6 +396,40 @@ public class GestionVentas {
                 ats.setPrecioUnitProducto(rs.getDouble("precio_unitario"));
                 ats.setTotal(rs.getDouble("total"));
                 ats.setEstadoProducto(rs.getString("estado_pago"));
+
+                ventas.add(ats);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.warning("Error obteniendo ventas de productos: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return ventas;
+    }
+    public static List<AllInfoTableServSalida> obtenerVentasServPorReserva(int idReserva) {
+        List<AllInfoTableServSalida> ventas = new ArrayList<>();
+
+        String sql = "SELECT cs.id, cs.reserva_id, cs.habitacion_id, s.nombre, cs.total, cs.estado_pago\n" +
+                "FROM consumo_servicios cs\n" +
+                "inner join servicios s on s.id = cs.servicio_id\n" +
+                "WHERE cs.reserva_id = ?";
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, idReserva);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                AllInfoTableServSalida ats = new AllInfoTableServSalida();
+
+                ats.setId_consumo(rs.getInt("id"));
+                ats.setId_reserva(rs.getInt("reserva_id"));
+                ats.setId_habitacion(rs.getInt("habitacion_id"));
+                ats.setNombreServicio(rs.getString("nombre"));
+                ats.setTotal(rs.getDouble("total"));
+                ats.setEstadoServicio(rs.getString("estado_pago"));
 
                 ventas.add(ats);
             }

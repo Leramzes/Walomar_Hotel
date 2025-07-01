@@ -8,6 +8,7 @@
 <%@ page import="development.team.hoteltransylvania.Business.*" %>
 <%@ page import="development.team.hoteltransylvania.Model.Product" %>
 <%@ page import="development.team.hoteltransylvania.DTO.AllInfoTableProdSalida" %>
+<%@ page import="development.team.hoteltransylvania.DTO.AllInfoTableServSalida" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -46,8 +47,9 @@
             .stream().filter(method -> method.getStatus() == 1).collect(Collectors.toUnmodifiableList());
 
     //Lista de venta de productos (pendientes y pagadas) del huesped
-    List<AllInfoTableProdSalida> ventasByReserva = GestionVentas.obtenerVentasProdPorPorReserva(reservation.getIdReservation());
+    List<AllInfoTableProdSalida> ventasByReserva = GestionVentas.obtenerVentasProdPorReserva(reservation.getIdReservation());
     //Lista de venta de servicios (pendientes y pagadas) del huesped
+    List<AllInfoTableServSalida> ventasSByReserva = GestionVentas.obtenerVentasServPorReserva(reservation.getIdReservation());
 %>
 
 <!-- Sección de Información -->
@@ -148,12 +150,12 @@
 
         <hr>
 
-        <h5>Servicio al Cuarto:</h5>
+        <h5>Productos Consumidos:</h5>
         <div class="table-responsive">
             <table class="table table-bordered align-middle">
                 <thead class="table-warning">
                 <tr>
-                    <th>Producto/Servicio</th>
+                    <th>Producto</th>
                     <th>Precio Unitario</th>
                     <th>Cantidad</th>
                     <th>Estado</th>
@@ -177,6 +179,41 @@
                     <td><%= venta.getPrecioUnitProducto() %></td>
                     <td><%= venta.getCantidad() %></td>
                     <td class="<%= classEstado %>"><%= venta.getEstadoProducto() %></td>
+                    <td style="<%= styleTotal %>">S/. <%= venta.getTotal() %></td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <h5>Servicios Consumidos:</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead class="table-warning">
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio Unitario</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Sub Total</th>
+                </tr>
+                </thead>
+                <tbody id="tablaServicioCuarto">
+                <%
+                    for (AllInfoTableServSalida venta : ventasSByReserva) {
+                        boolean esPendiente = venta.getEstadoServicio().equalsIgnoreCase("Pendiente");
+                        String classEstado = esPendiente ? "text-danger" : "text-success";
+                        String styleTotal = !esPendiente ? "text-decoration: line-through;" : "";
+
+                        if (esPendiente) {
+                            total += venta.getTotal();
+                        }
+                %>
+                <tr>
+                    <td><%= venta.getNombreServicio() %></td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="<%= classEstado %>"><%= venta.getEstadoServicio() %></td>
                     <td style="<%= styleTotal %>">S/. <%= venta.getTotal() %></td>
                 </tr>
                 <% } %>
