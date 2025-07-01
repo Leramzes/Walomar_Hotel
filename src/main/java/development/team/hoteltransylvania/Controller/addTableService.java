@@ -20,11 +20,13 @@ public class addTableService extends HttpServlet {
             Service service = GestionService.getserviceById(Integer.parseInt(req.getParameter("filter")));
             out.println("<tr data-id='" + service.getId() + "'>");
             out.println("    <td>" + service.getName() + "</td>");
-            out.println("    <td class='precio-total'> S/. " + service.getPrice() + "</td>");
+            out.println("    <td class='precio-total'>S/. " + service.getPrice() + "</td>");
             out.println("    <td class='align-middle text-center'>");
             out.println("        <div class='d-flex justify-content-center align-items-center gap-1'>");
             out.println("            <button class='btn btn-danger btn-eliminar-servicio'><i class='fas fa-trash'></i></button>");
             out.println("        </div>");
+            out.println("        <input type='hidden' name='serviceId[]' value='" + service.getId() + "'>");
+            out.println("        <input type='hidden' name='precioTotal[]' value='" + service.getPrice() + "'>");
             out.println("    </td>");
             out.println("</tr>");
         } catch (Exception e) {

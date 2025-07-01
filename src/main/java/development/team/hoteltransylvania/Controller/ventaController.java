@@ -1,9 +1,6 @@
 package development.team.hoteltransylvania.Controller;
 
-import development.team.hoteltransylvania.Business.GestionMetodosPago;
-import development.team.hoteltransylvania.Business.GestionProduct;
-import development.team.hoteltransylvania.Business.GestionUser;
-import development.team.hoteltransylvania.Business.GestionVentas;
+import development.team.hoteltransylvania.Business.*;
 import development.team.hoteltransylvania.Model.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,8 +32,13 @@ public class ventaController extends HttpServlet {
         String[] preciosTotal = req.getParameterValues("precioTotalProduct[]");
         String[] idsProductos = req.getParameterValues("idProduct[]");
 
+        String[] idsServicios = req.getParameterValues("serviceId[]");
+        String[] preciosTotalService = req.getParameterValues("precioTotal[]");
+
         int reservaId = Integer.parseInt(req.getParameter("reservaId"));
         int roomId = Integer.parseInt(req.getParameter("roomId"));
+
+        String opcionPago = req.getParameter("pago");
 
 
         switch (action) {
@@ -87,7 +89,6 @@ public class ventaController extends HttpServlet {
 
             case "ventaProducto":
 
-                String opcionPago = req.getParameter("pago");
                 int comprobanteIdGenerate = -1;
                 boolean ventasOk = true;
 
@@ -139,7 +140,53 @@ public class ventaController extends HttpServlet {
 
                 break;
             case "ventaServicio":
-                System.out.println("entro a controller venta de servicio");
+
+                int comprobanteServiceIdGenerate = -1;
+                boolean ventaServiceOk = true;
+
+                for (int i = 0; i < idsServicios.length; i++) {
+                    ConsumeService cs = new ConsumeService();
+                    cs.setService(GestionService.getserviceById(Integer.parseInt(idsServicios[i])));
+                    cs.setTotalPrice(Float.parseFloat(preciosTotalService[i]));
+
+                    String estadoPago = opcionPago.equalsIgnoreCase("ahora") ? "Pagado" : "Pendiente";
+                    cs.setEstado_pago(estadoPago);
+
+                    boolean ventaExitosa = GestionVentas.registrarVentaService(reservaId, roomId, cs);
+                    if (!ventaExitosa) {
+                        ventaServiceOk = false;
+                        break;
+                    }
+                }
+
+                if (ventaServiceOk && "ahora".equalsIgnoreCase(opcionPago)) {
+                    String metodoPagoStr = req.getParameter("metodoPago");
+                    if (metodoPagoStr == null || metodoPagoStr.isEmpty()) {
+                        resp.sendRedirect("menu.jsp?view=habitacionesServicio&error=faltamodopago");
+                        return;
+                    }
+
+                    float subtotalServicios = 0;
+                    for (String total : preciosTotalService) {
+                        subtotalServicios += Float.parseFloat(total);
+                    }
+
+                    Voucher voucher = new Voucher();
+                    voucher.setTypeVoucher(new TypeVoucher(1, "Boleta"));
+                    voucher.setPaymentMethod(GestionMetodosPago.getMethodPaymentById(Integer.parseInt(metodoPagoStr)));
+                    voucher.setSubtotalProducts(0);
+                    voucher.setSubtotalServices(subtotalServicios);
+                    voucher.setSubtotalPenalidad(0);
+                    voucher.setTotalAmount(subtotalServicios);
+
+                    comprobanteServiceIdGenerate = GestionVentas.registrarComprobante(reservaId, voucher);
+                }
+
+                if (ventaServiceOk && ("despues".equalsIgnoreCase(opcionPago) || comprobanteServiceIdGenerate > 0)) {
+                    resp.sendRedirect("menu.jsp?view=habitacionesServicio&succes=ventaserviciorealizada");
+                } else {
+                    resp.sendRedirect("menu.jsp?view=habitacionesServicio&error=falloregistro");
+                }
                 break;
         }
 

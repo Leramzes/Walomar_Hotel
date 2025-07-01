@@ -1161,7 +1161,7 @@ function validacionVentaDirecta() {
         event.preventDefault();
 
         if (!validarTablaTieneItems(
-            "#detalleProductos",
+            "#detalleVentaDirecta",
             "Agrega productos",
             "No hay productos agregados",
             "Por favor, agrega al menos un producto antes de continuar."

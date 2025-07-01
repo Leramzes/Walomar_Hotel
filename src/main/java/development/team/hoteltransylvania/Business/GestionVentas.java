@@ -341,4 +341,33 @@ public class GestionVentas {
 
         return result;
     }
+    public static boolean registrarVentaService(int idReserva, int idRoom, ConsumeService consumeService) {
+        String insertSql = "INSERT INTO consumo_servicios " +
+                "(reserva_id, habitacion_id, servicio_id, total, estado_pago) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        boolean result = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement psInsert = cnn.prepareStatement(insertSql)) {
+
+            psInsert.setInt(1, idReserva);
+            psInsert.setInt(2, idRoom);
+            psInsert.setInt(3, consumeService.getService().getId());
+            psInsert.setDouble(4, consumeService.getTotalPrice());
+            psInsert.setString(5, consumeService.getEstado_pago());
+
+            int rows = psInsert.executeUpdate();
+            result = rows > 0;
+
+            if (result) {
+                LOGGER.info("Servicio registrado correctamente");
+            }
+        } catch (SQLException e) {
+            LOGGER.warning("Error al registrar servicio: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }

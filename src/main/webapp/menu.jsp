@@ -1039,9 +1039,23 @@
             text: 'El archivo suido no es una imagen válida.',
         });
     }
+    if (params.get("error") === "faltamodopago") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un error en el modo de pago.',
+        });
+    }
     if (params.get("succes") === "ventadirectarealizada") {
         Swal.fire({
             title: "Venta Realizada Correctamente",
+            icon: "success",
+            draggable: true
+        });
+    }
+    if (params.get("succes") === "ventaserviciorealizada") {
+        Swal.fire({
+            title: "Venta de Servicio Realizado Correctamente",
             icon: "success",
             draggable: true
         });
