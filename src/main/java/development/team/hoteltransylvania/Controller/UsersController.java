@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static java.lang.System.out;
@@ -66,6 +69,7 @@ public class UsersController extends HttpServlet {
                 String num_doc = req.getParameter("numberdocumentHidden");
                 String password1 = num_doc;
                 int idRol = Integer.parseInt(req.getParameter("rol"));
+                String fechaCaducidadStr = req.getParameter("fechCaducidad");
 
                 if (userdao.existeUsuario(username1)) {
                     out.println("El email ya está registrado.");
@@ -89,6 +93,15 @@ public class UsersController extends HttpServlet {
 
                     user.setEmployee(employee);
                     user.setStatusUser(StatusUser.valueOf("Activo"));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        Date fechaCaducidad = sdf.parse(fechaCaducidadStr);
+                        user.setCaducidad(fechaCaducidad);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
                     IdUsuario = userdao.registerUser(user);
 
                     out.printf("Se ha registrado el User con ID: " + IdUsuario);

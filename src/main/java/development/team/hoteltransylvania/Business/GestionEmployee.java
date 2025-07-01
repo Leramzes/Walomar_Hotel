@@ -9,6 +9,7 @@ import development.team.hoteltransylvania.Util.LoggerConfifg;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -139,7 +140,7 @@ public class GestionEmployee {
     }
     public static List<usersEmployeeDTO> getAllEmployees() {
         String sql = "SELECT e.id AS id_empleado, u.id AS id_usuario, e.nombre, u.username AS nombre_usuario, " +
-                "e.correo, r.nombre AS rol, u.estado " +
+                "e.correo, r.nombre AS rol, u.estado, u.caducidad " +
                 "FROM empleados as e " +
                 "JOIN usuarios AS u ON u.empleado_id=e.id " +
                 "JOIN roles AS r ON e.rol_id=r.id";
@@ -157,8 +158,9 @@ public class GestionEmployee {
                 String email = rs.getString("correo");
                 String rol = rs.getString("rol");
                 String estado = rs.getString("estado");
+                Date caducidad = rs.getDate("caducidad");
 
-                allEmployees.add(new usersEmployeeDTO(id_empleado,id_usuario,nombre,nombre_usuario,email,rol,estado));
+                allEmployees.add(new usersEmployeeDTO(id_empleado,id_usuario,nombre,nombre_usuario,email,rol,estado,caducidad));
             }
 
         } catch (SQLException e) {
@@ -168,8 +170,11 @@ public class GestionEmployee {
         return allEmployees;
     }
     public static List<usersEmployeeDTO> getAllEmployeesPaginated(int page, int pageSize) {
+        // 🔁 Inactivar usuarios con fecha caducada antes de hacer la consulta
+        actualizarUsuariosCaducados();
+
         String sql = "SELECT e.id AS id_empleado, u.id AS id_usuario, e.nombre, u.username AS nombre_usuario, " +
-                "e.correo, r.nombre AS rol, u.estado " +
+                "e.correo, r.nombre AS rol, u.estado, u.caducidad " +
                 "FROM empleados as e " +
                 "JOIN usuarios AS u ON u.empleado_id=e.id " +
                 "JOIN roles AS r ON e.rol_id=r.id "+
@@ -192,8 +197,9 @@ public class GestionEmployee {
                 String email = rs.getString("correo");
                 String rol = rs.getString("rol");
                 String estado = rs.getString("estado");
+                Date caducidad = rs.getDate("caducidad");
 
-                allEmployees.add(new usersEmployeeDTO(id_empleado,id_usuario,nombre,nombre_usuario,email,rol,estado));
+                allEmployees.add(new usersEmployeeDTO(id_empleado,id_usuario,nombre,nombre_usuario,email,rol,estado,caducidad));
             }
 
         } catch (SQLException e) {
@@ -201,6 +207,19 @@ public class GestionEmployee {
         }
 
         return allEmployees;
+    }
+    public static void actualizarUsuariosCaducados() {
+        String sql = "UPDATE usuarios SET estado = 'Inactivo' WHERE caducidad < CURRENT_DATE AND estado <> 'Inactivo'";
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            int afectados = ps.executeUpdate();
+            LOGGER.info("Usuarios inactivados automáticamente: " + afectados);
+
+        } catch (SQLException e) {
+            LOGGER.warning("Error actualizando usuarios caducados: " + e.getMessage());
+        }
     }
     public static List<usersEmployeeDTO> filterEmployees(String nombre, String estado, int page, int size) {
         List<usersEmployeeDTO> allEmployees = getAllEmployees(); // Obtiene todos los registros

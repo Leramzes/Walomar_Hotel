@@ -1,5 +1,7 @@
 package development.team.hoteltransylvania.DTO;
 
+import java.util.Date;
+
 public class usersEmployeeDTO {
     private int id_employee;
     private int id_user;
@@ -8,6 +10,7 @@ public class usersEmployeeDTO {
     private String email_user;
     private String tipo_user;
     private String estado_user;
+    private Date fecha_caducidad;
 
     public usersEmployeeDTO(int id_employee, int id_user, String name_employee, String name_user, String email_user, String tipo_user, String estado_user) {
         this.id_employee = id_employee;
@@ -17,6 +20,16 @@ public class usersEmployeeDTO {
         this.email_user = email_user;
         this.tipo_user = tipo_user;
         this.estado_user = estado_user;
+    }
+    public usersEmployeeDTO(int id_employee, int id_user, String name_employee, String name_user, String email_user, String tipo_user, String estado_user, Date fecha_caducidad) {
+        this.id_employee = id_employee;
+        this.id_user = id_user;
+        this.name_employee = name_employee;
+        this.name_user = name_user;
+        this.email_user = email_user;
+        this.tipo_user = tipo_user;
+        this.estado_user = estado_user;
+        this.fecha_caducidad = fecha_caducidad;
     }
 
     public usersEmployeeDTO() {
@@ -77,6 +90,14 @@ public class usersEmployeeDTO {
 
     public void setEstado_user(String estado_user) {
         this.estado_user = estado_user;
+    }
+
+    public Date getFecha_caducidad() {
+        return fecha_caducidad;
+    }
+
+    public void setFecha_caducidad(Date fecha_caducidad) {
+        this.fecha_caducidad = fecha_caducidad;
     }
 
     @Override

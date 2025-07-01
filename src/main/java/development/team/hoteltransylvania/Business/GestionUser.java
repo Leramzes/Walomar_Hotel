@@ -20,7 +20,7 @@ import java.util.logging.Logger;
         private static final Logger LOGGER = LoggerConfifg.getLogger(development.team.hoteltransylvania.Business.GestionUser.class);
 
         public static int registerUser(User user) {
-            String sql = "INSERT INTO usuarios (username, password, empleado_id, estado) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO usuarios (username, password, empleado_id, estado, caducidad) VALUES (?, ?, ?, ?, ?)";
             int usuarioId = -1;
 
             try (Connection cnn = dataSource.getConnection();
@@ -33,6 +33,8 @@ import java.util.logging.Logger;
 
                 ps.setInt(3, user.getEmployee().getId()); // Corregir índice
                 ps.setString(4, user.getStatusUser().name()); // Corregir índice
+                java.sql.Date fechaSql = new java.sql.Date(user.getCaducidad().getTime());
+                ps.setDate(5, fechaSql);
 
                 int rowsAffected = ps.executeUpdate();
                 if (rowsAffected > 0) {

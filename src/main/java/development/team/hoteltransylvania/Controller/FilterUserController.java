@@ -37,6 +37,7 @@ public class FilterUserController extends HttpServlet {
                 out.println("<td>" + employee.getName_user() + "</td>");
                 out.println("<td>" + employee.getEmail_user() + "</td>");
                 out.println("<td>" + employee.getTipo_user() + "</td>");
+                out.println("<td>" + employee.getFecha_caducidad() + "</td>");
                 out.println("<td>" + employee.getEstado_user() + "</td>");
                 out.println("<td class='d-flex justify-content-center gap-1'>");
                 out.println("  <button class='btn btn-warning btn-sm' id='btn-editar' " +

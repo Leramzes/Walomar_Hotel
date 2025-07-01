@@ -2,6 +2,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="development.team.hoteltransylvania.DTO.usersEmployeeDTO" %>
 <%@ page import="development.team.hoteltransylvania.Model.User" %>
+<%@ page import="java.time.ZoneId" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.ZonedDateTime" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -138,6 +142,28 @@
                                        placeholder="Nombre Usuario" required readonly>
                             </div>
                         </div>
+                        <%
+                            ZoneId zonaPeru = ZoneId.of("America/Lima");
+                            LocalDate hoy = LocalDate.now(zonaPeru);
+                            LocalDate fechaEnUnMes = hoy.plusMonths(1);
+
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            String fechaMinima = hoy.format(formatter); // Hoy
+                            String fechaPorDefecto = fechaEnUnMes.format(formatter); // Hoy + 1 mes
+                        %>
+                        <div class="mb-3">
+                            <label for="username">Fecha Caducidad</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                <input type="date"
+                                       class="form-control"
+                                       id="fechCaducidad"
+                                       name="fechCaducidad"
+                                       min="<%= fechaMinima %>"
+                                       value="<%= fechaPorDefecto %>"
+                                       required>
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <button type="submit" class="btn btn-success">
                                 Guardar
@@ -218,6 +244,7 @@
                     <th>Usuario</th>
                     <th>Correo</th>
                     <th>Tipo</th>
+                    <th>Fecha Caducidad</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
@@ -235,6 +262,8 @@
                     <td><%=employee.getEmail_user()%>
                     </td>
                     <td><%=employee.getTipo_user()%>
+                    </td>
+                    <td><%=employee.getFecha_caducidad()%>
                     </td>
                     <td><%=employee.getEstado_user()%>
                     </td>

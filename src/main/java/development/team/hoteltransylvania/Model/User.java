@@ -1,11 +1,14 @@
 package development.team.hoteltransylvania.Model;
 
+import java.util.Date;
+
 public class User {
     private int id;
     private Employee employee;
     private String username;
     private String password;
     private StatusUser statusUser;
+    private Date caducidad;
 
     public User() {
     }
@@ -56,6 +59,14 @@ public class User {
 
     public void setStatusUser(StatusUser statusUser) {
         this.statusUser = statusUser;
+    }
+
+    public Date getCaducidad() {
+        return caducidad;
+    }
+
+    public void setCaducidad(Date caducidad) {
+        this.caducidad = caducidad;
     }
 
     @Override
