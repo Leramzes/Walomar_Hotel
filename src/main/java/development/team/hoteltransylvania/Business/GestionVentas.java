@@ -1,6 +1,6 @@
 package development.team.hoteltransylvania.Business;
 
-import development.team.hoteltransylvania.DTO.usersEmployeeDTO;
+import development.team.hoteltransylvania.DTO.AllInfoTableProdSalida;
 import development.team.hoteltransylvania.Model.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
@@ -9,7 +9,6 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -369,5 +368,42 @@ public class GestionVentas {
         }
 
         return result;
+    }
+    public static List<AllInfoTableProdSalida> obtenerVentasProdPorPorReserva(int idReserva) {
+        List<AllInfoTableProdSalida> ventas = new ArrayList<>();
+
+        String sql = "SELECT cp.id, cp.reserva_id, cp.habitacion_id, cp.producto_id, p.nombre, cp.cantidad, cp.precio_unitario, cp.total, cp.estado_pago\n" +
+                "FROM consumo_productos cp\n" +
+                "inner join productos p on p.id = cp.producto_id\n" +
+                "WHERE cp.reserva_id = ?";
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, idReserva);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                AllInfoTableProdSalida ats = new AllInfoTableProdSalida();
+
+                ats.setId_consumo(rs.getInt("id"));
+                ats.setId_reserva(rs.getInt("reserva_id"));
+                ats.setId_habitacion(rs.getInt("habitacion_id"));
+                ats.setId_producto(rs.getInt("producto_id"));
+                ats.setNombreProducto(rs.getString("nombre"));
+                ats.setCantidad(rs.getInt("cantidad"));
+                ats.setPrecioUnitProducto(rs.getDouble("precio_unitario"));
+                ats.setTotal(rs.getDouble("total"));
+                ats.setEstadoProducto(rs.getString("estado_pago"));
+
+                ventas.add(ats);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.warning("Error obteniendo ventas de productos: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return ventas;
     }
 }
