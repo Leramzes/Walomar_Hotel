@@ -193,7 +193,6 @@ function detalleReserva(id) {
             document.getElementById("adelantoDetalle").value = data.adelanto;
             document.getElementById("totalPagarDetalle").value = data.pago_total;
             document.getElementById("restanteDetalle").value = data.pago_total - data.adelanto;
-            document.getElementById("proximo").innerText = "Próximamente se validarán pagos";
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }
@@ -203,7 +202,7 @@ function editarReserva(id) {
     fetch("reservatioController?action=get&idreserva=" + id)
         .then(response => response.json())  // Convertimos la respuesta a JSON
         .then(data => {
-
+            console.log(data);
             document.getElementById("nombreEditar").value = data.clientName;
             document.querySelector("#nombreEditar").disabled = true;
             document.getElementById("tipoDocumentoEditar").value = data.documentType;
@@ -215,12 +214,37 @@ function editarReserva(id) {
             document.getElementById("telefonoEditar").value = data.phone;
             document.querySelector("#telefonoEditar").disabled = true;
             document.getElementById("tipoHabitacionEditar").value = data.roomTypeId;
-            /*document.getElementById("habitacionEditar").value = data.numberRoom;
-            document.getElementById("fechaEntradaEditar").value = data.checkInDate;
-            document.getElementById("fechaSalidaEditar").value = data.checkOutDate;*/
-            document.getElementById("proximoEdit").innerText = "Próximamente se editara fecha check-out";
+            document.querySelector("#tipoHabitacionEditar").disabled = true;
+            document.getElementById("habitacionEditar").value = data.numberRoom;
+            document.querySelector("#habitacionEditar").disabled = true;
+            document.getElementById("fechaEntradaEditar").value = formatearFecha(data.checkInDate);
+            document.querySelector("#fechaEntradaEditar").disabled = true;
+            document.getElementById("fechaSalidaEditar").value = formatearFecha(data.checkOutDate);
+            document.getElementById("descuentoEditar").value = data.dsct;
+            document.querySelector("#descuentoEditar").disabled = true;
+            document.getElementById("cobroExtraEditar").value = data.cobro_extra;
+            document.querySelector("#cobroExtraEditar").disabled = true;
+            document.getElementById("adelantoEditar").value = data.adelanto;
+            document.querySelector("#adelantoEditar").disabled = true;
+            document.getElementById("totalPagarEditar").value = data.pago_total;
+            document.querySelector("#totalPagarEditar").disabled = true;
+            document.getElementById("restanteEditar").value = data.pago_total - data.adelanto;
+            document.querySelector("#restanteEditar").disabled = true;
         })
         .catch(error => console.error("Error al obtener datos:", error));
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) return "";
+
+    const d = new Date(fecha);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hour = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hour}:${minutes}`;
 }
 
 function editarRoom(id) {

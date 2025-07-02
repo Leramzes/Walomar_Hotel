@@ -344,10 +344,8 @@
                             <label for="restanteDetalle">Restante</label>
                             <input type="text" class="form-control" id="restanteDetalle" readonly disabled>
                         </div>
-
                     </div>
                 </div>
-                <h5 class="text-danger fw-bold text-center" id="proximo"></h5>
             </div>
 
             <div class="modal-footer">
@@ -366,8 +364,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <form id="formEditarReserva">
-                    <input type="hidden" id="editIndex">
+                <form id="formEditarReserva" method="post" action="reservatioController">
+                    <input type="hidden" name="actionEdit" value="editar">
 
                     <div class="row">
                         <!-- Datos del Cliente -->
@@ -410,10 +408,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="habitacionEditar" class="form-label">Habitación</label>
-                                <select class="form-select" id="habitacionEditar" name="habitacionEditar" required
-                                        onchange='updateTotal()'>
-                                    <option value="">Seleccione una habitación</option>
-                                </select>
+                                <input type="text" class="form-control" id="habitacionEditar" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fechaEntradaEditar" class="form-label">Fecha y Hora de Entrada</label>
@@ -421,7 +416,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="fechaSalidaEditar" class="form-label">Fecha y Hora de Salida</label>
-                                <input type="datetime-local" class="form-control" id="fechaSalidaEditar" required>
+                                <input type="datetime-local" class="form-control" id="fechaSalidaEditar" name="fechaSalidaEditar" required>
                             </div>
                         </div>
 
@@ -431,9 +426,9 @@
                             <div class="mb-3">
                                 <label for="descuentoEditar" class="form-label">Descuento</label>
                                 <select class="form-select" id="descuentoEditar">
-                                    <option value="0%">0%</option>
-                                    <option value="5%">5%</option>
-                                    <option value="10%">10%</option>
+                                    <option value="0">0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="10">10%</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -448,15 +443,25 @@
                                 <label for="totalPagarEditar" class="form-label">Total a Pagar</label>
                                 <input type="number" class="form-control" id="totalPagarEditar" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="restanteEditar">Restante</label>
+                                <input type="text" class="form-control" id="restanteEditar" readonly disabled>
+                            </div>
                         </div>
                     </div>
 
                     <hr>
 
+                    <div class="form-text text-danger small mb-3">
+                        <label>
+                            OJO 👀: La ampliación de fecha de salida de la reserva esta sujeta a disponibilidad de la habitacion para reservas futuras.
+                        </label>
+                    </div>
                     <!-- Botón Guardar alineado a la izquierda -->
                     <div class="d-flex justify-content-start">
-                        <button type="button" class="btn btn-success">Guardar</button>
+                        <button type="submit" class="btn btn-success">Guardar</button>
                     </div>
+
 
                 </form>
                 <h5 class="text-danger fw-bold text-center" id="proximoEdit"></h5>

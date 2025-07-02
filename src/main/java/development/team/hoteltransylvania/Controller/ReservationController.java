@@ -48,6 +48,15 @@ public class ReservationController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("actionEdit");
+        if ("editar".equals(action)) {
+
+            String nuevaFechSalida = (req.getParameter("fechaSalidaEditar"));
+            System.out.println(nuevaFechSalida); //aqui formatear la nueva fecha y validarla segun nuevas reservas y al final actualziar la reserva
+
+            resp.sendRedirect("menu.jsp?view=reserva");
+            return;
+        }
 
         HttpSession session = req.getSession();
         //Que pasa cuando registro una reserva
@@ -99,13 +108,8 @@ public class ReservationController extends HttpServlet {
             fechaSalida = Timestamp.valueOf(fechaSalidaLocal);
 
             if (fechaEntradaLocal.isAfter(fechaSalidaLocal)) {
-                // Puedes redirigir a una página de error o mostrar un mensaje
-                System.out.println("Error: La fecha de entrada es posterior a la de salida.");
                 resp.sendRedirect("menu.jsp?view=reserva&error=fechas_invalidas"); //aqui manejar alerta
                 return; // Evita que continúe con el proceso
-            }
-            if (fechaEntradaLocal.isAfter(fechaSalidaLocal)) {
-
             }
 
             boolean puedeReservar = validarReserva(fechaEntrada, fechaSalida, reservaAsociate);
@@ -132,19 +136,12 @@ public class ReservationController extends HttpServlet {
 
         // Crear Checkout (Asegúrate de manejar bien el tiempo extra)
         Checkout checkout = new Checkout(reservation, fechaSalida, null, 0);
-/*
-        System.out.println(reservation);
-        System.out.println(room);
-        System.out.println(payment);
-        System.out.println(checkout);*/
 
         int reservationResgitered = GestionReservation.registerReservation(reservation,room,payment, checkout);
         System.out.println("se registro: "+reservationResgitered);
         resp.sendRedirect("menu.jsp?view=reserva");
         //aun falta pasr bien el employee
 
-        //cambio de estado de habitacion: cuando es reserva siempre será status 4 pendiente
-        /*GestionRoom.updateStatusRoom(room.getId(),4);*/
     }
     public static boolean validarReserva(
             Timestamp fechaEntrada,
