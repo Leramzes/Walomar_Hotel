@@ -215,10 +215,11 @@ function editarReserva(id) {
             document.querySelector("#telefonoEditar").disabled = true;
             document.getElementById("tipoHabitacionEditar").value = data.roomTypeId;
             document.querySelector("#tipoHabitacionEditar").disabled = true;
+            document.getElementById("habitacionIdEdit").value = data.idRoom;
             document.getElementById("habitacionEditar").value = data.numberRoom;
             document.querySelector("#habitacionEditar").disabled = true;
             document.getElementById("fechaEntradaEditar").value = formatearFecha(data.checkInDate);
-            document.querySelector("#fechaEntradaEditar").disabled = true;
+            /*document.querySelector("#fechaEntradaEditar").disabled = true;*/
             document.getElementById("fechaSalidaEditar").value = formatearFecha(data.checkOutDate);
             document.getElementById("descuentoEditar").value = data.dsct;
             document.querySelector("#descuentoEditar").disabled = true;

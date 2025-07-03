@@ -409,10 +409,11 @@
                             <div class="mb-3">
                                 <label for="habitacionEditar" class="form-label">Habitación</label>
                                 <input type="text" class="form-control" id="habitacionEditar" required>
+                                <input type="hidden" class="form-control" id="habitacionIdEdit" name="habitacionIdEdit" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fechaEntradaEditar" class="form-label">Fecha y Hora de Entrada</label>
-                                <input type="datetime-local" class="form-control" id="fechaEntradaEditar" required>
+                                <input type="datetime-local" class="form-control" id="fechaEntradaEditar" name="fechaEntradaEditar" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fechaSalidaEditar" class="form-label">Fecha y Hora de Salida</label>

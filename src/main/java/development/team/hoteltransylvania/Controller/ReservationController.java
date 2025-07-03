@@ -49,10 +49,31 @@ public class ReservationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("actionEdit");
-        if ("editar".equals(action)) {
 
-            String nuevaFechSalida = (req.getParameter("fechaSalidaEditar"));
-            System.out.println(nuevaFechSalida); //aqui formatear la nueva fecha y validarla segun nuevas reservas y al final actualziar la reserva
+        if ("editar".equals(action)) {
+            String habitacionEditar = req.getParameter("habitacionIdEdit");
+            List<TableReservationDTO> reservaAsociateEdit = GestionReservation.
+                    getRoomAsociateReservationPendiete(Integer.parseInt(habitacionEditar)); //verificar reservas asociadas a la habitacion
+
+            String fechaEntradaEditar = req.getParameter("fechaEntradaEditar");
+            String nuevaFechSalida = req.getParameter("fechaSalidaEditar");
+            System.out.println(fechaEntradaEditar);
+            System.out.println(nuevaFechSalida);
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+            // Convertir a LocalDateTime
+            LocalDateTime entrada = LocalDateTime.parse(fechaEntradaEditar, formatter);
+            LocalDateTime salida = LocalDateTime.parse(nuevaFechSalida, formatter);
+
+            // Convertir a Timestamp
+            Timestamp timestampEntrada = Timestamp.valueOf(entrada);
+            Timestamp timestampSalida = Timestamp.valueOf(salida);
+
+            //cambiar metodo para que valide amplaicion de esa reserva
+
+            boolean puedeReservar = validarReserva(timestampEntrada, timestampSalida, reservaAsociateEdit);
+            System.out.println("puede reservar: "+puedeReservar);
 
             resp.sendRedirect("menu.jsp?view=reserva");
             return;
