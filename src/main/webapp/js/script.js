@@ -215,6 +215,7 @@ function editarReserva(id) {
             document.querySelector("#telefonoEditar").disabled = true;
             document.getElementById("tipoHabitacionEditar").value = data.roomTypeId;
             document.querySelector("#tipoHabitacionEditar").disabled = true;
+            document.getElementById("idReservaEdit").value = data.idReservation;
             document.getElementById("habitacionIdEdit").value = data.idRoom;
             document.getElementById("habitacionEditar").value = data.numberRoom;
             document.querySelector("#habitacionEditar").disabled = true;

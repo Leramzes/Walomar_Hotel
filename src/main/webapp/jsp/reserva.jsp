@@ -105,14 +105,15 @@
                                         cliente</p>
                                     <div class="mb-3">
                                         <label for="nombre">Nombre Completo</label>
-                                        <input type="hidden" class="form-control readonly-style" id="idCLiente" name="idCLiente"
+                                        <input type="hidden" class="form-control readonly-style" id="idCLiente"
+                                               name="idCLiente"
                                                required>
                                         <input type="text" class="form-control" id="nombre" name="nombre" required
                                                readonly>
                                     </div>
                                     <div class="mb-3">
                                         <label for="tipoDocumento">Tipo de Documento</label>
-                                        <select class="form-select" id="tipoDocumento" name="tipoDocumento" required >
+                                        <select class="form-select" id="tipoDocumento" name="tipoDocumento" required>
                                             <option value="#">DNI</option>
                                             <option value="#">PASAPORTE</option>
                                             <option value="#">RUC</option>
@@ -409,15 +410,19 @@
                             <div class="mb-3">
                                 <label for="habitacionEditar" class="form-label">Habitación</label>
                                 <input type="text" class="form-control" id="habitacionEditar" required>
-                                <input type="hidden" class="form-control" id="habitacionIdEdit" name="habitacionIdEdit" required>
+                                <input type="hidden" class="form-control" id="habitacionIdEdit" name="habitacionIdEdit"
+                                       required>
+                                <input type="hidden" id="idReservaEdit" name="idReservaEdit">
                             </div>
                             <div class="mb-3">
                                 <label for="fechaEntradaEditar" class="form-label">Fecha y Hora de Entrada</label>
-                                <input type="datetime-local" class="form-control" id="fechaEntradaEditar" name="fechaEntradaEditar" required>
+                                <input type="datetime-local" class="form-control" id="fechaEntradaEditar"
+                                       name="fechaEntradaEditar" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fechaSalidaEditar" class="form-label">Fecha y Hora de Salida</label>
-                                <input type="datetime-local" class="form-control" id="fechaSalidaEditar" name="fechaSalidaEditar" required>
+                                <input type="datetime-local" class="form-control" id="fechaSalidaEditar"
+                                       name="fechaSalidaEditar" required>
                             </div>
                         </div>
 
@@ -455,7 +460,8 @@
 
                     <div class="form-text text-danger small mb-3">
                         <label>
-                            OJO 👀: La ampliación de fecha de salida de la reserva esta sujeta a disponibilidad de la habitacion para reservas futuras.
+                            OJO 👀: La ampliación de fecha de salida de la reserva esta sujeta a disponibilidad de la
+                            habitacion para reservas futuras.
                         </label>
                     </div>
                     <!-- Botón Guardar alineado a la izquierda -->
@@ -591,9 +597,9 @@
                     <%
                         }
                     } else {
-                            LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
-                            ZonedDateTime ahora = ZonedDateTime.now(zonaPeru);
-                            long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
+                        LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
+                        ZonedDateTime ahora = ZonedDateTime.now(zonaPeru);
+                        long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
 
                         if ("Pendiente".equalsIgnoreCase(estado) && minutosPasados > 20) {
                     %>
@@ -616,11 +622,18 @@
                                 onclick="detalleReserva(<%= reservations.getIdReservation() %>)">
                             👁️
                         </button>
+                        <%
+                            String estadoEdit = reservations.getReservationStatus();
+                            boolean puedeEditar = "Pendiente".equalsIgnoreCase(estadoEdit) || "Ocupada".equalsIgnoreCase(estadoEdit);
+
+                            if (puedeEditar) {
+                        %>
                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#modalEditarReserva" title="Editar Reserva"
                                 onclick="editarReserva(<%= reservations.getIdReservation() %>)">
                             ✏️
                         </button>
+                        <%}%>
                         <%if (permitCancel) {%>
                         <form action="recepController" method="post">
                             <input type="hidden" name="vista" value="reserva">

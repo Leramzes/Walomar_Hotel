@@ -51,9 +51,10 @@ public class ReservationController extends HttpServlet {
         String action = req.getParameter("actionEdit");
 
         if ("editar".equals(action)) {
-            String habitacionEditar = req.getParameter("habitacionIdEdit");
-            List<TableReservationDTO> reservaAsociateEdit = GestionReservation.
-                    getRoomAsociateReservationPendiete(Integer.parseInt(habitacionEditar)); //verificar reservas asociadas a la habitacion
+            int idReservaEditar = Integer.parseInt(req.getParameter("idReservaEdit"));
+            int habitacionEditar = Integer.parseInt(req.getParameter("habitacionIdEdit"));
+            List<TableReservationDTO> otrasReservas = GestionReservation.
+                    getRoomAsociateReservationPendienteExcluyendoActual(habitacionEditar, idReservaEditar); //verificar reservas asociadas a la habitacion
 
             String fechaEntradaEditar = req.getParameter("fechaEntradaEditar");
             String nuevaFechSalida = req.getParameter("fechaSalidaEditar");
@@ -72,7 +73,7 @@ public class ReservationController extends HttpServlet {
 
             //cambiar metodo para que valide amplaicion de esa reserva
 
-            boolean puedeReservar = validarReserva(timestampEntrada, timestampSalida, reservaAsociateEdit);
+            boolean puedeReservar = validarReserva(timestampEntrada, timestampSalida, otrasReservas);
             System.out.println("puede reservar: "+puedeReservar);
 
             resp.sendRedirect("menu.jsp?view=reserva");
