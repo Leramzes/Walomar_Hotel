@@ -367,106 +367,39 @@
             <div class="modal-body">
                 <form id="formEditarReserva" method="post" action="reservatioController">
                     <input type="hidden" name="actionEdit" value="editar">
+                    <input type="hidden" id="idReservaEdit" name="idReservaEdit">
+                    <input type="hidden" id="habitacionIdEdit" name="habitacionIdEdit">
+                    <input type="hidden" id="fechaEntradaEditar" name="fechaEntradaEditar">
 
-                    <div class="row">
-                        <!-- Datos del Cliente -->
-                        <div class="col-md-4 border-end">
-                            <h5>Datos del Cliente</h5>
-                            <div class="mb-3">
-                                <label for="nombreEditar" class="form-label">Nombre Completo</label>
-                                <input type="text" class="form-control" id="nombreEditar" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="tipoDocumentoEditar" class="form-label">Tipo de Documento</label>
-                                <input type="text" class="form-control" id="tipoDocumentoEditar" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="documentoEditar" class="form-label">Documento</label>
-                                <input type="text" class="form-control" id="documentoEditar" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="correoEditar" class="form-label">Correo</label>
-                                <input type="text" class="form-control" id="correoEditar" disabled>
-                            </div>
-                            <div class="mb-3">
-                                <label for="telefonoEditar" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="telefonoEditar" disabled>
-                            </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="habitacionEditar" class="form-label">Habitación</label>
+                            <input type="text" class="form-control" id="habitacionEditar" disabled>
                         </div>
 
-                        <!-- Datos del Alojamiento -->
-                        <div class="col-md-4 border-end">
-                            <h5>Datos del Alojamiento</h5>
-                            <div class="mb-3">
-                                <label for="tipoHabitacionEditar" class="form-label">Tipo de Habitación</label>
-                                <select class="form-select" id="tipoHabitacionEditar" name="tipoHabitacionEditar"
-                                        onchange="getRoomsByType('#tipoHabitacion')" required>
-                                    <%for (TypeRoom typeRoom : allTypeRooms) {%>
-                                    <option value="<%=typeRoom.getId()%>"><%=typeRoom.getName()%>
-                                    </option>
-                                    <%}%>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="habitacionEditar" class="form-label">Habitación</label>
-                                <input type="text" class="form-control" id="habitacionEditar" required>
-                                <input type="hidden" class="form-control" id="habitacionIdEdit" name="habitacionIdEdit"
-                                       required>
-                                <input type="hidden" id="idReservaEdit" name="idReservaEdit">
-                            </div>
-                            <div class="mb-3">
-                                <label for="fechaEntradaEditar" class="form-label">Fecha y Hora de Entrada</label>
-                                <input type="datetime-local" class="form-control" id="fechaEntradaEditar"
-                                       name="fechaEntradaEditar" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="fechaSalidaEditar" class="form-label">Fecha y Hora de Salida</label>
-                                <input type="datetime-local" class="form-control" id="fechaSalidaEditar"
-                                       name="fechaSalidaEditar" required>
-                            </div>
+                        <div class="mb-3">
+                            <label for="fechaEntradaEditarView" class="form-label">Fecha y Hora de Entrada</label>
+                            <input type="datetime-local" class="form-control" id="fechaEntradaEditarView" disabled>
                         </div>
 
-                        <!-- Costo -->
-                        <div class="col-md-4">
-                            <h5>Costo</h5>
-                            <div class="mb-3">
-                                <label for="descuentoEditar" class="form-label">Descuento</label>
-                                <select class="form-select" id="descuentoEditar">
-                                    <option value="0">0%</option>
-                                    <option value="5">5%</option>
-                                    <option value="10">10%</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cobroExtraEditar" class="form-label">Cobro extra</label>
-                                <input type="number" class="form-control" id="cobroExtraEditar">
-                            </div>
-                            <div class="mb-3">
-                                <label for="adelantoEditar" class="form-label">Adelanto</label>
-                                <input type="number" class="form-control" id="adelantoEditar">
-                            </div>
-                            <div class="mb-3">
-                                <label for="totalPagarEditar" class="form-label">Total a Pagar</label>
-                                <input type="number" class="form-control" id="totalPagarEditar" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="restanteEditar">Restante</label>
-                                <input type="text" class="form-control" id="restanteEditar" readonly disabled>
-                            </div>
+                        <div class="mb-3">
+                            <label for="fechaSalidaEditarView" class="form-label">Fecha y Hora de Salida</label>
+                            <input type="datetime-local" class="form-control" id="fechaSalidaEditarView" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fechaSalidaEditar" class="form-label">Nueva Fecha y Hora de Salida</label>
+                            <input type="datetime-local" class="form-control" id="fechaSalidaEditar" name="fechaSalidaEditar" required>
+                        </div>
+
+                        <div class="alert alert-warning small mt-3">
+                            <strong>Nota:</strong> Solo puedes ampliar la salida si no interfiere con otras reservas en la habitación.
                         </div>
                     </div>
 
-                    <hr>
-
-                    <div class="form-text text-danger small mb-3">
-                        <label>
-                            OJO 👀: La ampliación de fecha de salida de la reserva esta sujeta a disponibilidad de la
-                            habitacion para reservas futuras.
-                        </label>
-                    </div>
-                    <!-- Botón Guardar alineado a la izquierda -->
-                    <div class="d-flex justify-content-start">
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     </div>
 
 

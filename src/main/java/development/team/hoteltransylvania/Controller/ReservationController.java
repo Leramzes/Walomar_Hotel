@@ -58,8 +58,6 @@ public class ReservationController extends HttpServlet {
 
             String fechaEntradaEditar = req.getParameter("fechaEntradaEditar");
             String nuevaFechSalida = req.getParameter("fechaSalidaEditar");
-            System.out.println(fechaEntradaEditar);
-            System.out.println(nuevaFechSalida);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
@@ -71,12 +69,22 @@ public class ReservationController extends HttpServlet {
             Timestamp timestampEntrada = Timestamp.valueOf(entrada);
             Timestamp timestampSalida = Timestamp.valueOf(salida);
 
-            //cambiar metodo para que valide amplaicion de esa reserva
-
+            //Validar si no hay interferencia con otra reserva para esa fecha
             boolean puedeReservar = validarReserva(timestampEntrada, timestampSalida, otrasReservas);
-            System.out.println("puede reservar: "+puedeReservar);
+            if(!puedeReservar) {
+                resp.sendRedirect("menu.jsp?view=reserva&error=choque_fechas_edit");
+                return;
+            }
 
-            resp.sendRedirect("menu.jsp?view=reserva");
+            // Aquí puedes actualizar la reserva si todo está correcto
+            boolean exito = GestionReservation.actualizarFechaSalidaReserva(idReservaEditar, timestampSalida);
+
+            if (exito) {
+                resp.sendRedirect("menu.jsp?view=reserva&success=actualizacion_exitosa");
+            } else {
+                resp.sendRedirect("menu.jsp?view=reserva&error=actualizacion_fallida");
+            }
+
             return;
         }
 
@@ -137,7 +145,6 @@ public class ReservationController extends HttpServlet {
             boolean puedeReservar = validarReserva(fechaEntrada, fechaSalida, reservaAsociate);
 
             if (!puedeReservar) {
-                System.out.println("Error: No se puede reservar porque hay un choque con otra reserva.");
                 resp.sendRedirect("menu.jsp?view=reserva&error=choque_fechas"); //aqui manejar alerta
                 return;
             }

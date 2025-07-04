@@ -198,40 +198,43 @@ function detalleReserva(id) {
 }
 
 function editarReserva(id) {
-
     fetch("reservatioController?action=get&idreserva=" + id)
-        .then(response => response.json())  // Convertimos la respuesta a JSON
+        .then(response => response.json())
         .then(data => {
             console.log(data);
-            document.getElementById("nombreEditar").value = data.clientName;
-            document.querySelector("#nombreEditar").disabled = true;
-            document.getElementById("tipoDocumentoEditar").value = data.documentType;
-            document.querySelector("#tipoDocumentoEditar").disabled = true;
-            document.getElementById("documentoEditar").value = data.documentNumber;
-            document.querySelector("#documentoEditar").disabled = true;
-            document.getElementById("correoEditar").value = data.email;
-            document.querySelector("#correoEditar").disabled = true;
-            document.getElementById("telefonoEditar").value = data.phone;
-            document.querySelector("#telefonoEditar").disabled = true;
-            document.getElementById("tipoHabitacionEditar").value = data.roomTypeId;
-            document.querySelector("#tipoHabitacionEditar").disabled = true;
+            document.getElementById("habitacionEditar").value = data.roomType + ' - ' + data.numberRoom;
+            document.getElementById("fechaEntradaEditarView").value = formatearFecha(data.checkInDate);
+            document.getElementById("fechaSalidaEditarView").value = formatearFecha(data.checkOutDate);
             document.getElementById("idReservaEdit").value = data.idReservation;
             document.getElementById("habitacionIdEdit").value = data.idRoom;
-            document.getElementById("habitacionEditar").value = data.numberRoom;
-            document.querySelector("#habitacionEditar").disabled = true;
+
+            // Asignar al input oculto
             document.getElementById("fechaEntradaEditar").value = formatearFecha(data.checkInDate);
-            /*document.querySelector("#fechaEntradaEditar").disabled = true;*/
-            document.getElementById("fechaSalidaEditar").value = formatearFecha(data.checkOutDate);
-            document.getElementById("descuentoEditar").value = data.dsct;
-            document.querySelector("#descuentoEditar").disabled = true;
-            document.getElementById("cobroExtraEditar").value = data.cobro_extra;
-            document.querySelector("#cobroExtraEditar").disabled = true;
-            document.getElementById("adelantoEditar").value = data.adelanto;
-            document.querySelector("#adelantoEditar").disabled = true;
-            document.getElementById("totalPagarEditar").value = data.pago_total;
-            document.querySelector("#totalPagarEditar").disabled = true;
-            document.getElementById("restanteEditar").value = data.pago_total - data.adelanto;
-            document.querySelector("#restanteEditar").disabled = true;
+
+            const estado = data.reservationStatus; // Suponiendo que viene como 'pendiente' o 'ocupada'
+            const checkInDate = new Date(data.checkInDate);
+            const ahora = new Date();
+
+            let minDate;
+
+            if (estado === "Ocupada" && ahora > checkInDate) {
+                // Ya ingresó, mínimo 1 día después de la fecha de entrada
+                minDate = new Date(checkInDate);
+                minDate.setDate(minDate.getDate() + 1);
+            } else {
+                // Aún no ha llegado (pendiente), mínimo 1 día después de check-in
+                minDate = new Date(checkInDate);
+                minDate.setDate(minDate.getDate() + 1);
+            }
+
+            const year = minDate.getFullYear();
+            const month = String(minDate.getMonth() + 1).padStart(2, '0');
+            const day = String(minDate.getDate()).padStart(2, '0');
+            const hour = String(minDate.getHours()).padStart(2, '0');
+            const minute = String(minDate.getMinutes()).padStart(2, '0');
+
+            const minSalida = `${year}-${month}-${day}T${hour}:${minute}`;
+            document.getElementById("fechaSalidaEditar").setAttribute("min", minSalida);
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }

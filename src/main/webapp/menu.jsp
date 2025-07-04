@@ -1060,6 +1060,28 @@
             draggable: true
         });
     }
+    //edit de reserva
+    if (params.get("error") === "choque_fechas_edit") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se puede actualizar la salida para esta fecha porque hay un choque con otra reserva.',
+        });
+    }
+    if (params.get("error") === "actualizacion_fallida") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se puede actualizar la salida para esta fecha.',
+        });
+    }
+    if (params.get("success") === "actualizacion_exitosa") {
+        Swal.fire({
+            title: "Actualizacion Realizada Correctamente",
+            icon: "success",
+            draggable: true
+        });
+    }
 </script>
 
 <script>

@@ -7,6 +7,7 @@ import development.team.hoteltransylvania.Util.LoggerConfifg;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -470,5 +471,72 @@ public class GestionReservation {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime localDateTime = LocalDateTime.parse(fechaStr, formatter);
         return Timestamp.valueOf(localDateTime);
+    }
+
+    public static boolean actualizarFechaSalidaReserva(int idReservaEditar, Timestamp nuevaFechaFin) {
+        String obtenerDatosSql = """
+        SELECT r.fecha_inicio, h.precio
+        FROM reservas r
+        JOIN detalle_habitacion dh ON r.id = dh.reserva_id
+        JOIN habitaciones h ON dh.habitacion_id = h.id
+        WHERE r.id = ?
+    """;
+
+        String sqlReserva = "UPDATE reservas SET fecha_fin = ? WHERE id = ?";
+        String sqlCheckout = "UPDATE checkout SET fecha_checkout = ? WHERE reserva_id = ?";
+        String sqlDetalle = "UPDATE detalle_habitacion SET pago_total = ? WHERE reserva_id = ?";
+        boolean success = false;
+
+        try (Connection cnn = dataSource.getConnection()) {
+            cnn.setAutoCommit(false);
+
+            try (
+                    PreparedStatement psDatos = cnn.prepareStatement(obtenerDatosSql);
+                    PreparedStatement psReserva = cnn.prepareStatement(sqlReserva);
+                    PreparedStatement psCheckout = cnn.prepareStatement(sqlCheckout);
+                    PreparedStatement psDetalle = cnn.prepareStatement(sqlDetalle)
+            ) {
+                psDatos.setInt(1, idReservaEditar);
+                ResultSet rs = psDatos.executeQuery();
+
+                if (rs.next()) {
+                    Timestamp fechaInicio = rs.getTimestamp("fecha_inicio");
+                    BigDecimal precioHabitacion = rs.getBigDecimal("precio");
+
+                    // Calcular cantidad de días (al menos 1)
+                    long millisDiferencia = nuevaFechaFin.getTime() - fechaInicio.getTime();
+                    long dias = Math.max(1, millisDiferencia / (1000 * 60 * 60 * 24));
+
+                    BigDecimal nuevoTotal = precioHabitacion.multiply(BigDecimal.valueOf(dias));
+
+                    // Actualizar reservas
+                    psReserva.setTimestamp(1, nuevaFechaFin);
+                    psReserva.setInt(2, idReservaEditar);
+                    psReserva.executeUpdate();
+
+                    // Actualizar checkout
+                    psCheckout.setTimestamp(1, nuevaFechaFin);
+                    psCheckout.setInt(2, idReservaEditar);
+                    psCheckout.executeUpdate();
+
+                    // Actualizar detalle_habitacion con nuevo pago_total
+                    psDetalle.setBigDecimal(1, nuevoTotal);
+                    psDetalle.setInt(2, idReservaEditar);
+                    psDetalle.executeUpdate();
+
+                    cnn.commit();
+                    success = true;
+                } else {
+                    System.out.println("No se encontró la reserva o la habitación.");
+                }
+            } catch (SQLException e) {
+                cnn.rollback();
+                System.out.println("Error durante la actualización: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            System.out.println("Error de conexión: " + e.getMessage());
+        }
+
+        return success;
     }
 }
