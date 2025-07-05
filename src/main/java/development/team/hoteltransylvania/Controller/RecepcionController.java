@@ -45,7 +45,7 @@ public class RecepcionController extends HttpServlet {
             GestionReservation.updateStatusReservation(idReserva,3);
             GestionRoom.updateStatusRoom(Integer.parseInt(habitacion), 1);
             if("reserva".equalsIgnoreCase(vista)){
-                resp.sendRedirect("menu.jsp?view=reserva");
+                resp.sendRedirect("menu.jsp?view=reserva&success=reserva_cancelada");
             }else{
                 resp.sendRedirect("menu.jsp?view=recepcion");
             }

@@ -1287,3 +1287,21 @@ function validarTablaTieneItems(idTabla, textoPlaceholder, tituloAlerta, mensaje
     }
     return true;
 }
+
+function validarCancelacionReserva(){
+    const formCancelarReserva = document.getElementById("formCancelarReserva");
+    Swal.fire({
+        title: '¿Confirmar Cancelación?',
+        text: '¿Deseas cancelar esta reserva?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, confirmar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#198754',
+        cancelButtonColor: '#6c757d',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            formCancelarReserva.submit();
+        }
+    });
+}

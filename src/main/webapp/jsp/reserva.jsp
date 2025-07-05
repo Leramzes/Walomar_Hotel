@@ -389,11 +389,13 @@
 
                         <div class="mb-3">
                             <label for="fechaSalidaEditar" class="form-label">Nueva Fecha y Hora de Salida</label>
-                            <input type="datetime-local" class="form-control" id="fechaSalidaEditar" name="fechaSalidaEditar" required>
+                            <input type="datetime-local" class="form-control" id="fechaSalidaEditar"
+                                   name="fechaSalidaEditar" required>
                         </div>
 
                         <div class="alert alert-warning small mt-3">
-                            <strong>Nota:</strong> Solo puedes ampliar la salida si no interfiere con otras reservas en la habitación.
+                            <strong>Nota:</strong> Solo puedes ampliar la salida si no interfiere con otras reservas en
+                            la habitación.
                         </div>
                     </div>
 
@@ -502,20 +504,20 @@
                         String estado = reservations.getReservationStatus();
                         Timestamp fechaIngreso = reservations.getFecha_ingreso();
                         Timestamp fechaInicio = reservations.getCheckInDate();
-                        boolean permitCancel = false;
+                        boolean permitCancel = "Pendiente".equalsIgnoreCase(estado);
+
+                        LocalDateTime ahora = ZonedDateTime.now(zonaPeru).toLocalDateTime();
 
                         if ("Cancelada".equalsIgnoreCase(estado)) {
                     %>
                     ----
                     <%
-                    } else if (fechaIngreso == null) {
-                        if ("Pendiente".equalsIgnoreCase(estado) && fechaInicio != null) {
+                    } else if ("Pendiente".equalsIgnoreCase(estado)) {
+                        if (fechaIngreso == null && fechaInicio != null) {
                             LocalDateTime inicio = fechaInicio.toLocalDateTime();
-                            LocalDateTime ahora = ZonedDateTime.now(zonaPeru).toLocalDateTime();
                             long minutosPasados = Duration.between(inicio, ahora).toMinutes();
 
                             if (minutosPasados > 20) {
-                                permitCancel = true;
                     %>
                     <span style="color: red;">Fuera del tiempo de tolerancia</span>
                     <%
@@ -524,23 +526,24 @@
                     Aún no ingresó
                     <%
                         }
-                    } else {
-                    %>
-                    Aún no ingresó
-                    <%
-                        }
-                    } else {
-                        LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
-                        ZonedDateTime ahora = ZonedDateTime.now(zonaPeru);
-                        long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
-
-                        if ("Pendiente".equalsIgnoreCase(estado) && minutosPasados > 20) {
-                    %>
-                    <span style="color: red;">Fuera del tiempo de tolerancia</span>
-                    <%
-                    } else {
+                    } else if (fechaIngreso != null) {
                     %>
                     <%= fechaIngreso %>
+                    <%
+                    } else {
+                    %>
+                    Aún no ingresó
+                    <%
+                        }
+                    } else {
+                        // Para estados como 'Ocupada' o 'Finalizada'
+                        if (fechaIngreso != null) {
+                    %>
+                    <%= fechaIngreso %>
+                    <%
+                    } else {
+                    %>
+                    ----
                     <%
                             }
                         }
@@ -568,12 +571,13 @@
                         </button>
                         <%}%>
                         <%if (permitCancel) {%>
-                        <form action="recepController" method="post">
+                        <form action="recepController" method="post" id="formCancelarReserva">
                             <input type="hidden" name="vista" value="reserva">
                             <input type="hidden" name="idReserva" value="<%= reservations.getIdReservation() %>">
                             <input type="hidden" name="roomSelect" value="<%= reservations.getIdRoom() %>">
-                            <button type="submit" name="accion" value="cancelar" class="btn btn-danger btn-sm"
-                                    title="Cancelar Reserva">❌
+                            <input type="hidden" name="accion" value="cancelar">
+                            <button type="button" class="btn btn-danger btn-sm" title="Cancelar Reserva"
+                                    onclick="validarCancelacionReserva()">❌
                             </button>
                         </form>
                         <%}%>

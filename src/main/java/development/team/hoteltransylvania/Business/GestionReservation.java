@@ -250,6 +250,7 @@ public class GestionReservation {
                 "            th.nombre AS tipo_habitacion,\n" +
                 "            r.fecha_inicio,\n" +
                 "            r.fecha_fin,\n" +
+                "            r.fecha_ingreso,\n" +
                 "            er.estado,\n" +
                 "            er.id AS id_statusreserva\n" +
                 "        FROM reservas r\n" +
@@ -280,6 +281,7 @@ public class GestionReservation {
                 dto.setRoomType(rs.getString("tipo_habitacion"));
                 dto.setCheckInDate(rs.getTimestamp("fecha_inicio"));
                 dto.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                dto.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
                 dto.setReservationStatus(rs.getString("estado"));
                 dto.setReservationStatusId(rs.getInt("id_statusreserva"));
 

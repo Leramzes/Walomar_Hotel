@@ -1039,6 +1039,7 @@
             text: 'El archivo suido no es una imagen válida.',
         });
     }
+    //Validaciones Ventas
     if (params.get("error") === "faltamodopago") {
         Swal.fire({
             icon: 'error',
@@ -1078,6 +1079,13 @@
     if (params.get("success") === "actualizacion_exitosa") {
         Swal.fire({
             title: "Actualizacion Realizada Correctamente",
+            icon: "success",
+            draggable: true
+        });
+    }
+    if (params.get("success") === "reserva_cancelada") {
+        Swal.fire({
+            title: "Reserva Cancelada Correctamente",
             icon: "success",
             draggable: true
         });

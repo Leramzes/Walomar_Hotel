@@ -58,15 +58,17 @@ public class FilterReservationController extends HttpServlet {
                 Timestamp fechaInicio = reservation.getCheckInDate();
                 boolean permitCancel = false;
 
-                String contenidoTD = "";
+                ZoneId zonaPeru = ZoneId.of("America/Lima");
+                LocalDateTime ahora = ZonedDateTime.now(zonaPeru).toLocalDateTime();
+
+                String contenidoTD;
 
                 if ("Cancelada".equalsIgnoreCase(estado)) {
                     contenidoTD = "----";
-                } else if (fechaIngreso == null) {
-                    if ("Pendiente".equalsIgnoreCase(estado) && fechaInicio != null) {
-                        ZoneId zonaPeru = ZoneId.of("America/Lima");
+
+                } else if ("Pendiente".equalsIgnoreCase(estado)) {
+                    if (fechaIngreso == null && fechaInicio != null) {
                         LocalDateTime inicio = fechaInicio.toLocalDateTime();
-                        LocalDateTime ahora = ZonedDateTime.now(zonaPeru).toLocalDateTime();
                         long minutosPasados = Duration.between(inicio, ahora).toMinutes();
 
                         if (minutosPasados > 20) {
@@ -75,19 +77,18 @@ public class FilterReservationController extends HttpServlet {
                         } else {
                             contenidoTD = "Aún no ingresó";
                         }
+                    } else if (fechaIngreso != null) {
+                        contenidoTD = fechaIngreso.toString(); // Formatear si quieres
                     } else {
                         contenidoTD = "Aún no ingresó";
                     }
-                } else {
-                    // Ya tiene ingreso
-                    LocalDateTime ingreso = fechaIngreso.toLocalDateTime();
-                    LocalDateTime ahora = LocalDateTime.now();
-                    long minutosPasados = Duration.between(ingreso, ahora).toMinutes();
 
-                    if ("Pendiente".equalsIgnoreCase(estado) && minutosPasados > 20) {
-                        contenidoTD = "<span style='color: red;'>Fuera del tiempo de tolerancia</span>";
+                } else {
+                    // Ocupada, Finalizada, etc.
+                    if (fechaIngreso != null) {
+                        contenidoTD = fechaIngreso.toString(); // ✅ Mostrar fecha real de ingreso
                     } else {
-                        contenidoTD = fechaIngreso.toString(); // puedes formatear si lo deseas
+                        contenidoTD = "Aún no registrado"; // O algo más claro que "----"
                     }
                 }
 
@@ -100,13 +101,22 @@ public class FilterReservationController extends HttpServlet {
                 out.println("              onclick='detalleReserva(" + reservation.getIdReservation() + ")'>");
                 out.println("          👁️");
                 out.println("      </button>");
-                out.println("      <button class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#modalEditarReserva'>✏️</button>");
+
+                String estadoEdit = reservation.getReservationStatus();
+                boolean puedeEditar = "Pendiente".equalsIgnoreCase(estadoEdit) || "Ocupada".equalsIgnoreCase(estadoEdit);
+                if (puedeEditar) {
+                    out.println("      <button class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#modalEditarReserva' " +
+                            "title='Editar Reserva' onclick='editarReserva("+reservation.getIdReservation()+")'>✏️</button>");
+                }
+
                 if (permitCancel) {
                     out.println("<form action=\"recepController\" method=\"post\">");
                     out.println("    <input type=\"hidden\" name=\"vista\" value=\"reserva\">");
                     out.println("    <input type=\"hidden\" name=\"idReserva\" value=\"" + reservation.getIdReservation() + "\">");
                     out.println("    <input type=\"hidden\" name=\"roomSelect\" value=\"" + reservation.getIdRoom() + "\">");
-                    out.println("    <button type=\"submit\" name=\"accion\" value=\"cancelar\" class=\"btn btn-danger btn-sm\" title=\"Cancelar Reserva\">❌</button>");
+                    out.println("<input type=\"hidden\" name=\"accion\" value=\"cancelar\">");
+                    out.println("    <button type=\"button\" class=\"btn btn-danger btn-sm\" title=\"Cancelar Reserva\" onclick=\"validarCancelacionReserva()\">❌\n" +
+                            "                            </button>");
                     out.println("</form>");
                 }
                 out.println("    </div>");
