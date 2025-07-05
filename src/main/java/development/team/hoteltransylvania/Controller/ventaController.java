@@ -35,8 +35,7 @@ public class ventaController extends HttpServlet {
         String[] idsServicios = req.getParameterValues("serviceId[]");
         String[] preciosTotalService = req.getParameterValues("precioTotal[]");
 
-        int reservaId = Integer.parseInt(req.getParameter("reservaId"));
-        int roomId = Integer.parseInt(req.getParameter("roomId"));
+
 
         String opcionPago = req.getParameter("pago");
 
@@ -88,6 +87,8 @@ public class ventaController extends HttpServlet {
                 break;
 
             case "ventaProducto":
+                int reservaId = Integer.parseInt(req.getParameter("reservaId"));
+                int roomId = Integer.parseInt(req.getParameter("roomId"));
 
                 int comprobanteIdGenerate = -1;
                 boolean ventasOk = true;
@@ -140,6 +141,8 @@ public class ventaController extends HttpServlet {
 
                 break;
             case "ventaServicio":
+                int reservaIdS = Integer.parseInt(req.getParameter("reservaId"));
+                int roomIdS = Integer.parseInt(req.getParameter("roomId"));
 
                 int comprobanteServiceIdGenerate = -1;
                 boolean ventaServiceOk = true;
@@ -152,7 +155,7 @@ public class ventaController extends HttpServlet {
                     String estadoPago = opcionPago.equalsIgnoreCase("ahora") ? "Pagado" : "Pendiente";
                     cs.setEstado_pago(estadoPago);
 
-                    boolean ventaExitosa = GestionVentas.registrarVentaService(reservaId, roomId, cs);
+                    boolean ventaExitosa = GestionVentas.registrarVentaService(reservaIdS, roomIdS, cs);
                     if (!ventaExitosa) {
                         ventaServiceOk = false;
                         break;
@@ -179,7 +182,7 @@ public class ventaController extends HttpServlet {
                     voucher.setSubtotalPenalidad(0);
                     voucher.setTotalAmount(subtotalServicios);
 
-                    comprobanteServiceIdGenerate = GestionVentas.registrarComprobante(reservaId, voucher);
+                    comprobanteServiceIdGenerate = GestionVentas.registrarComprobante(reservaIdS, voucher);
                 }
 
                 if (ventaServiceOk && ("despues".equalsIgnoreCase(opcionPago) || comprobanteServiceIdGenerate > 0)) {
