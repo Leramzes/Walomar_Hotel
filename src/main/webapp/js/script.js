@@ -382,27 +382,37 @@ function buscarClienteRecepcion() {
     });
 }
 
-/*function Search(wordKey, tableSearch, quantitySearch, controller) {
-    var nameFilter = $(wordKey).val().trim();
+window.SearchReporte = function (wordKey, stateKey, tableSearch, quantitySearch, controller, page = 1, size = 10) {
+    var fecha = $(wordKey).val();
+    var empleadoId = $(stateKey).val();
 
     $.ajax({
         url: controller,
-        data: { filter: nameFilter },
+        data: {
+            fecha: fecha,
+            empleadoId: empleadoId,
+            page: page,
+            size: size
+        },
         success: function (result) {
             $(tableSearch).find("tbody").html(result);
 
-            // Extraer la cantidad de registros desde el comentario oculto
+            // Leer el comentario con el número total de registros del servidor
             var match = result.match(/<!--COUNT:(\d+)-->/);
-            var cantidad = match ? parseInt(match[1]) : 0;
+            var totalRecords = match ? parseInt(match[1]) : 0;
 
-            // Actualizar el input con la cantidad de registros
-            $(quantitySearch).val(cantidad);
+            // ✅ Aquí se actualiza el valor del input "registros"
+            $(quantitySearch).val(totalRecords);
+
+            // Actualizar la paginación
+            updatePagination(totalRecords, page, size, wordKey, stateKey, tableSearch, quantitySearch, controller);
         },
         error: function () {
             console.error("Error al obtener los datos filtrados.");
         }
     });
-}*/
+}
+
 window.Search = function (wordKey, stateKey, tableSearch, quantitySearch, controller, page = 1, size = 10) {
     console.log($(wordKey));
     var nameFilter = $(wordKey).val().trim();

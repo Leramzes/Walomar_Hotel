@@ -2,6 +2,8 @@ package development.team.hoteltransylvania.Business;
 
 import development.team.hoteltransylvania.DTO.AllInfoTableProdSalida;
 import development.team.hoteltransylvania.DTO.AllInfoTableServSalida;
+import development.team.hoteltransylvania.DTO.AllInfoVentasDirecta;
+import development.team.hoteltransylvania.DTO.usersEmployeeDTO;
 import development.team.hoteltransylvania.Model.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
@@ -10,11 +12,15 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.stream.Collectors;
 
 public class GestionVentas {
     private static final DataSource dataSource = DataBaseUtil.getDataSource();
@@ -260,9 +266,7 @@ public class GestionVentas {
     }
     public static double getMontoTotalVentaPorEmpleado(int empleadoId) {
         String sql = "SELECT SUM(total) FROM venta_directa vd " +
-                "INNER JOIN comprobantes c ON vd.id_comprobante=c.id " +
-                "INNER JOIN empleados e ON e.id=vd.empleado_id " +
-                "WHERE empleado_id = ? and reserva_id = 1000000000";
+                "WHERE empleado_id = ?";
         double total = 0.0;
 
         try (Connection cnn = dataSource.getConnection();
@@ -281,7 +285,6 @@ public class GestionVentas {
 
         return total;
     }
-
     public static boolean registrarVenta(int idReserva, int idRoom, ConsumeProduct consumeProduct) {
         String selectStockSql = "SELECT cantidad FROM productos WHERE id = ?";
         String insertSql = "INSERT INTO consumo_productos " +
@@ -440,5 +443,91 @@ public class GestionVentas {
         }
 
         return ventas;
+    }
+    public static List<AllInfoVentasDirecta> getAllVentasDirecta() {
+        List<AllInfoVentasDirecta> ventas = new ArrayList<>();
+
+        String sql = "select vd.id as idVentaDirecta, c.id as idComprobante, e.id as idEmpleado, p.id as idProducto, p.nombre, vd.cantidad, vd.precio_unit, vd.total,\n" +
+                "       c.fecha_emision, e.nombre as empleadoNombre\n" +
+                "from venta_directa vd\n" +
+                "inner join comprobantes c on c.id=vd.id_comprobante\n" +
+                "inner join productos p on p.id=vd.producto_id\n" +
+                "inner join empleados e on e.id=vd.empleado_id\n" +
+                "ORDER BY c.fecha_emision DESC";
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                AllInfoVentasDirecta aivd = new AllInfoVentasDirecta();
+
+                aivd.setId_venta_directa(rs.getInt("idVentaDirecta"));
+                aivd.setId_comprobante(rs.getInt("idComprobante"));
+                aivd.setId_empleado(rs.getInt("idEmpleado"));
+                aivd.setId_producto(rs.getInt("idProducto"));
+                aivd.setProducto(rs.getString("nombre"));
+                aivd.setCantidad(rs.getInt("cantidad"));
+                aivd.setPrecio_unitario(rs.getDouble("precio_unit"));
+                aivd.setPrecio_total(rs.getDouble("total"));
+                aivd.setFecha_hora(rs.getTimestamp("fecha_emision"));
+                aivd.setEmpleado(rs.getString("empleadoNombre"));
+
+                ventas.add(aivd);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.warning("Error obteniendo ventas de productos: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return ventas;
+    }
+    public static List<AllInfoVentasDirecta> filterVentaDirecta(int empleadoId, Date fechaFiltrada, int page, int size) {
+        List<AllInfoVentasDirecta> todasVentas = getAllVentasDirecta();
+
+        List<AllInfoVentasDirecta> filtradas = todasVentas.stream()
+                .filter(venta -> {
+                    boolean porEmpleado = empleadoId == -1 || venta.getId_empleado() == empleadoId;
+
+                    boolean porFecha = true;
+                    if (fechaFiltrada != null) {
+                        LocalDate fechaVenta = venta.getFecha_hora().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate();
+                        LocalDate fechaFiltro = fechaFiltrada.toLocalDate();
+                        porFecha = fechaVenta.equals(fechaFiltro);
+                    }
+
+                    return porEmpleado && porFecha;
+                })
+                .collect(Collectors.toList());
+
+        // Paginación
+        int from = Math.max((page - 1) * size, 0);
+        int to = Math.min(from + size, filtradas.size());
+
+        return filtradas.subList(from, to);
+    }
+    public static int countFilteredVentaDirecta(int empleadoId, Date fechaFiltrada) {
+        List<AllInfoVentasDirecta> todasVentas = getAllVentasDirecta();
+
+        return (int) todasVentas.stream()
+                .filter(venta -> {
+                    boolean porEmpleado = empleadoId == -1 || venta.getId_empleado() == empleadoId;
+
+                    boolean porFecha = true;
+                    if (fechaFiltrada != null) {
+                        LocalDate fechaVenta = venta.getFecha_hora().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate();
+                        LocalDate fechaFiltro = fechaFiltrada.toLocalDate();
+                        porFecha = fechaVenta.equals(fechaFiltro);
+                    }
+
+                    return porEmpleado && porFecha;
+                })
+                .count();
     }
 }

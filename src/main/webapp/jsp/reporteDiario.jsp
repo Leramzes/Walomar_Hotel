@@ -3,6 +3,7 @@
 <%@ page import="development.team.hoteltransylvania.Model.Employee" %>
 <%@ page import="development.team.hoteltransylvania.DTO.usersEmployeeDTO" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionVentas" %>
+<%@ page import="development.team.hoteltransylvania.DTO.AllInfoVentasDirecta" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,10 +14,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<%
+    <%
     List<usersEmployeeDTO> employees = GestionEmployee.getAllEmployees();
     double totalVentaDirecta = GestionVentas.getAmuntTotalVentaDirecta();
-    /*double totalVentaDirectaByEmpleado = GestionVentas.getMontoTotalVentaPorEmpleado(33);*/
+    double totalVentaDirectaByEmpleado = GestionVentas.getMontoTotalVentaPorEmpleado(33);
+    List<AllInfoVentasDirecta> allInfoVentasDirectas = GestionVentas.getAllVentasDirecta();
 %>
 <body>
 <div class="d-flex justify-content-between align-items-center">
@@ -32,16 +34,22 @@
 
 <!-- Filtros -->
 <div class="row my-3">
+    <%
+        java.time.LocalDate hoy = java.time.LocalDate.now();
+    %>
     <div class="col-md-2">
         <label for="fecha" class="form-label"><strong>Fecha</strong></label>
-        <input type="date" id="fecha" class="form-control">
+        <input type="date" id="fecha" class="form-control" value="<%= hoy %>"
+               onchange="SearchReporte('#fecha', '#responsable', '#tablaVentaDirecta', '#registros', 'filterReportes', 1, 10)">
     </div>
     <div class="col-md-2">
         <label for="responsable" class="form-label"><strong>Responsable</strong></label>
-        <select id="responsable" class="form-select">
+        <select id="responsable" class="form-select"
+                onchange="SearchReporte('#fecha', '#responsable','#tablaVentaDirecta','#registros','filterReportes', 1, 10)">
             <option value="todos">Todos</option>
-            <%for(usersEmployeeDTO employeeDTO : employees){%>
-                <option value="<%=employeeDTO.getId_employee()%>"><%=employeeDTO.getName_employee()%></option>
+            <%for (usersEmployeeDTO employeeDTO : employees) {%>
+            <option value="<%=employeeDTO.getId_employee()%>"><%=employeeDTO.getName_employee()%>
+            </option>
             <%}%>
         </select>
     </div>
@@ -50,13 +58,18 @@
 <!-- Pestañas -->
 <ul class="nav nav-tabs mt-4">
     <li class="nav-item">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alquiler" type="button">Tabla alquiler</button>
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alquiler" type="button">Tabla alquiler
+        </button>
     </li>
     <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta" type="button">Servicio a la habitación y venta</button>
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta" type="button">Servicio a la
+            habitación y venta
+        </button>
     </li>
     <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta-directa" type="button">Ventas directa</button>
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta-directa" type="button">Ventas
+            directa
+        </button>
     </li>
     <li class="nav-item ms-auto">
         <button class="btn btn-success">
@@ -85,7 +98,8 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
-                <input id="registros" type="number" min="1" max="999" value="1" class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
+                <input id="registros" type="number" min="1" max="999" value="1"
+                       class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
                 registros
             </label>
 
@@ -126,7 +140,9 @@
                     <td>S/.0</td>
                     <td class="text-danger">Si</td>
                     <td class="d-flex justify-content-center gap-1">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">👁️</button>
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
+                            👁️
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -162,7 +178,8 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
-                <input id="registros" type="number" min="1" max="999" value="1" class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
+                <input id="registros" type="number" min="1" max="999" value="1"
+                       class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
                 registros
             </label>
 
@@ -203,7 +220,9 @@
                     <td>S/.0</td>
                     <td class="text-danger">Si</td>
                     <td class="d-flex justify-content-center gap-1">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">👁️</button>
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
+                            👁️
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -225,11 +244,12 @@
         <div class="container mt-4">
             <div class="d-flex justify-content-center text-center gap-5">
                 <div>
-                    <h5>S/.<%=totalVentaDirecta%></h5>
+                    <h5>S/.<%=totalVentaDirecta%>
+                    </h5>
                     <h5>TOTAL RECEPCIÓN</h5>
                 </div>
                 <div>
-                    <h5>S/.500</h5>
+                    <h5>S/.<%=totalVentaDirecta%></h5>
                     <h5>TOTAL POR EMPLEADO</h5>
                 </div>
             </div>
@@ -237,7 +257,8 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
-                <input id="registros" type="number" min="1" max="999" value="1" class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
+                <input id="registros" type="number" min="1" max="999" value="<%=allInfoVentasDirectas.size()%>"
+                       class="form-control d-inline-block text-center ms-1 me-1" style="width: 5rem;" readonly>
                 registros
             </label>
 
@@ -247,40 +268,33 @@
             </div>
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered align-middle">
+            <table id="tablaVentaDirecta" class="table table-bordered align-middle">
                 <thead class="table-warning">
                 <tr>
                     <th>N°</th>
-                    <th>DNI</th>
-                    <th>Tipo</th>
-                    <th>Habitación</th>
-                    <th>Descuento</th>
-                    <th>Extra</th>
-                    <th>Dinero Adelantado</th>
-                    <th>Servicio</th>
-                    <th>Penalidad</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
                     <th>Total</th>
-                    <th>Tiempo Rebasado</th>
-                    <th>Detalles</th>
+                    <th>Fecha-Hora</th>
+                    <th>Responsable</th>
                 </tr>
                 </thead>
                 <tbody id="tablaReporteDiario">
-                <tr>
-                    <td>1</td>
-                    <td>12345678</td>
-                    <td>Recepción</td>
-                    <td>696 - 24hr</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td class="text-danger">Si</td>
-                    <td class="d-flex justify-content-center gap-1">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">👁️</button>
-                    </td>
-                </tr>
+                <%
+                    int count = 1;
+                    for (AllInfoVentasDirecta directa : allInfoVentasDirectas) {
+                %>
+                    <tr>
+                        <td><%=count%></td>
+                        <td><%=directa.getProducto()%></td>
+                        <td><%=directa.getCantidad()%></td>
+                        <td><%=directa.getPrecio_unitario()%></td>
+                        <td><%=directa.getPrecio_total()%></td>
+                        <td><%=directa.getFecha_hora()%></td>
+                        <td><%=directa.getEmpleado()%></td>
+                    </tr>
+                <%count++;}%>
                 </tbody>
             </table>
         </div>
@@ -445,7 +459,8 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="penalidadAlquilerCalculado" class="form-label">Penalidad y Resto del Alquiler Calculado</label>
+                    <label for="penalidadAlquilerCalculado" class="form-label">Penalidad y Resto del Alquiler
+                        Calculado</label>
                     <select class="form-select" id="penalidadAlquilerCalculado" disabled>
                         <option value="efectivo">Efectivo</option>
                         <option value="tarjeta">Tarjeta</option>
