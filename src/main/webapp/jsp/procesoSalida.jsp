@@ -137,9 +137,9 @@
                     <td><%= reservation.getAdelanto() %>
                     </td>
                     <td>
-                        <input type="number" class="form-control" value="0">
+                        <input type="number" id="inputPenalidad" class="form-control" value="0" min="0" oninput="actualizarTotalConPenalidad()">
                     </td>
-                    <td><%= reservation.getPago_total() %>
+                    <td><%= reservation.getPago_total() - reservation.getAdelanto()%>
                     </td>
                     <td><%= onlyFirstName %>
                     </td>
@@ -164,7 +164,7 @@
                 </thead>
                 <tbody id="tablaServicioCuarto">
                 <%
-                    double total = 0;
+                    double total = reservation.getPago_total() - reservation.getAdelanto();
                     for (AllInfoTableProdSalida venta : ventasByReserva) {
                         boolean esPendiente = venta.getEstadoProducto().equalsIgnoreCase("Pendiente");
                         String classEstado = esPendiente ? "text-danger" : "text-success";
@@ -221,7 +221,8 @@
             </table>
         </div>
 
-        <p class="fw-bold mt-3 mt-sm-3">TOTAL: S/.<%=total%></p>
+        <%--<p id="totalFinal" class="fw-bold mt-3 mt-sm-3">TOTAL: S/.<%=total%></p>--%>
+        <p id="totalFinal" class="fw-bold mt-3 mt-sm-3" data-base-total="<%=total%>">TOTAL: S/.<%=total%></p>
 
         <!-- Método de Pago en un Select-->
         <div class="input-group my-3" id="metodoPagoGroup" style="max-width: 320px;">

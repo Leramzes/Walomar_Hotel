@@ -1325,3 +1325,17 @@ function validarCancelacionReserva(){
         }
     });
 }
+
+function actualizarTotalConPenalidad() {
+    const input = document.getElementById("inputPenalidad");
+    const totalElement = document.getElementById("totalFinal");
+
+    if (!input || !totalElement) return;
+
+    const penalidad = parseFloat(input.value) || 0;
+    const baseTotal = parseFloat(totalElement.getAttribute("data-base-total")) || 0;
+
+    const nuevoTotal = baseTotal + penalidad;
+
+    totalElement.textContent = "TOTAL: S/. " + nuevoTotal.toFixed(2);
+}
