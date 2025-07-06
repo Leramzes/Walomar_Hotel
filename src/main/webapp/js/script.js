@@ -1029,6 +1029,11 @@ function abrirModalClave() {
 function agregarProducto(idTabla) {
     var productId = $("#selectProducto").val();
 
+    // Si no se seleccionó un producto válido, simplemente no hace nada
+    if (!productId || productId.trim() === "") {
+        return; // Salir sin hacer nada
+    }
+
     // Buscar si ya existe en la tabla
     var filaExistente = $(idTabla).find("tbody").find("tr[data-id='" + productId + "']");
 
@@ -1081,6 +1086,11 @@ function recalcularTotalProducto(idTabla) {
 
 function agregarServicio(idTabla) {
     var serviceId = $("#selectServicio").val();
+
+    // Si no se seleccionó un servicio válido, simplemente no hace nada
+    if (!serviceId || serviceId.trim() === "") {
+        return; // Salir sin hacer nada
+    }
 
     // Verificar si ya está en la tabla
     var filaExistente = $(idTabla).find("tbody").find("tr[data-id='" + serviceId + "']");

@@ -88,7 +88,7 @@
         <div class="row align-items-center">
             <div class="col-9 d-flex gap-2">
                 <select class="form-select" id="selectProducto">
-                    <option selected>Seleccione una opción</option>
+                    <option value="" disabled selected>Seleccione un producto</option>
                     <%for (Product product : productsInList) {%>
                     <option value="<%=product.getId()%>">Nombre: <%=product.getName()%> |
                         Precio: <%=product.getPrice()%>
