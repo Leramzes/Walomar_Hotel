@@ -1004,34 +1004,51 @@ function abrirModalClave() {
     }
 
     Swal.fire({
-        title: "Ingrese clave de administrador",
-        input: "password",
-        inputLabel: "Clave",
-        inputAttributes: {
-            autocapitalize: "off"
-        },
+        title: "Validación de administrador",
+        html:
+            '<input id="swal-usuario" class="swal2-input" placeholder="Usuario">' +
+            '<input id="swal-clave" type="password" class="swal2-input" placeholder="Clave">',
+        focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: "Validar",
-        preConfirm: (clave) => {
-            if (clave !== "1234") {
-                Swal.showValidationMessage("Clave incorrecta");
+        preConfirm: () => {
+            const usuario = document.getElementById("swal-usuario").value.trim();
+            const clave = document.getElementById("swal-clave").value.trim();
+
+            if (!usuario || !clave) {
+                Swal.showValidationMessage("Ingrese ambos campos");
                 return false;
             }
-            return true;
+
+            // Retornar los datos para usarlos en el .then
+            return { usuario, clave };
         }
     }).then((result) => {
-        const nuevoModalReserva = new bootstrap.Modal(modalReservaElement);
-        nuevoModalReserva.show();
-
-        const campoDescuento = document.getElementById("descuento");
-        const iconoDescuento = document.getElementById("iconoDescuento");
-
-        if (result.isConfirmed && result.value === true) {
-            campoDescuento.disabled = false;
-            iconoDescuento.className = "fas fa-unlock text-success"; // Candado abierto verde
-        } else {
-            campoDescuento.disabled = true;
-            iconoDescuento.className = "fas fa-lock text-danger"; // Candado cerrado rojo
+        if (result.isConfirmed && result.value) {
+            validarCredenciales(result.value.usuario, result.value.clave);
+        }
+    });
+}
+function validarCredenciales(usuario, clave) {
+    $.ajax({
+        url: "validarAdmin", // Servlet
+        method: "POST",
+        data: {
+            usuario: usuario,
+            clave: clave
+        },
+        success: function (respuesta) {
+            if (respuesta === "OK") {
+                // ✅ Usuario válido
+                document.getElementById("descuento").disabled = false;
+                document.getElementById("iconoDescuento").className = "fas fa-unlock text-success";
+                bootstrap.Modal.getOrCreateInstance(document.getElementById("modalAgregarReserva")).show();
+            } else {
+                Swal.fire("Error", "Credenciales inválidas", "error");
+            }
+        },
+        error: function () {
+            Swal.fire("Error", "Ocurrió un error en el servidor", "error");
         }
     });
 }

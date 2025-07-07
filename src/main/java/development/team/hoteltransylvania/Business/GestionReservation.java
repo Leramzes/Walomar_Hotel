@@ -4,6 +4,7 @@ import development.team.hoteltransylvania.DTO.TableReservationDTO;
 import development.team.hoteltransylvania.Model.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
@@ -540,5 +541,39 @@ public class GestionReservation {
         }
 
         return success;
+    }
+
+    public static boolean validarAdmin(String usuario, String clavePlano) {
+        boolean esValido = false;
+
+        String sql = "SELECT u.password " +  // Aquí traes el hash desde BD
+                "FROM usuarios u " +
+                "INNER JOIN empleados e ON u.empleado_id = e.id " +
+                "INNER JOIN roles r ON r.id = e.rol_id " +
+                "WHERE u.username = ? " +
+                "AND r.id = 1 " + // Verificas que sea admin
+                "AND u.estado = 'Activo'";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, usuario); // Solo pasas el usuario
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String claveHasheada = rs.getString("password"); // Hash almacenado en BD
+
+                    // Comparas la clave ingresada (plana) con la clave hasheada
+                    if (BCrypt.checkpw(clavePlano, claveHasheada)) {
+                        esValido = true;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return esValido;
     }
 }
