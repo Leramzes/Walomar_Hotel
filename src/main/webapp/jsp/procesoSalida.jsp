@@ -221,8 +221,7 @@
             </table>
         </div>
 
-        <%--<p id="totalFinal" class="fw-bold mt-3 mt-sm-3">TOTAL: S/.<%=total%></p>--%>
-        <p id="totalFinal" class="fw-bold mt-3 mt-sm-3" data-base-total="<%=total%>">TOTAL: S/.<%=total%></p>
+        <p id="totalFinal" class="fw-bold mt-3 mt-sm-3" data-base-total="<%=total%>">TOTAL: S/. <%=total%></p>
 
         <!-- Método de Pago en un Select-->
         <div class="input-group my-3" id="metodoPagoGroup" style="max-width: 320px;">
