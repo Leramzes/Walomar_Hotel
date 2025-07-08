@@ -274,19 +274,10 @@
                                 <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
-                        <div class="col-md-12 mt-2">
-                            <label for="observaciones" class="form-label"><strong>Observaciones:</strong></label>
-                            <textarea class="form-control" id="observaciones"
-                                      rows="3" <%= camposBloqueados ? "disabled" : "" %>></textarea>
-                        </div>
-
                         <div class="col-md-12 mt-2 d-flex justify-content-between">
                             <%
                                 switch (room.getStatusRoom().getValue()) {
                                     case 2:
-                            %>
-                            <button type="submit" name="accion" value="finalizar" class="btn btn-danger">Finalizar</button>
-                            <%
                                     break;
                                 case 3:
                             %>
@@ -314,61 +305,6 @@
                 </div>
             </div>
         </div>
-        <%--<!-- Modal para agregar Cliente -->
-        <div class="modal fade" id="modalAgregarCliente" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="agregarCliente">Agregar Cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post" action="#">
-                            <input type="hidden" id="inputAgregarCliente">
-                            <input type="hidden" value="add" name="#">
-                            <div class="row">
-                                <div class="col-md-6 mt-2">
-                                    <label for="tipoDocumentoModal" class="form-label"><strong>Tipo de
-                                        Documento:</strong></label>
-                                    <select class="form-select" id="tipoDocumentoModal" aria-label="Default select example"
-                                            required>
-                                        <option selected>Buscar Cliente</option>
-                                        <option value="#">DNI</option>
-                                        <option value="#">Pasaporte</option>
-                                        <option value="#">RUC</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-6 mt-2">
-                                    <label for="documentoModal" class="form-label"><strong>Documento:</strong></label>
-                                    <input type="text" class="form-control" id="documentoModal" required>
-                                </div>
-
-                                <div class="col-md-12 mt-2">
-                                    <label for="nombre" class="form-label"><strong>Nombre:</strong> (Obligatorio)</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" required>
-                                </div>
-
-                                <div class="col-md-12 mt-2">
-                                    <label for="correoModal" class="form-label"><strong>Correo:</strong></label>
-                                    <input type="email" class="form-control" id="correoModal">
-                                </div>
-
-                                <div class="col-md-12 mt-2">
-                                    <label for="telefonoModal" class="form-label"><strong>Teléfono:</strong></label>
-                                    <input type="text" class="form-control" id="telefonoModal">
-                                </div>
-
-                                <div class="col-md-12 mt-2 text-end">
-                                    <button type="submit" class="btn btn-success">Agregar</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        --%>
     </div>
 </form>
 
