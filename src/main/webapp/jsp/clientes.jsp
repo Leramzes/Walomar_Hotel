@@ -253,12 +253,17 @@
                         </div>
                         <div class="mb-3">
                             <label for="correo">Correo</label>
-                            <input type="text" class="form-control" id="correo" name="clientemail"
+                            <%--<input type="text" class="form-control" id="correo" name="clientemail"
                                    required
                                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                    title="Debe ingresar un correo válido como ejemplo@dominio.com"
                                    oninvalid="this.setCustomValidity('Ingrese un correo electrónico válido. Ejemplo: ejemplo@dominio.com')"
-                                   oninput="this.setCustomValidity('')">
+                                   oninput="this.setCustomValidity('')">--%>
+                            <input type="text" class="form-control" id="correo" name="clientemail"
+                                   placeholder="ejemplo@dominio.com"
+                                   autocomplete="off"
+                                   oninput="validarCorreoLive(this)">
+                            <small id="mensajeCorreo" class="form-text"></small>
                         </div>
                         <div class="mb-3">
                             <label for="telefono">Teléfono</label>

@@ -235,6 +235,13 @@
             </select>
         </div>
 
+        <div class="centro">
+            <label>
+                <input type="checkbox" name="enviarCorreo" value="si">
+                Enviar estado de cuenta por correo
+            </label>
+        </div>
+
         <!-- Botones -->
         <div class="d-flex flex-column flex-md-row justify-content-between mt-2">
             <div class="d-flex flex-column flex-md-row justify-content-start gap-1">

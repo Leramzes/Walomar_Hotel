@@ -174,3 +174,60 @@ hr {
     pointer-events: none; /* evita interacción visual */
     border-color: #ced4da;
 }
+input.is-valid {
+    border-color: #198754;
+}
+input.is-invalid {
+    border-color: #dc3545;
+}
+#mensajeCorreo {
+    display: block;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}
+#mensajeCorreo.valid {
+    color: #198754;
+}
+#mensajeCorreo.invalid {
+    color: #dc3545;
+}
+.centro {
+    text-align: center;
+}
+
+.centro label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: #2e4550;
+}
+
+.centro input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #2e4550;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.centro input[type="checkbox"]:checked {
+    background-color: #2e86de;
+    border-color: #2e86de;
+}
+
+.centro input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+}

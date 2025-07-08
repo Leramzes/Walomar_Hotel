@@ -946,6 +946,7 @@
 </script>
 
 <script>
+    let estadoCorreoValido = false;
     //validacion correo
     document.addEventListener('submit', function (e) {
         const form = e.target;
@@ -983,9 +984,79 @@
                         toast: true
                     });
                 }
+                if (!estadoCorreoValido) {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Correo inválido',
+                        text: 'Ingrese un correo válido y entregable.',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        position: 'center',
+                        toast: true
+                    });
+                }
             }
         }
     });
+</script>
+
+<script>
+    const API_KEY = "b13b4cd6c3624c3c9d338e82d2117962"; // tu API Key
+    let timerCorreo;
+
+    function validarCorreoLive(input) {
+        const mensajeCorreo = document.getElementById("mensajeCorreo");
+        const correo = input.value.trim();
+
+        clearTimeout(timerCorreo);
+
+        timerCorreo = setTimeout(() => {
+            // Regex de formato
+            const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!regexCorreo.test(correo)) {
+                input.classList.remove("is-valid");
+                input.classList.add("is-invalid");
+
+                mensajeCorreo.textContent = "Formato de correo no válido.";
+                mensajeCorreo.className = "form-text invalid";
+                estadoCorreoValido = false;
+                return;
+            }
+
+            // Llamada a API
+            fetch(`https://emailvalidation.abstractapi.com/v1/?api_key=`+API_KEY+`&email=`+correo)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("DATA COMPLETA:", data);
+
+                    if (data.deliverability === "DELIVERABLE") {
+                        input.classList.remove("is-invalid");
+                        input.classList.add("is-valid");
+                        mensajeCorreo.textContent = "Correo válido y entregable.";
+                        mensajeCorreo.className = "form-text valid";
+                        estadoCorreoValido = true;
+                    } else {
+                        input.classList.remove("is-valid");
+                        input.classList.add("is-invalid");
+                        mensajeCorreo.textContent = "Correo inválido o no entregable.";
+                        mensajeCorreo.className = "form-text invalid";
+                        estadoCorreoValido = false;
+                    }
+                })
+                .catch(err => {
+                    console.error("Error al validar el correo:", err);
+                    input.classList.remove("is-valid");
+                    input.classList.add("is-invalid");
+
+                    mensajeCorreo.textContent = "Error al validar. Intente más tarde.";
+                    mensajeCorreo.className = "form-text invalid";
+                    estadoCorreoValido = false;
+                });
+        }, 600); // Espera 600ms
+    }
 </script>
 
 <script>
