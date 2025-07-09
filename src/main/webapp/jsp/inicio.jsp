@@ -24,7 +24,6 @@
 
     List<TableReservationDTO> reservasOcupadas = GestionReservation.getAllReservations().stream().
             filter(ocupada -> ocupada.getReservationStatus().equals("Ocupada")).collect(Collectors.toUnmodifiableList());
-    System.out.println(reservasOcupadas.size());
     List<Room> rooms = GestionRoom.getAllRooms();
     int quantityRooms = rooms.size();
     int quantityRoomsFree = rooms.stream().filter(stado -> stado.getStatusRoom().getValue() == 1).collect(Collectors.toUnmodifiableList()).size();

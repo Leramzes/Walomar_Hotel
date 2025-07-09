@@ -1356,3 +1356,129 @@ function actualizarTotalConPenalidad() {
 
     totalElement.textContent = "TOTAL: S/. " + nuevoTotal.toFixed(2);
 }
+
+async function exportarClientesPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // 1. Mostrar alerta de carga
+    Swal.fire({
+        title: 'Generando PDF...',
+        html: 'Por favor espera unos segundos.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // 2. Cargar logo
+    const logo = new Image();
+    logo.crossOrigin = "anonymous";
+    logo.src = 'img/imagenWalomar.jpg'; // ✅ Ruta relativa desde /webapp
+
+    logo.onload = () => {
+        const fecha = new Date();
+        const fechaTexto = fecha.toLocaleDateString('es-PE');
+        const horaTexto = fecha.toLocaleTimeString('es-PE');
+
+        // Header con logo
+        doc.addImage(logo, 'JPG', 15, 10, 30, 30);
+
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text("Walomar Hotel", 50, 18);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text("RUC: 10428703575", 50, 24);
+        doc.text("Calle Diego Ferre N°102", 50, 30);
+        doc.text("Puerto Eten, Chiclayo - Tel: 948036274", 50, 36);
+
+        doc.setFontSize(9);
+        doc.text(`Generado: ${fechaTexto} ${horaTexto}`, 150, 20);
+
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'bold');
+        doc.text("REPORTE DE CLIENTES", 105, 50, { align: "center" });
+
+        // Extraer datos de la tabla
+        const tabla = document.querySelector("#tablaClients");
+        const filas = tabla.querySelectorAll("tbody tr");
+        const datos = [];
+
+        filas.forEach(tr => {
+            if (tr.style.display === "none") return;
+
+            const celdas = tr.querySelectorAll("td");
+            if (celdas.length < 6) return;
+
+            datos.push([
+                celdas[0].innerText.trim(),
+                celdas[1].innerText.trim(),
+                celdas[2].innerText.trim(),
+                celdas[3].innerText.trim(),
+                celdas[4].innerText.trim(),
+                celdas[5].innerText.trim()
+            ]);
+        });
+
+        if (datos.length === 0) {
+            Swal.fire("Sin datos visibles", "No hay clientes para exportar", "info");
+            return;
+        }
+
+        // Generar tabla
+        doc.autoTable({
+            startY: 60,
+            head: [[
+                "N°",
+                "Nombre Completo",
+                "Tipo Doc.",
+                "N° Documento",
+                "Correo",
+                "Teléfono"
+            ]],
+            body: datos,
+            theme: 'grid',
+            styles: {
+                fontSize: 9,
+                cellPadding: 3,
+                halign: 'left'
+            },
+            headStyles: {
+                fillColor: [52, 58, 64], // ✅ Formal: gris oscuro
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            alternateRowStyles: {
+                fillColor: [245, 245, 245]
+            },
+            margin: { top: 60, bottom: 30 }
+        });
+
+        // Pie de página en todas las páginas
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            doc.text(`Página ${i} de ${totalPages}`, 195, 290, { align: "right" });
+            doc.text("Reporte generado por el sistema - Walomar Hotel", 15, 290);
+        }
+
+        // Guardar el archivo
+        const timestamp = new Date().toISOString().replace(/[-T:.]/g, "").slice(0, 14);
+        const nombreArchivo = `Reporte_Clientes_${timestamp}.pdf`;
+        doc.save(nombreArchivo);
+
+        // 3. Cerrar loading y mostrar éxito
+        Swal.close();
+        Swal.fire("¡Éxito!", "PDF generado correctamente", "success");
+    };
+
+    // Si falla el logo
+    logo.onerror = () => {
+        Swal.close();
+        Swal.fire("Error", "No se pudo cargar el logo", "error");
+    };
+}
