@@ -309,8 +309,13 @@
                         </div>
                         <div class="mb-3">
                             <label for="correoEditar">Correo</label>
-                            <input type="email" class="form-control" id="correoEditar" name="correoEditar"
-                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                            <input type="text" class="form-control" id="correoEditar" name="correoEditar"
+                                   placeholder="ejemplo@dominio.com"
+                                   autocomplete="off"
+                                   oninput="validarCorreoLive(this)" required>
+                            <small id="mensajeCorreo" class="form-text"></small>
+                            <%--<input type="email" class="form-control" id="correoEditar" name="correoEditar"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>--%>
                         </div>
                         <div class="mb-3">
                             <label for="telefonoEditar">Teléfono</label>

@@ -199,7 +199,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="correoEditar">Correo</label>
-                            <input type="email" class="form-control" id="correoEditar" name="correoEdit" required>
+                            <input type="text" class="form-control" id="correoEditar" name="correoEdit"
+                                   placeholder="ejemplo@dominio.com"
+                                   autocomplete="off"
+                                   oninput="validarCorreoLive(this)" required>
+                            <small id="mensajeCorreo" class="form-text"></small>
+                            <%--<input type="email" class="form-control" id="correoEditar" name="correoEdit" required>--%>
                         </div>
                         <div class="mb-3">
                             <label for="usuarioEditar">Usuario</label>

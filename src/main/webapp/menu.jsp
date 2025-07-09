@@ -109,6 +109,13 @@
             </a>
         </div>
 
+        <%
+            String mod = "";
+            if (rolUser == 2) {
+                mod = "d-none";
+            }
+        %>
+
         <hr>
         <!-- Menú de opciones -->
         <ul class="sidebar-nav">
@@ -145,7 +152,7 @@
                             Vender Productos
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item <%=mod%>">
                         <a href="#" class="sidebar-link" data-pagina="catalagoProductos"
                            onclick="cargarPagina('jsp/catalagoProductos.jsp', 'catalogoProductos')">
                             <i class="fa-solid fa-basket-shopping me-2"></i>
@@ -159,7 +166,7 @@
                             Vender Servicios
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item <%=mod%>">
                         <a href="#" class="sidebar-link" data-pagina="catalagoServicios"
                            onclick="cargarPagina('jsp/catalagoServicios.jsp', 'catalogoServicios')">
                             <i class="fa-solid fa-basket-shopping me-2"></i>
@@ -182,7 +189,7 @@
                     <span>Clientes</span>
                 </a>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item <%=mod%>">
                 <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                    data-bs-target="#reportes" aria-expanded="false" aria-controls="auth">
                     <i class="fa-solid fa-sheet-plastic me-2"></i>
@@ -213,12 +220,6 @@
                 </ul>
             </li>
 
-            <%
-                String mod = "";
-                if (rolUser == 2) {
-                    mod = "d-none";
-                }
-            %>
             <li class="sidebar-item <%=mod%>">
                 <a href="#" class="sidebar-link" data-pagina="usuarios" onclick="cargarPagina('jsp/usuarios.jsp')">
                     <i class="fa-solid fa-users-gear me-2"></i>
@@ -1007,7 +1008,8 @@
     let timerCorreo;
 
     function validarCorreoLive(input) {
-        const mensajeCorreo = document.getElementById("mensajeCorreo");
+        /*const mensajeCorreo = document.getElementById("mensajeCorreo");*/
+        const mensajeCorreo = input.nextElementSibling;
         const correo = input.value.trim();
 
         clearTimeout(timerCorreo);
