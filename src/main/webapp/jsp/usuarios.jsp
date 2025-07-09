@@ -41,7 +41,7 @@
     }
 
     int pagina = 1;
-    int pageSize = 8;
+    int pageSize = 10;
 
     String pageParam = request.getParameter("page");
     if (pageParam != null) {
@@ -119,9 +119,14 @@
                             <label for="correo">Correo</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input type="email" class="form-control" id="correo" name="email"
-                                       placeholder="Correo Electrónico" required>
+                                <%--<input type="email" class="form-control" id="correo" name="email"
+                                       placeholder="Correo Electrónico" required>--%>
+                                <input type="text" class="form-control" id="correo" name="email"
+                                       placeholder="ejemplo@dominio.com"
+                                       autocomplete="off"
+                                       oninput="validarCorreoLive(this)">
                             </div>
+                            <small id="mensajeCorreo" class="form-text"></small>
                         </div>
                         <div class="mb-3">
                             <label for="rol">Rol</label>
