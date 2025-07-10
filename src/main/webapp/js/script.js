@@ -1357,7 +1357,17 @@ function actualizarTotalConPenalidad() {
     totalElement.textContent = "TOTAL: S/. " + nuevoTotal.toFixed(2);
 }
 
-async function exportarClientesPDF() {
+async function exportarTablaPDF({
+                                    tablaId,
+                                    tituloReporte = "REPORTE",
+                                    nombreArchivo = "Reporte",
+                                    columnas,
+                                    nombreEmpresa = "Walomar Hotel",
+                                    ruc = "10428703575",
+                                    direccion = "Calle Diego Ferre N°102",
+                                    telefono = "948036274",
+                                    logoPath = 'img/imagenWalomar.jpg'
+                                }) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
@@ -1371,37 +1381,41 @@ async function exportarClientesPDF() {
         }
     });
 
-    // 2. Cargar logo
     const logo = new Image();
     logo.crossOrigin = "anonymous";
-    logo.src = 'img/imagenWalomar.jpg'; // ✅ Ruta relativa desde /webapp
+    logo.src = logoPath;
 
     logo.onload = () => {
         const fecha = new Date();
         const fechaTexto = fecha.toLocaleDateString('es-PE');
         const horaTexto = fecha.toLocaleTimeString('es-PE');
 
-        // Header con logo
+        // --- Header ---
         doc.addImage(logo, 'JPG', 15, 10, 30, 30);
-
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text("Walomar Hotel", 50, 18);
+        doc.text(nombreEmpresa, 50, 18);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
-        doc.text("RUC: 10428703575", 50, 24);
-        doc.text("Calle Diego Ferre N°102", 50, 30);
-        doc.text("Puerto Eten, Chiclayo - Tel: 948036274", 50, 36);
-
+        doc.text(`RUC: ${ruc}`, 50, 24);
+        doc.text(direccion, 50, 30);
+        doc.text(`Tel: ${telefono}`, 50, 36);
         doc.setFontSize(9);
         doc.text(`Generado: ${fechaTexto} ${horaTexto}`, 150, 20);
 
+        // --- Título del Reporte ---
         doc.setFontSize(13);
         doc.setFont('helvetica', 'bold');
-        doc.text("REPORTE DE CLIENTES", 105, 50, { align: "center" });
+        doc.text(tituloReporte, 105, 50, { align: "center" });
 
-        // Extraer datos de la tabla
-        const tabla = document.querySelector("#tablaClients");
+        // --- Extraer datos de la tabla ---
+        const tabla = document.querySelector(`#${tablaId}`);
+        if (!tabla) {
+            Swal.close();
+            Swal.fire("Error", "No se encontró la tabla", "error");
+            return;
+        }
+
         const filas = tabla.querySelectorAll("tbody tr");
         const datos = [];
 
@@ -1409,34 +1423,25 @@ async function exportarClientesPDF() {
             if (tr.style.display === "none") return;
 
             const celdas = tr.querySelectorAll("td");
-            if (celdas.length < 6) return;
+            if (celdas.length === 0) return;
 
-            datos.push([
-                celdas[0].innerText.trim(),
-                celdas[1].innerText.trim(),
-                celdas[2].innerText.trim(),
-                celdas[3].innerText.trim(),
-                celdas[4].innerText.trim(),
-                celdas[5].innerText.trim()
-            ]);
+            const fila = [];
+            for (let i = 0; i < columnas.length; i++) {
+                fila.push(celdas[i]?.innerText.trim() || '');
+            }
+            datos.push(fila);
         });
 
         if (datos.length === 0) {
-            Swal.fire("Sin datos visibles", "No hay clientes para exportar", "info");
+            Swal.close();
+            Swal.fire("Sin datos", "No hay filas visibles para exportar", "info");
             return;
         }
 
-        // Generar tabla
+        // --- Generar tabla ---
         doc.autoTable({
             startY: 60,
-            head: [[
-                "N°",
-                "Nombre Completo",
-                "Tipo Doc.",
-                "N° Documento",
-                "Correo",
-                "Teléfono"
-            ]],
+            head: [columnas],
             body: datos,
             theme: 'grid',
             styles: {
@@ -1445,7 +1450,7 @@ async function exportarClientesPDF() {
                 halign: 'left'
             },
             headStyles: {
-                fillColor: [52, 58, 64], // ✅ Formal: gris oscuro
+                fillColor: [52, 58, 64],
                 textColor: [255, 255, 255],
                 fontStyle: 'bold',
                 halign: 'center'
@@ -1456,29 +1461,164 @@ async function exportarClientesPDF() {
             margin: { top: 60, bottom: 30 }
         });
 
-        // Pie de página en todas las páginas
+        // --- Pie de página ---
         const totalPages = doc.internal.getNumberOfPages();
         for (let i = 1; i <= totalPages; i++) {
             doc.setPage(i);
             doc.setFontSize(8);
             doc.setTextColor(100);
             doc.text(`Página ${i} de ${totalPages}`, 195, 290, { align: "right" });
-            doc.text("Reporte generado por el sistema - Walomar Hotel", 15, 290);
+            doc.text(`Reporte generado por el sistema - ${nombreEmpresa}`, 15, 290);
         }
 
-        // Guardar el archivo
+        // --- Descargar archivo ---
         const timestamp = new Date().toISOString().replace(/[-T:.]/g, "").slice(0, 14);
-        const nombreArchivo = `Reporte_Clientes_${timestamp}.pdf`;
-        doc.save(nombreArchivo);
+        doc.save(`${nombreArchivo}_${timestamp}.pdf`);
 
-        // 3. Cerrar loading y mostrar éxito
         Swal.close();
         Swal.fire("¡Éxito!", "PDF generado correctamente", "success");
     };
 
-    // Si falla el logo
     logo.onerror = () => {
         Swal.close();
         Swal.fire("Error", "No se pudo cargar el logo", "error");
     };
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function cargarImagen(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
+}
+
+async function exportarData(tipo) {
+    const exportConfigs = {
+        clientes: {
+            titulo: 'REPORTE DE CLIENTES',
+            nombreArchivo: 'Reporte_Clientes',
+            columnas: ['#', 'Nombre Completo', 'Tipo Doc.', 'N° Documento', 'Correo', 'Teléfono'],
+            campos: [
+                (c, i) => i + 1,
+                c => c.name === '-' ? c.razonSocial : `${c.name} ${c.apPaterno} ${c.apMaterno}`,
+                'typeDocument',
+                'numberDocument',
+                'email',
+                'telephone'
+            ]
+        },
+        usuarios: {
+            titulo: 'REPORTE DE USUARIOS',
+            nombreArchivo: 'Reporte_Usuarios',
+            columnas: ['#', 'Empleado', 'Usuario', 'Correo', 'Rol', 'Fecha Caducidad', 'Estado'],
+            campos: [
+                (u, i) => i + 1,
+                u => u.employee?.name || '',
+                u => u.username,
+                u => u.employee?.email || '',
+                u => u.employee?.position === '1' ? 'Administrador' : u.employee?.position === '2' ? 'Recepcionista' : 'Otro',
+                u => u.caducidad,
+                u => u.statusUser
+            ]
+        }
+    };
+
+    const config = exportConfigs[tipo];
+    if (!config) {
+        Swal.fire("Error", "No hay configuración para este tipo", "error");
+        return;
+    }
+
+    Swal.fire({
+        title: 'Generando PDF...',
+        html: 'Por favor espera unos segundos.',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    try {
+        await sleep(300); // ❗️espera breve para asegurar que se muestre Swal antes de cargar
+        const response = await fetch(`export-data?tipo=${tipo}`);
+
+        const result = await response.json();
+
+        const { empresa, datos } = result;
+        const { nombre, ruc, direccion, contacto, logo } = empresa;
+
+        if (!Array.isArray(datos) || datos.length === 0) {
+            Swal.close();
+            Swal.fire("Sin datos", "No hay información para exportar", "info");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const img = await cargarImagen(logo);
+
+        const fecha = new Date();
+        const fechaTexto = fecha.toLocaleDateString('es-PE');
+        const horaTexto = fecha.toLocaleTimeString('es-PE');
+
+        doc.addImage(img, 'JPG', 15, 10, 30, 30);
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(nombre, 50, 18);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(ruc, 50, 24);
+        doc.text(direccion, 50, 30);
+        doc.text(contacto, 50, 36);
+        doc.setFontSize(9);
+        doc.text(`Generado: ${fechaTexto} ${horaTexto}`, 150, 20);
+
+        doc.setFontSize(13);
+        doc.setFont('helvetica', 'bold');
+        doc.text(config.titulo, 105, 50, { align: "center" });
+
+        const tablaDatos = datos.map((item, index) =>
+            config.campos.map(c => typeof c === 'function' ? c(item, index) : item[c])
+        );
+
+        doc.autoTable({
+            startY: 60,
+            head: [config.columnas],
+            body: tablaDatos,
+            theme: 'grid',
+            styles: { fontSize: 9, cellPadding: 3 },
+            headStyles: {
+                fillColor: [52, 58, 64],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            alternateRowStyles: { fillColor: [245, 245, 245] },
+            margin: { top: 60, bottom: 30 }
+        });
+
+        const totalPages = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= totalPages; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            doc.text(`Página ${i} de ${totalPages}`, 195, 290, { align: "right" });
+            doc.text(`Reporte generado por el sistema - ${nombre}`, 15, 290);
+        }
+
+        const timestamp = new Date().toISOString().replace(/[-T:.]/g, "").slice(0, 14);
+        doc.save(`${config.nombreArchivo}_${timestamp}.pdf`);
+
+        Swal.close();
+        Swal.fire("¡Éxito!", "PDF generado correctamente", "success");
+    } catch (e) {
+        Swal.close();
+        console.error("Error al exportar:", e);
+        Swal.fire("Error", "Ocurrió un error al generar el PDF", "error");
+    }
 }

@@ -331,7 +331,7 @@ import java.util.logging.Logger;
             return employee;
         }
         public static List<User> getAllUsers() {
-            String sql = "SELECT id, username, empleado_id, estado FROM usuarios";
+            String sql = "SELECT id, username, empleado_id, estado, caducidad FROM usuarios";
             List<User> lista = new ArrayList<>();
             try (Connection con = dataSource.getConnection();
                  PreparedStatement ps = con.prepareStatement(sql);
@@ -345,7 +345,8 @@ import java.util.logging.Logger;
                             employee,
                             rs.getString("username"),
                             "***", // No se recupera la contraseña por seguridad
-                            statusUser
+                            statusUser,
+                            rs.getDate("caducidad")
                     );
                     lista.add(user);
                 }

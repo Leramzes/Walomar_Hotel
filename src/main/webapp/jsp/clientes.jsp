@@ -49,13 +49,22 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between mt-2">
+        <div class="d-flex justify-content-between align-items-start gap-2 mt-2 mb-3">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
                 <i class="fas fa-plus"></i> Agregar nuevo
             </button>
-            <button class="btn btn-success" onclick="exportarClientesPDF()">
-                <i class="fa-solid fa-file-export"></i> Exportar clientes a PDF
-            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" onclick="exportarData('clientes')"><i
+                        class="fa-solid fa-file-export"></i> Exportar Clientes
+                </button>
+                <button class="btn btn-success" onclick="exportarTablaPDF({
+                tablaId: 'tablaClients',
+                tituloReporte: 'REPORTE DE CLIENTES',
+                nombreArchivo: 'Reporte_Clientes',
+                columnas: ['N°', 'Nombre Completo', 'Tipo Doc.', 'N° Documento', 'Correo', 'Teléfono']})">
+                    <i class="fa-solid fa-file-export"></i> Exportar Vista Actual a PDF
+                </button>
+            </div>
         </div>
     </div>
 
@@ -267,7 +276,7 @@
                     <td class="d-flex justify-content-center gap-1">
                         <button class="btn btn-warning btn-sm" id="btn-editar"
                                 data-bs-toggle="modal"
-                                data-bs-target="#modalEditarCliente"  title="Editar Cliente"
+                                data-bs-target="#modalEditarCliente" title="Editar Cliente"
                                 onclick="editarClient(<%=client.getId()%>)">
                             ✏️ Editar
                         </button>

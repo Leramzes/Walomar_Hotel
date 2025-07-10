@@ -70,9 +70,24 @@
                 </select>
             </div>
         </div>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
-            <i class="fas fa-plus"></i> Agregar nuevo
-        </button>
+        <div class="d-flex justify-content-between align-items-start gap-2 mt-2 mb-3">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
+                <i class="fas fa-plus"></i> Agregar nuevo
+            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" onclick="exportarData('usuarios')">
+                    <i class="fa-solid fa-file-export"></i> Exportar Usuarios
+                </button>
+                <button class="btn btn-success" onclick="exportarTablaPDF({
+            tablaId: 'tablaUsuarios',
+            tituloReporte: 'REPORTE DE USUARIOS',
+            nombreArchivo: 'Reporte_Usuarios',
+            columnas: ['N°', 'Nombre', 'Usuario', 'Correo', 'Tipo', 'Fecha Caducidad', 'Estatus']
+        })">
+                    <i class="fa-solid fa-file-export"></i> Exportar Vista Actual a PDF
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Modal para agregar usuario -->

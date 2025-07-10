@@ -20,6 +20,15 @@ public class User {
         this.password = password;
         this.statusUser = statusUser;
     }
+    public User(int id, Employee employee, String username, String password, StatusUser statusUser,
+                Date caducidad) {
+        this.id = id;
+        this.employee = employee;
+        this.username = username;
+        this.password = password;
+        this.statusUser = statusUser;
+        this.caducidad = caducidad;
+    }
 
     public int getId() {
         return id;
