@@ -37,7 +37,10 @@ public class GestionRecepcion {
                 "    c.tipo_documento,\n" +
                 "    c.numero_documento,\n" +
                 "    c.telefono,\n" +
-                "    c.email\n" +
+                "    c.email,\n" +
+                "    r.adelanto,\n" +
+                "    dh.pago_total,\n" +
+                "    r.cobro_extra\n" +
                 "FROM habitaciones h\n" +
                 "         JOIN detalle_habitacion dh ON h.id = dh.habitacion_id\n" +
                 "         JOIN reservas r ON dh.reserva_id = r.id\n" +
@@ -71,6 +74,9 @@ public class GestionRecepcion {
                     dto.setEmail(rs.getString("email"));
                     dto.setDocumentNumber(rs.getString("numero_documento"));
                     dto.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
+                    dto.setAdelanto(rs.getDouble("adelanto"));
+                    dto.setPago_total(rs.getDouble("pago_total"));
+                    dto.setCobro_extra(rs.getDouble("cobro_extra"));
                 }
             }
 
@@ -95,7 +101,10 @@ public class GestionRecepcion {
                 "    c.tipo_documento,\n" +
                 "    c.numero_documento,\n" +
                 "    c.telefono,\n" +
-                "    c.email\n" +
+                "    c.email,\n" +
+                "    r.adelanto,\n" +
+                "    dh.pago_total,\n" +
+                "    r.cobro_extra\n" +
                 "FROM habitaciones h\n" +
                 "         JOIN detalle_habitacion dh ON h.id = dh.habitacion_id\n" +
                 "         JOIN reservas r ON dh.reserva_id = r.id\n" +
@@ -129,6 +138,9 @@ public class GestionRecepcion {
                     dto.setEmail(rs.getString("email"));
                     dto.setDocumentNumber(rs.getString("numero_documento"));
                     dto.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
+                    dto.setAdelanto(rs.getDouble("adelanto"));
+                    dto.setPago_total(rs.getDouble("pago_total"));
+                    dto.setCobro_extra(rs.getDouble("cobro_extra"));
                 }
             }
 

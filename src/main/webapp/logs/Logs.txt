@@ -16,3 +16,9 @@ GRAVE: Error updating Room 23: ERROR: column "estado_id" is of type integer but 
   Position: 37
 may. 23, 2025 11:45:00 A. M. development.team.hoteltransylvania.Business.GestionRoom updateStatusRoom
 INFORMACIÓN: Room 23 updated successfully.
+jul. 11, 2025 10:42:41 A. M. development.team.hoteltransylvania.Business.GestionRecepcion getReservationOcupada
+GRAVE: Error retrieving Rooms: ERROR: syntax error at or near "."
+  Position: 292
+jul. 11, 2025 10:44:13 A. M. development.team.hoteltransylvania.Business.GestionRecepcion getReservationOcupada
+GRAVE: Error retrieving Rooms: ERROR: syntax error at or near "."
+  Position: 292

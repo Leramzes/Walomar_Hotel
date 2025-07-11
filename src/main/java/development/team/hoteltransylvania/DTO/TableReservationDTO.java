@@ -290,20 +290,34 @@ public class TableReservationDTO {
 
         return dias + " días " + horas + " horas " + mins + " minutos";
     }
+
     @Override
     public String toString() {
         return "TableReservationDTO{" +
                 "idReservation=" + idReservation +
                 ", idClient=" + idClient +
                 ", clientName='" + clientName + '\'' +
+                ", clientApellidos='" + clientApellidos + '\'' +
                 ", documentType='" + documentType + '\'' +
                 ", documentNumber='" + documentNumber + '\'' +
                 ", idRoom=" + idRoom +
                 ", numberRoom='" + numberRoom + '\'' +
                 ", roomType='" + roomType + '\'' +
+                ", roomTypeId=" + roomTypeId +
                 ", checkInDate=" + checkInDate +
                 ", checkOutDate=" + checkOutDate +
+                ", fecha_ingreso=" + fecha_ingreso +
+                ", cantDays=" + cantDays +
                 ", reservationStatus='" + reservationStatus + '\'' +
+                ", reservationStatusId=" + reservationStatusId +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", dsct=" + dsct +
+                ", cobro_extra=" + cobro_extra +
+                ", adelanto=" + adelanto +
+                ", pago_total=" + pago_total +
+                ", empleadoId=" + empleadoId +
                 '}';
     }
 }

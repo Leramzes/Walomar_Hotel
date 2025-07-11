@@ -194,22 +194,23 @@
                         <!-- Columna Izquierda -->
                         <div class="col-md-6">
                             <div class="mt-2">
-                                <label for="fechaEntradaRecep" class="form-label"><strong>Fecha Programada - Entrada:</strong></label>
+                                <label for="fechaEntradaRecep" class="form-label"><strong>Fecha Programada -
+                                    Entrada:</strong></label>
                                 <input type="datetime-local" class="form-control" id="fechaEntradaRecep"
                                        name="fechaEntradaRecep"
                                        value="<%= reservaPendiente == null ? fechaHoraActual : reservaPendiente.getCheckInDate()%>"
                                        readonly <%= camposBloqueados ? "disabled" : "" %>>
                             </div>
 
-                            <%if(reservaPendiente != null){%>
-                                <div class="mt-2">
-                                    <label for="fechaEntradaRealRecep" class="form-label"><strong>Fecha y Hora de
-                                        Ingreso:</strong></label>
-                                    <input type="datetime-local" class="form-control" id="fechaEntradaRealRecep"
-                                           name="fechaEntradaRealRecep"
-                                           value="<%=reservaPendiente.getFecha_ingreso()==null
+                            <%if (reservaPendiente != null) {%>
+                            <div class="mt-2">
+                                <label for="fechaEntradaRealRecep" class="form-label"><strong>Fecha y Hora de
+                                    Ingreso:</strong></label>
+                                <input type="datetime-local" class="form-control" id="fechaEntradaRealRecep"
+                                       name="fechaEntradaRealRecep"
+                                       value="<%=reservaPendiente.getFecha_ingreso()==null
                                            ? fechaHoraActual : reservaPendiente.getFecha_ingreso()%>" readonly>
-                                </div>
+                            </div>
                             <%}%>
                         </div>
 
@@ -230,7 +231,8 @@
                         <input type="hidden" data-precio="<%=room.getPrice()%>" name="habitacionRecep"
                                id="habitacionRecep">
                         <input type="hidden" name="roomSelect" value="<%=room.getId()%>">
-                        <input type="hidden" name="idReserva" value="<%= reservaPendiente != null ? reservaPendiente.getIdReservation() : 0 %>">
+                        <input type="hidden" name="idReserva"
+                               value="<%= reservaPendiente != null ? reservaPendiente.getIdReservation() : 0 %>">
                         <div class="col-md-6 mt-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label for="descuento" class="form-label m-0"><strong>Descuento:</strong></label>
@@ -258,19 +260,33 @@
                             <label for="cobroExtraRecep" class="form-label"><strong>Cobro Extra:</strong></label>
                             <input type="number" class="form-control" id="cobroExtraRecep" name="cobroExtraRecep"
                                    min="0"
-                                   value="0" required <%= camposBloqueados ? "disabled" : "" %>>
+                                   value="<%=reservaPendiente != null ? reservaPendiente.getCobro_extra() : "0" %>"
+                                   required <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
                         <div class="col-md-6 mt-2">
                             <label for="adelantoRecep" class="form-label"><strong>Adelanto:</strong></label>
                             <input type="number" class="form-control" id="adelantoRecep" name="adelantoRecep" min="0"
-                                   value="0" required <%= camposBloqueados ? "disabled" : "" %>>
+                                   value="<%=reservaPendiente != null ? reservaPendiente.getAdelanto() : "" %>"
+                                   required <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
+
+                        <% if (reservaPendiente != null) { %>
+                        <% if (reservaPendiente.getReservationStatus().equals("1") || reservaPendiente.getReservationStatus().equals("4")) { %>
+                        <div class="col-md-6 mt-2">
+                            <label for="totalPagarRestante" class="form-label"><strong>Restante:</strong></label>
+                            <input type="text" class="form-control" id="totalPagarRestante" name="totalPagarRestante"
+                                   value="<%= reservaPendiente.getPago_total() - reservaPendiente.getAdelanto() %>"
+                                   readonly required <%= camposBloqueados ? "disabled" : "" %> />
+                        </div>
+                        <% } %>
+                        <% } %>
 
                         <div class="col-md-6 mt-2">
                             <label for="totalPagarRecep" class="form-label"><strong>Total a Pagar:</strong></label>
                             <input type="text" class="form-control" id="totalPagarRecep" name="totalPagarRecep"
-                                   value="<%=room.getPrice()%>" readonly required
+                                   value="<%=reservaPendiente != null ? reservaPendiente.getPago_total() : room.getPrice() %>"
+                                   readonly required
                                 <%= camposBloqueados ? "disabled" : "" %>>
                         </div>
 
@@ -278,8 +294,8 @@
                             <%
                                 switch (room.getStatusRoom().getValue()) {
                                     case 2:
-                                    break;
-                                case 3:
+                                        break;
+                                    case 3:
                             %>
                             <button type="submit" name="accion" value="habilitar" class="btn btn-warning">Habilitar
                                 Habitación
@@ -288,15 +304,21 @@
                                     break;
                                 case 4:
                             %>
-                            <button type="submit" name="accion" value="cancelar" class="btn btn-danger">Cancelar Reserva</button>
-                            <button type="submit" name="accion" value="ocuparReservada" class="btn btn-success">Ocupar Habitación</button>
+                            <button type="submit" name="accion" value="cancelar" class="btn btn-danger">Cancelar
+                                Reserva
+                            </button>
+                            <button type="submit" name="accion" value="ocuparReservada" class="btn btn-success">Ocupar
+                                Habitación
+                            </button>
                         </div>
                         <%
                                 break;
                             default:
                         %>
                         <button type="submit" class="btn btn-primary">Ocupar Habitación</button>
-                        <button type="submit" name="accion" value="mantenimiento" class="btn btn-warning" formnovalidate>Dar Mantenimiento</button>
+                        <button type="submit" name="accion" value="mantenimiento" class="btn btn-warning"
+                                formnovalidate>Dar Mantenimiento
+                        </button>
                         <%
                                     break;
                             }

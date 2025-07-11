@@ -1,6 +1,7 @@
 package development.team.hoteltransylvania.Test;
 
 import development.team.hoteltransylvania.Business.*;
+import development.team.hoteltransylvania.DTO.TableReservationDTO;
 import development.team.hoteltransylvania.Model.Product;
 import development.team.hoteltransylvania.Model.Room;
 import development.team.hoteltransylvania.Model.User;
@@ -21,13 +22,8 @@ import java.util.stream.Collectors;
 
 public class testGeneral {
     public static void main(String[] args) {
-
+        TableReservationDTO reservaOcupada = GestionRecepcion.getReservationOcupada("304");
+        System.out.println(reservaOcupada);
     }
-    private static Timestamp parseFecha(String fechaStr) {
-        if (fechaStr == null || fechaStr.isEmpty()) return null;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.parse(fechaStr, formatter);
-        return Timestamp.valueOf(localDateTime);
-    }
 }

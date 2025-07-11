@@ -21,7 +21,7 @@ hr {
     border-radius: 5px;
 }
 
-#restanteDetalle {
+#restanteDetalle, #totalPagarRestante {
     border: 2px solid red;
     border-radius: 5px;
 }
