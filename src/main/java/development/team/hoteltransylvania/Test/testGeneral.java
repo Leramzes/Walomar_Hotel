@@ -5,11 +5,13 @@ import development.team.hoteltransylvania.DTO.TableReservationDTO;
 import development.team.hoteltransylvania.Model.Product;
 import development.team.hoteltransylvania.Model.Room;
 import development.team.hoteltransylvania.Model.User;
+import development.team.hoteltransylvania.Services.Emails;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
 import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,8 +24,16 @@ import java.util.stream.Collectors;
 
 public class testGeneral {
     public static void main(String[] args) {
-        TableReservationDTO reservaOcupada = GestionRecepcion.getReservationOcupada("304");
-        System.out.println(reservaOcupada);
+        File archivo = new File("src/main/webapp/img/evidencia.jpg");
+
+        Emails.enviarCorreoConAdjunto(
+                "U21216255@utp.edu.pe",
+                "DEJESE DE WEBADAS",
+                "<p>Su equipo de trabajo esta esperando su avance. ¿Por qué se fue el Mall?" +
+                        "Adjuntamos evidencia.</p>",
+                true,
+                archivo
+        );
     }
 
 }
