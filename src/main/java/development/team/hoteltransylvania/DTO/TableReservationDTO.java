@@ -1,6 +1,7 @@
 package development.team.hoteltransylvania.DTO;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 
 public class TableReservationDTO {
     private int idReservation;
@@ -289,6 +290,18 @@ public class TableReservationDTO {
         long mins = minutos % 60;
 
         return dias + " días " + horas + " horas " + mins + " minutos";
+    }
+    public static Duration parseTiempoRebasado(String tiempo) {
+        // Ejemplo: "1 días 2 horas 30 minutos"
+        String[] partes = tiempo.split(" ");
+
+        long dias = Long.parseLong(partes[0]);
+        long horas = Long.parseLong(partes[2]);
+        long minutos = Long.parseLong(partes[4]);
+
+        return Duration.ofDays(dias)
+                .plusHours(horas)
+                .plusMinutes(minutos);
     }
 
     @Override

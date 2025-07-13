@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class testGeneral {
     public static void main(String[] args) {
-        File archivo = new File("src/main/webapp/img/evidencia.jpg");
+        /*File archivo = new File("src/main/webapp/img/evidencia.jpg");
 
         Emails.enviarCorreoConAdjunto(
                 "U21216255@utp.edu.pe",
@@ -33,7 +34,12 @@ public class testGeneral {
                         "Adjuntamos evidencia.</p>",
                 true,
                 archivo
-        );
+        );*/
+        TableReservationDTO reservation = GestionReservation.getReservationById(101);
+        Duration tiempoextra = TableReservationDTO.parseTiempoRebasado(reservation.getTiempoRebasado());
+        System.out.println(tiempoextra);
+        boolean checkout = GestionReservation.updateCheckoutReservation(101,tiempoextra,50.0);
+        System.out.println(checkout);
     }
 
 }

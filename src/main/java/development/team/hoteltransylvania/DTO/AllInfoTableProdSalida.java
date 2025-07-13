@@ -82,4 +82,19 @@ public class AllInfoTableProdSalida {
     public void setEstadoProducto(String estadoProducto) {
         this.estadoProducto = estadoProducto;
     }
+
+    @Override
+    public String toString() {
+        return "AllInfoTableProdSalida{" +
+                "id_consumo=" + id_consumo +
+                ", id_reserva=" + id_reserva +
+                ", id_habitacion=" + id_habitacion +
+                ", id_producto=" + id_producto +
+                ", nombreProducto='" + nombreProducto + '\'' +
+                ", cantidad=" + cantidad +
+                ", precioUnitProducto=" + precioUnitProducto +
+                ", total=" + total +
+                ", estadoProducto='" + estadoProducto + '\'' +
+                '}';
+    }
 }

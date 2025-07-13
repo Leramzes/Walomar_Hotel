@@ -444,6 +444,42 @@ public class GestionVentas {
 
         return ventas;
     }
+    public static boolean actualizarProductosPagadosPorReserva(int idReserva) {
+        String sql = "UPDATE consumo_productos SET estado_pago = 'Pagado al salir' WHERE reserva_id = ? and estado_pago = 'Pendiente'";
+        boolean success = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, idReserva);
+            int rows = ps.executeUpdate();
+            success = rows > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error actualizando estado de productos: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return success;
+    }
+    public static boolean actualizarServiciosPagadosPorReserva(int idReserva) {
+        String sql = "UPDATE consumo_servicios SET estado_pago = 'Pagado al salir' WHERE reserva_id = ? and estado_pago = 'Pendiente'";
+        boolean success = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, idReserva);
+            int rows = ps.executeUpdate();
+            success = rows > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error actualizando estado de productos: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return success;
+    }
     public static List<AllInfoVentasDirecta> getAllVentasDirecta() {
         List<AllInfoVentasDirecta> ventas = new ArrayList<>();
 

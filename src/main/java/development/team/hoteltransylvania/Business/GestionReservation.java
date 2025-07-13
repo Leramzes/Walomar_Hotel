@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.*;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -576,4 +577,34 @@ public class GestionReservation {
 
         return esValido;
     }
+
+    public static boolean updateCheckoutReservation(int idReservation, Duration tiempo_extra, double total_price) {
+        String sql = "UPDATE checkout SET tiempo_extra = CAST(? AS INTERVAL), total = ? WHERE reserva_id = ?";
+        boolean success = false;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            long totalSeconds = tiempo_extra.getSeconds();
+            long days = totalSeconds / (24 * 3600);
+            long hours = (totalSeconds % (24 * 3600)) / 3600;
+            long minutes = (totalSeconds % 3600) / 60;
+            long seconds = totalSeconds % 60;
+
+            String intervalStr = String.format("%d days %d hours %d minutes %d seconds", days, hours, minutes, seconds);
+
+            ps.setString(1, intervalStr);         // CAST a INTERVAL en SQL
+            ps.setDouble(2, total_price);         // Total penalidad o monto extra
+            ps.setInt(3, idReservation);
+
+            int rows = ps.executeUpdate();
+            success = rows > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar checkout: " + e.getMessage());
+        }
+
+        return success;
+    }
+
 }

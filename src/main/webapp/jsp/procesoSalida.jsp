@@ -137,7 +137,8 @@
                     <td><%= reservation.getAdelanto() %>
                     </td>
                     <td>
-                        <input type="number" id="inputPenalidad" class="form-control" value="0" min="0" oninput="actualizarTotalConPenalidad()">
+                        <input type="number" id="inputPenalidad" name="inputPenalidad" class="form-control" value="0" min="0"
+                               oninput="actualizarTotalConPenalidad()">
                     </td>
                     <td><%= reservation.getPago_total() - reservation.getAdelanto()%>
                     </td>
@@ -175,11 +176,16 @@
                         }
                 %>
                 <tr>
-                    <td><%= venta.getNombreProducto() %></td>
-                    <td><%= venta.getPrecioUnitProducto() %></td>
-                    <td><%= venta.getCantidad() %></td>
-                    <td class="<%= classEstado %>"><%= venta.getEstadoProducto() %></td>
-                    <td style="<%= styleTotal %>">S/. <%= venta.getTotal() %></td>
+                    <td><%= venta.getNombreProducto() %>
+                    </td>
+                    <td><%= venta.getPrecioUnitProducto() %>
+                    </td>
+                    <td><%= venta.getCantidad() %>
+                    </td>
+                    <td class="<%= classEstado %>"><%= venta.getEstadoProducto() %>
+                    </td>
+                    <td style="<%= styleTotal %>">S/. <%= venta.getTotal() %>
+                    </td>
                 </tr>
                 <% } %>
                 </tbody>
@@ -191,7 +197,7 @@
             <table class="table table-bordered align-middle">
                 <thead class="table-warning">
                 <tr>
-                    <th>Producto</th>
+                    <th>Servicio</th>
                     <th>Precio Unitario</th>
                     <th>Cantidad</th>
                     <th>Estado</th>
@@ -210,18 +216,22 @@
                         }
                 %>
                 <tr>
-                    <td><%= venta.getNombreServicio() %></td>
+                    <td><%= venta.getNombreServicio() %>
+                    </td>
                     <td>-</td>
                     <td>-</td>
-                    <td class="<%= classEstado %>"><%= venta.getEstadoServicio() %></td>
-                    <td style="<%= styleTotal %>">S/. <%= venta.getTotal() %></td>
+                    <td class="<%= classEstado %>"><%= venta.getEstadoServicio() %>
+                    </td>
+                    <td style="<%= styleTotal %>">S/. <%= venta.getTotal() %>
+                    </td>
                 </tr>
                 <% } %>
                 </tbody>
             </table>
         </div>
 
-        <p id="totalFinal" class="fw-bold mt-3 mt-sm-3" data-base-total="<%=total%>">TOTAL: S/. <%=total%></p>
+        <p id="totalFinal" class="fw-bold mt-3 mt-sm-3" data-base-total="<%=total%>">TOTAL: S/. <%=total%>
+        </p>
 
         <!-- Método de Pago en un Select-->
         <div class="input-group my-3" id="metodoPagoGroup" style="max-width: 320px;">
@@ -235,9 +245,21 @@
             </select>
         </div>
 
+        <!-- Tipo de Comprobante -->
+        <div class="input-group my-3" id="tipoComprobanteGroup" style="max-width: 320px;">
+            <label class="input-group-text" for="tipoComprobante">
+                <i class="fa-solid fa-receipt"></i>
+            </label>
+            <select class="form-select" id="tipoComprobante" name="tipoComprobante" required>
+                <option value="" selected disabled>Tipo de Comprobante</option>
+                <option value="1">Boleta</option>
+                <option value="2">Factura</option>
+            </select>
+        </div>
+
         <div class="centro">
             <label>
-                <input type="checkbox" name="enviarCorreo" value="si">
+                <input type="checkbox" name="enviarCorreo" value="1" id="enviarCorreo">
                 Enviar estado de cuenta por correo
             </label>
         </div>
@@ -250,9 +272,13 @@
                 </button>
                 <%--<button class="btn btn-primary w-auto w-sm-100 mt-2 mt-md-0" onclick="cargarPagina('jsp/VerificacionSalidas.jsp')"> Realizar Limpieza Intermedia </button>--%>
             </div>
-            <button class="btn btn-success w-auto w-sm-100 mt-2 mt-md-0"
-                    onclick="cargarPagina('jsp/VerificacionSalidas.jsp')"> Culminar y Limpiar Habitación
+            <input type="hidden" value="<%=reservation.getIdReservation()%>" name="idReserva" id="idReserva">
+            <input type="hidden" value="<%=reservation.getIdClient()%>" name="idClient" id="idClient">
+            <button class="btn btn-success w-auto w-sm-100 mt-2 mt-md-0" onclick="culminarYGenerarBoleta()"> Culminar y Limpiar Habitación
             </button>
+
+            <%--<button class="btn btn-info" onclick="generarComprobantePDF('BOLETA')">Generar Boleta</button>
+            <button onclick="generarFacturaPDF()">Generar Factura</button>--%>
         </div>
     </div>
 </div>

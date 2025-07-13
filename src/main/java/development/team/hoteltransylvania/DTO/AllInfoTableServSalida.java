@@ -64,4 +64,17 @@ public class AllInfoTableServSalida {
     public void setEstadoServicio(String estadoServicio) {
         this.estadoServicio = estadoServicio;
     }
+
+    @Override
+    public String toString() {
+        return "AllInfoTableServSalida{" +
+                "id_consumo=" + id_consumo +
+                ", id_reserva=" + id_reserva +
+                ", id_habitacion=" + id_habitacion +
+                ", id_servicio=" + id_servicio +
+                ", nombreServicio='" + nombreServicio + '\'' +
+                ", total=" + total +
+                ", estadoServicio='" + estadoServicio + '\'' +
+                '}';
+    }
 }
