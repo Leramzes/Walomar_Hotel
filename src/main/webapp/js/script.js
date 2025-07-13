@@ -197,15 +197,34 @@ function detalleReserva(id) {
             const inputRestante = document.getElementById("restanteDetalle");
             const inputTotalPagar = document.getElementById("totalPagarDetalle");
             const inputEstadoPago = document.getElementById("estadoPagoDetalle");
+            const fechaIngreso = document.getElementById("fechaIngresoDetalle");
+            const fechaDesalojo = document.getElementById("fechaDesalojoDetalle");
 
-            console.log(data.reservationStatus);
+            // Controlar visibilidad de fechas según estado
             if (data.reservationStatus === "Finalizada") {
-                // Si está finalizada, ocultamos el campo restante y quitamos fondo verde
+                fechaIngreso.parentElement.style.display = "block";
+                fechaIngreso.value = data.fecha_ingreso || ""; // debes asegurarte de que esto venga del backend
+                fechaDesalojo.parentElement.style.display = "block";
+                fechaDesalojo.value = data.fecha_desalojo || "";
+
                 inputRestante.parentElement.style.display = "none";
-                inputTotalPagar.style.border = "1px solid #ced4da"; // Por si tiene estilos aplicados
-                inputEstadoPago.value =  "Pago completo";
+                inputTotalPagar.style.border = "1px solid #ced4da";
+                inputEstadoPago.value = "Pago completo";
+            } else if (data.reservationStatus === "Ocupada") {
+                fechaIngreso.parentElement.style.display = "block";
+                fechaIngreso.value = data.fecha_ingreso || "";
+                fechaDesalojo.parentElement.style.display = "none";
+
+                inputRestante.parentElement.style.display = "block";
+                inputRestante.value = restante.toFixed(2);
+                inputTotalPagar.style.border = "2px solid green";
+                inputTotalPagar.style.borderRadius = "5px";
+                inputEstadoPago.value = "En proceso";
             } else {
-                // Si no está finalizada, mostramos campo restante y limpiamos estilos
+                // Pendiente
+                fechaIngreso.parentElement.style.display = "none";
+                fechaDesalojo.parentElement.style.display = "none";
+
                 inputRestante.parentElement.style.display = "block";
                 inputRestante.value = restante.toFixed(2);
                 inputTotalPagar.style.border = "2px solid green";

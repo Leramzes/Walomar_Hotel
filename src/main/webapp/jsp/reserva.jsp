@@ -312,12 +312,20 @@
                             <input type="text" class="form-control" id="habitacionDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="fechaEntradaDetalle">Fecha y Hora de Entrada</label>
+                            <label for="fechaEntradaDetalle">Fecha de Entrada Prevista</label>
                             <input type="text" class="form-control" id="fechaEntradaDetalle" readonly disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="fechaSalidaDetalle">Fecha y Hora de Salida</label>
+                            <label for="fechaIngresoDetalle">Fecha de Ingreso</label>
+                            <input type="text" class="form-control" id="fechaIngresoDetalle" readonly disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaSalidaDetalle">Fecha Salida Prevista</label>
                             <input type="text" class="form-control" id="fechaSalidaDetalle" readonly disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaDesalojoDetalle">Fecha Desalojo</label>
+                            <input type="text" class="form-control" id="fechaDesalojoDetalle" readonly disabled>
                         </div>
                     </div>
 

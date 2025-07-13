@@ -42,6 +42,7 @@ public class GestionReservation {
                 "    r.fecha_inicio,\n" +
                 "    r.fecha_fin,\n" +
                 "    r.fecha_ingreso,\n" +
+                "    r.fecha_desalojo,\n" +
                 "    r.cant_dias,\n" +
                 "    r.descuento,\n" +
                 "    r.cobro_extra,\n" +
@@ -84,6 +85,7 @@ public class GestionReservation {
                 reservation.setCheckInDate(rs.getTimestamp("fecha_inicio"));
                 reservation.setCheckOutDate(rs.getTimestamp("fecha_fin"));
                 reservation.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
+                reservation.setFecha_desalojo(rs.getTimestamp("fecha_desalojo"));
                 reservation.setCantDays(rs.getInt("cant_dias"));
                 reservation.setDsct(rs.getInt("descuento"));
                 reservation.setCobro_extra(rs.getDouble("cobro_extra"));

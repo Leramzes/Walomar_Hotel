@@ -17,6 +17,7 @@ public class TableReservationDTO {
     private Timestamp checkInDate;
     private Timestamp checkOutDate;
     private Timestamp fecha_ingreso;
+    private Timestamp fecha_desalojo;
     private int cantDays;
     private String reservationStatus;
     private int reservationStatusId;
@@ -304,6 +305,14 @@ public class TableReservationDTO {
                 .plusMinutes(minutos);
     }
 
+    public Timestamp getFecha_desalojo() {
+        return fecha_desalojo;
+    }
+
+    public void setFecha_desalojo(Timestamp fecha_desalojo) {
+        this.fecha_desalojo = fecha_desalojo;
+    }
+
     @Override
     public String toString() {
         return "TableReservationDTO{" +
@@ -320,6 +329,7 @@ public class TableReservationDTO {
                 ", checkInDate=" + checkInDate +
                 ", checkOutDate=" + checkOutDate +
                 ", fecha_ingreso=" + fecha_ingreso +
+                ", fecha_desalojo=" + fecha_desalojo +
                 ", cantDays=" + cantDays +
                 ", reservationStatus='" + reservationStatus + '\'' +
                 ", reservationStatusId=" + reservationStatusId +
