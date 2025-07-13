@@ -70,9 +70,8 @@ public class FilterReservationController extends HttpServlet {
                     if (fechaIngreso == null && fechaInicio != null) {
                         LocalDateTime inicio = fechaInicio.toLocalDateTime();
                         long minutosPasados = Duration.between(inicio, ahora).toMinutes();
-
+                        permitCancel = true;
                         if (minutosPasados > 20) {
-                            permitCancel = true;
                             contenidoTD = "<span style='color: red;'>Fuera del tiempo de tolerancia</span>";
                         } else {
                             contenidoTD = "Aún no ingresó";
@@ -110,7 +109,7 @@ public class FilterReservationController extends HttpServlet {
                 }
 
                 if (permitCancel) {
-                    out.println("<form action=\"recepController\" method=\"post\">");
+                    out.println("<form action=\"recepController\" method=\"post\" id=\"formCancelarReserva\">");
                     out.println("    <input type=\"hidden\" name=\"vista\" value=\"reserva\">");
                     out.println("    <input type=\"hidden\" name=\"idReserva\" value=\"" + reservation.getIdReservation() + "\">");
                     out.println("    <input type=\"hidden\" name=\"roomSelect\" value=\"" + reservation.getIdRoom() + "\">");
