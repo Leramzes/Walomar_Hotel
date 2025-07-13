@@ -178,7 +178,6 @@ function detalleReserva(id) {
     fetch("reservatioController?action=get&idreserva=" + id)
         .then(response => response.json())  // Convertimos la respuesta a JSON
         .then(data => {
-
             document.getElementById("nombreDetalle").value = data.clientName;
             document.getElementById("tipoDocumentoDetalle").value = data.documentType;
             document.getElementById("documentoDetalle").value = data.documentNumber;
@@ -192,7 +191,27 @@ function detalleReserva(id) {
             document.getElementById("cobroExtraDetalle").value = data.cobro_extra;
             document.getElementById("adelantoDetalle").value = data.adelanto;
             document.getElementById("totalPagarDetalle").value = data.pago_total;
-            document.getElementById("restanteDetalle").value = data.pago_total - data.adelanto;
+
+            const restante = data.pago_total - data.adelanto;
+
+            const inputRestante = document.getElementById("restanteDetalle");
+            const inputTotalPagar = document.getElementById("totalPagarDetalle");
+            const inputEstadoPago = document.getElementById("estadoPagoDetalle");
+
+            console.log(data.reservationStatus);
+            if (data.reservationStatus === "Finalizada") {
+                // Si está finalizada, ocultamos el campo restante y quitamos fondo verde
+                inputRestante.parentElement.style.display = "none";
+                inputTotalPagar.style.border = "1px solid #ced4da"; // Por si tiene estilos aplicados
+                inputEstadoPago.value =  "Pago completo";
+            } else {
+                // Si no está finalizada, mostramos campo restante y limpiamos estilos
+                inputRestante.parentElement.style.display = "block";
+                inputRestante.value = restante.toFixed(2);
+                inputTotalPagar.style.border = "2px solid green";
+                inputTotalPagar.style.borderRadius = "5px";
+                inputEstadoPago.value = "En proceso";
+            }
         })
         .catch(error => console.error("Error al obtener datos:", error));
 }

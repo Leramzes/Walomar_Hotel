@@ -345,6 +345,10 @@
                             <label for="restanteDetalle">Restante</label>
                             <input type="text" class="form-control" id="restanteDetalle" readonly disabled>
                         </div>
+                        <div class="mb-3">
+                            <label for="estadoPagoDetalle">Estado del Pago</label>
+                            <input type="text" class="form-control" id="estadoPagoDetalle" readonly disabled>
+                        </div>
                     </div>
                 </div>
             </div>
