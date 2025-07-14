@@ -353,7 +353,23 @@ public class GestionReservation {
 
         return generatedId;
     }
+    public static boolean updateReservationFechaDesalojo(int idReservation, Timestamp fechaDesalojo){
+        String sql = "UPDATE reservas SET fecha_desalojo = ? WHERE id = ?";
+        boolean success = false;
 
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+            ps.setTimestamp(1, fechaDesalojo);
+            ps.setInt(2, idReservation);
+
+            int rows = ps.executeUpdate();
+            success = rows > 0;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return success;
+    }
     public static boolean updateStatusReservation(int idReservation, int statusReservation) {
         String sql = "UPDATE reservas SET estado_id = ? WHERE id = ?";
         boolean success = false;
@@ -388,7 +404,6 @@ public class GestionReservation {
 
         return success;
     }
-
     private static boolean registerDetailRoom(Connection cnn, RoomDetails roomDetails, int idReservation, double payment) {
         String sql = "INSERT INTO detalle_habitacion (reserva_id, habitacion_id, pago_total) VALUES (?, ?, ?)";
         boolean success = false;
@@ -406,7 +421,6 @@ public class GestionReservation {
 
         return success;
     }
-
     private static boolean registerCheckout(Connection cnn, RoomDetails roomDetails, int idReservation, Checkout checkout) {
         String sql = "INSERT INTO checkout (reserva_id, fecha_checkout, tiempo_extra, total) VALUES (?, ?, ?, ?)";
         boolean success = false;
@@ -425,7 +439,6 @@ public class GestionReservation {
 
         return success;
     }
-
     public static List<TableReservationDTO> filterReservation(String client, String documento, String fecDesde, String fecHasta,
                                                               String estado, int page, int size) {
         List<TableReservationDTO> allReservations = getAllReservations(); // Obtiene todos los registros
@@ -478,7 +491,6 @@ public class GestionReservation {
         LocalDateTime localDateTime = LocalDateTime.parse(fechaStr, formatter);
         return Timestamp.valueOf(localDateTime);
     }
-
     public static boolean actualizarFechaSalidaReserva(int idReservaEditar, Timestamp nuevaFechaFin) {
         String obtenerDatosSql = """
         SELECT r.fecha_inicio, h.precio

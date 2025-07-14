@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
+import java.sql.Timestamp;
 
 @WebServlet(name = "registroSalida", urlPatterns = {"/registroSalida"})
 public class RegistrarSalida extends HttpServlet {
@@ -51,9 +52,12 @@ public class RegistrarSalida extends HttpServlet {
         boolean sepudo2 = GestionReservation.updateCheckoutReservation(idReserva,tiempoextra,inputPenalidad);
         System.out.println("se actualizo el checkout = "+sepudo2);
 
-        //Actualizo el estado de la reserva
+        //Actualizo el estado de la reserva y su fecha de salida
         boolean sepudo3 = GestionReservation.updateStatusReservation(idReserva, 5);
+        Timestamp fechaDesalojo = new Timestamp(System.currentTimeMillis());
+        boolean sepudodesalojo = GestionReservation.updateReservationFechaDesalojo(idReserva,fechaDesalojo);
         System.out.println("se actualizo la resrva = "+sepudo3);
+        System.out.println("se actualizo fecha de desalojo = "+sepudodesalojo);
 
         //*Genero mi comprobante*//*
         //Sumo totales de productos y servicios asociados a la resevra

@@ -1,6 +1,7 @@
 <%@ page import="development.team.hoteltransylvania.Model.Client" %>
 <%@ page import="java.util.List" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionClient" %>
+<%@ page import="development.team.hoteltransylvania.Model.User" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -14,6 +15,14 @@
 </head>
 
 <%
+    HttpSession sessionObj = request.getSession(false);
+    if (sessionObj == null || sessionObj.getAttribute("usuario") == null) {
+        response.sendRedirect("index.jsp"); //Mensaje: Inicia sesión primero
+        return;
+    }
+    User usuario = (User) sessionObj.getAttribute("usuario");
+    int rolUser = Integer.parseInt(usuario.getEmployee().getPosition());
+
     int pagina = 1;
     int pageSize = 8;
 
@@ -53,7 +62,13 @@
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCliente">
                 <i class="fas fa-plus"></i> Agregar nuevo
             </button>
-            <div class="d-flex gap-2">
+            <%
+                String mod = "d-flex gap-2";
+                if (rolUser == 2) {
+                    mod = "d-none";
+                }
+            %>
+            <div class="<%=mod%>">
                 <button class="btn btn-success" onclick="exportarData('clientes')"><i
                         class="fa-solid fa-file-export"></i> Exportar Clientes
                 </button>
