@@ -16,7 +16,7 @@ public class GestionInformationHotel {
     private static final Logger LOGGER = LoggerConfifg.getLogger(GestionRoom.class);
 
     public static InformationHotel getInformationHotel() {
-        String sql = "SELECT id, nombre, telefono, email, ubicacion, ruta_img FROM informacion_hotel LIMIT 1";
+        String sql = "SELECT id, nombre, telefono, email, ubicacion, ruta_img, ruc FROM informacion_hotel LIMIT 1";
         InformationHotel hotel = null;
 
         try (Connection cnn = dataSource.getConnection();
@@ -30,7 +30,8 @@ public class GestionInformationHotel {
                 hotel.setPhone(rs.getString("telefono"));
                 hotel.setEmail(rs.getString("email"));
                 hotel.setAddress(rs.getString("ubicacion"));
-                hotel.setImg(rs.getString("img"));
+                hotel.setImg(rs.getString("ruta_img"));
+                hotel.setRuc(rs.getString("ruc"));
             } else {
                 LOGGER.warning("No se encontró ningún registro en la tabla tipo_habitacion.");
             }

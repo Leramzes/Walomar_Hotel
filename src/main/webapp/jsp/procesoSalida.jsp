@@ -274,11 +274,8 @@
             </div>
             <input type="hidden" value="<%=reservation.getIdReservation()%>" name="idReserva" id="idReserva">
             <input type="hidden" value="<%=reservation.getIdClient()%>" name="idClient" id="idClient">
-            <button class="btn btn-success w-auto w-sm-100 mt-2 mt-md-0" onclick="culminarYGenerarBoleta()"> Culminar y Limpiar Habitación
+            <button class="btn btn-success w-auto w-sm-100 mt-2 mt-md-0" onclick="culminarYGenerarComprobante()"> Culminar y Limpiar Habitación
             </button>
-
-            <%--<button class="btn btn-info" onclick="generarComprobantePDF('BOLETA')">Generar Boleta</button>
-            <button onclick="generarFacturaPDF()">Generar Factura</button>--%>
         </div>
     </div>
 </div>

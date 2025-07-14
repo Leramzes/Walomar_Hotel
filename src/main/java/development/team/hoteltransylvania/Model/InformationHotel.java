@@ -7,6 +7,7 @@ public class InformationHotel {
     private String phone;
     private String email;
     private String img;
+    private String ruc;
 
     public InformationHotel() {
     }
@@ -65,6 +66,14 @@ public class InformationHotel {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
     }
 
     @Override
