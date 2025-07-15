@@ -210,6 +210,7 @@ function detalleReserva(id) {
                 inputRestante.parentElement.style.display = "none";
                 inputTotalPagar.style.border = "1px solid #ced4da";
                 inputEstadoPago.value = "Pago completo";
+                inputEstadoPago.parentElement.style.display = "block";
             } else if (data.reservationStatus === "Ocupada") {
                 fechaIngreso.parentElement.style.display = "block";
                 fechaIngreso.value = data.fecha_ingreso || "";
@@ -220,7 +221,8 @@ function detalleReserva(id) {
                 inputTotalPagar.style.border = "2px solid green";
                 inputTotalPagar.style.borderRadius = "5px";
                 inputEstadoPago.value = "En proceso";
-            } else {
+                inputEstadoPago.parentElement.style.display = "block";
+            } else if(data.reservationStatus === "Pendiente") {
                 // Pendiente
                 fechaIngreso.parentElement.style.display = "none";
                 fechaDesalojo.parentElement.style.display = "none";
@@ -230,6 +232,13 @@ function detalleReserva(id) {
                 inputTotalPagar.style.border = "2px solid green";
                 inputTotalPagar.style.borderRadius = "5px";
                 inputEstadoPago.value = "En proceso";
+                inputEstadoPago.parentElement.style.display = "block";
+            } else {
+                fechaIngreso.parentElement.style.display = "none";
+                fechaDesalojo.parentElement.style.display = "none";
+                inputEstadoPago.parentElement.style.display = "none";
+                inputTotalPagar.style.border = "2px solid";
+                inputRestante.parentElement.style.display = "none";
             }
         })
         .catch(error => console.error("Error al obtener datos:", error));
