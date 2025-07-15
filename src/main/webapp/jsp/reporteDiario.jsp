@@ -258,7 +258,7 @@
                 <tr>
                     <td><%=count1%></td>
                     <td>Recepción</td>
-                    <td><%=reportesh.getNumeroHabitacion()%> - 24H</td>
+                    <td><%=reportesh.getNumeroHabitacion()%></td>
                     <td><%=reportesh.getNombreArticulo()%></td>
                     <td>--</td>
                     <td>--</td>
@@ -290,7 +290,7 @@
                 <div>
                     <h5>S/.<%=totalVentaDirecta%>
                     </h5>
-                    <h5>TOTAL RECEPCIÓN</h5>
+                    <h5>TOTAL VENTA DIRECTA</h5>
                 </div>
                 <div>
                     <h5 id="totalVentaEmpleadoVD">S/.<%=totalVentaDirecta%></h5>

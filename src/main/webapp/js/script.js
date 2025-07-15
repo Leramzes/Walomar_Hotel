@@ -1782,7 +1782,7 @@ async function generarComprobantePDF(idReserva, idClient) {
                     p.nombreProducto,
                     `S/. ${p.precioUnitProducto}`,
                     p.cantidad,
-                    p.estadoProducto,
+                    p.estadoProducto === "Pagado" ? "Pagado" : "Pagado al salir",
                     `S/. ${p.total}`
                 ])
                 : [[{
@@ -1803,7 +1803,7 @@ async function generarComprobantePDF(idReserva, idClient) {
             body: servicios.length > 0
                 ? servicios.map(s => [
                     s.nombreServicio,
-                    s.estadoServicio,
+                    s.estadoServicio === "Pagado" ? "Pagado" : "Pagado al salir",
                     `S/. ${s.total}`
                 ])
                 : [[{
@@ -1827,8 +1827,12 @@ async function generarComprobantePDF(idReserva, idClient) {
         doc.setTextColor(0);
 
         // Sumar total productos y servicios (con seguridad)
-        const totalProductos = productos.reduce((acc, p) => acc + (parseFloat(p.total) || 0), 0);
-        const totalServicios = servicios.reduce((acc, s) => acc + (parseFloat(s.total) || 0), 0);
+        const totalProductos = productos
+            .filter(p => p.estadoProducto === "Pagado al salir")
+            .reduce((acc, p) => acc + (parseFloat(p.total) || 0), 0);
+        const totalServicios = servicios
+            .filter(s => s.estadoServicio === "Pagado al salir")
+            .reduce((acc, s) => acc + (parseFloat(s.total) || 0), 0);
         const totalHabitacion = reserva.pago_total || 0;
         const totalExtra = reserva.cobro_extra || 0;
         const totalAdelanto = reserva.adelanto || 0;
@@ -1988,7 +1992,7 @@ async function generarFacturaPDF(idReserva, idClient) {
                         p.nombreProducto,
                         `S/. ${p.precioUnitProducto}`,
                         p.cantidad,
-                        p.estadoProducto,
+                        p.estadoProducto === "Pagado" ? "Pagado" : "Pagado al salir",
                         `S/. ${p.total}`
                     ])
                     : [[{
@@ -2013,7 +2017,7 @@ async function generarFacturaPDF(idReserva, idClient) {
                 body: servicios.length > 0
                     ? servicios.map(s => [
                         s.nombreServicio,
-                        s.estadoServicio,
+                        s.estadoServicio === "Pagado" ? "Pagado" : "Pagado al salir",
                         `S/. ${s.total}`
                     ])
                     : [[{
@@ -2042,8 +2046,13 @@ async function generarFacturaPDF(idReserva, idClient) {
             doc.setTextColor(0);
 
             // Sumar total productos y servicios (con seguridad)
-            const totalProductos = productos.reduce((acc, p) => acc + (parseFloat(p.total) || 0), 0);
-            const totalServicios = servicios.reduce((acc, s) => acc + (parseFloat(s.total) || 0), 0);
+            const totalProductos = productos
+                .filter(p => p.estadoProducto === "Pagado al salir")
+                .reduce((acc, p) => acc + (parseFloat(p.total) || 0), 0);
+            // Solo sumar servicios con estado "pagado al salir"
+            const totalServicios = servicios
+                .filter(s => s.estadoServicio === "Pagado al salir")
+                .reduce((acc, s) => acc + (parseFloat(s.total) || 0), 0);
             const totalHabitacion = reserva.pago_total || 0;
             const totalExtra = reserva.cobro_extra || 0;
             const totalAdelanto = reserva.adelanto || 0;

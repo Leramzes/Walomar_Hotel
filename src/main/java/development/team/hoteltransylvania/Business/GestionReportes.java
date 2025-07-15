@@ -96,18 +96,38 @@ public class GestionReportes {
     public static List<AllInfoReporteVenta> getAllReporteVentaProductoHabitacion(){
         List<AllInfoReporteVenta> reporteVentas = new ArrayList<>();
 
-        String sql = "select cp.id as id_consumo,h.id id_habitacion, h.numero numero_habitacion, p.id as id_producto, p.nombre as nombre_articulo,cp.cantidad,\n" +
-                "       cp.precio_unitario,cp.total,c.fecha_emision,\n" +
-                "       e.nombre as nombre_empleado,e.id as id_empleado\n" +
-                "from consumo_productos cp\n" +
-                "inner join productos p on p.id = cp.producto_id\n" +
-                "inner join reservas r on r.id = cp.reserva_id\n" +
-                "inner join empleados e on e.id=r.empleado_id\n" +
-                "inner join comprobantes c on c.reserva_id=r.id\n" +
-                "inner join tipo_comprobante t on t.id=c.tipo_comprobante_id\n" +
-                "inner join metodo_pago m on m.id=c.metodo_pago_id\n" +
-                "inner join detalle_habitacion dh on dh.reserva_id=r.id\n" +
-                "inner join habitaciones h on h.id=dh.habitacion_id";
+        String sql = "SELECT\n" +
+                "    cp.id AS id_consumo,\n" +
+                "    h.id AS id_habitacion,\n" +
+                "    h.numero AS numero_habitacion,\n" +
+                "    p.id AS id_producto,\n" +
+                "    p.nombre AS nombre_articulo,\n" +
+                "    cp.cantidad,\n" +
+                "    cp.precio_unitario,\n" +
+                "    cp.total,\n" +
+                "    c.fecha_emision,\n" +
+                "    e.nombre AS nombre_empleado,\n" +
+                "    e.id AS id_empleado\n" +
+                "FROM consumo_productos cp\n" +
+                "         INNER JOIN productos p ON p.id = cp.producto_id\n" +
+                "         INNER JOIN reservas r ON r.id = cp.reserva_id\n" +
+                "         INNER JOIN empleados e ON e.id = r.empleado_id\n" +
+                "\n" +
+                "-- SUBCONSULTA para traer solo el comprobante más reciente por reserva\n" +
+                "         INNER JOIN (\n" +
+                "    SELECT c1.*\n" +
+                "    FROM comprobantes c1\n" +
+                "             INNER JOIN (\n" +
+                "        SELECT reserva_id, MAX(fecha_emision) AS fecha_max\n" +
+                "        FROM comprobantes\n" +
+                "        GROUP BY reserva_id\n" +
+                "    ) c2 ON c1.reserva_id = c2.reserva_id AND c1.fecha_emision = c2.fecha_max\n" +
+                ") c ON c.reserva_id = r.id\n" +
+                "\n" +
+                "         INNER JOIN tipo_comprobante t ON t.id = c.tipo_comprobante_id\n" +
+                "         INNER JOIN metodo_pago m ON m.id = c.metodo_pago_id\n" +
+                "         INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
+                "         INNER JOIN habitaciones h ON h.id = dh.habitacion_id;";
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql)) {
@@ -140,18 +160,36 @@ public class GestionReportes {
     public static List<AllInfoReporteVenta> getAllReporteVentaServicioHabitacion(){
         List<AllInfoReporteVenta> reporteVentas = new ArrayList<>();
 
-        String sql = "select cs.id as id_consumo,h.id id_habitacion, h.numero numero_habitacion, s.id as id_servicio, s.nombre as nombre_articulo,\n" +
-                "       cs.total,c.fecha_emision,\n" +
-                "       e.nombre as nombre_empleado,e.id as id_empleado\n" +
-                "from consumo_servicios cs\n" +
-                "inner join servicios s on s.id = cs.servicio_id\n" +
-                "inner join reservas r on r.id = cs.reserva_id\n" +
-                "inner join empleados e on e.id=r.empleado_id\n" +
-                "inner join comprobantes c on c.reserva_id=r.id\n" +
-                "inner join tipo_comprobante t on t.id=c.tipo_comprobante_id\n" +
-                "inner join metodo_pago m on m.id=c.metodo_pago_id\n" +
-                "inner join detalle_habitacion dh on dh.reserva_id=r.id\n" +
-                "inner join habitaciones h on h.id=dh.habitacion_id";
+        String sql = "SELECT \n" +
+                "    cs.id AS id_consumo,\n" +
+                "    h.id AS id_habitacion,\n" +
+                "    h.numero AS numero_habitacion,\n" +
+                "    s.id AS id_servicio,\n" +
+                "    s.nombre AS nombre_articulo,\n" +
+                "    cs.total,\n" +
+                "    c.fecha_emision,\n" +
+                "    e.nombre AS nombre_empleado,\n" +
+                "    e.id AS id_empleado\n" +
+                "FROM consumo_servicios cs\n" +
+                "INNER JOIN servicios s ON s.id = cs.servicio_id\n" +
+                "INNER JOIN reservas r ON r.id = cs.reserva_id\n" +
+                "INNER JOIN empleados e ON e.id = r.empleado_id\n" +
+                "\n" +
+                "-- Subconsulta para seleccionar solo el comprobante más reciente por reserva\n" +
+                "INNER JOIN (\n" +
+                "    SELECT c1.*\n" +
+                "    FROM comprobantes c1\n" +
+                "    INNER JOIN (\n" +
+                "        SELECT reserva_id, MAX(fecha_emision) AS fecha_max\n" +
+                "        FROM comprobantes\n" +
+                "        GROUP BY reserva_id\n" +
+                "    ) c2 ON c1.reserva_id = c2.reserva_id AND c1.fecha_emision = c2.fecha_max\n" +
+                ") c ON c.reserva_id = r.id\n" +
+                "\n" +
+                "INNER JOIN tipo_comprobante t ON t.id = c.tipo_comprobante_id\n" +
+                "INNER JOIN metodo_pago m ON m.id = c.metodo_pago_id\n" +
+                "INNER JOIN detalle_habitacion dh ON dh.reserva_id = r.id\n" +
+                "INNER JOIN habitaciones h ON h.id = dh.habitacion_id;";
 
         try (Connection cnn = dataSource.getConnection();
              PreparedStatement ps = cnn.prepareStatement(sql)) {
