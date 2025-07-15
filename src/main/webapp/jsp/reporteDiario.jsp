@@ -4,6 +4,8 @@
 <%@ page import="development.team.hoteltransylvania.DTO.usersEmployeeDTO" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionVentas" %>
 <%@ page import="development.team.hoteltransylvania.DTO.AllInfoVentasDirecta" %>
+<%@ page import="development.team.hoteltransylvania.DTO.AllInfoReporteVenta" %>
+<%@ page import="development.team.hoteltransylvania.Business.GestionReportes" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -15,9 +17,18 @@
 </head>
 
     <%
+    //2da pestaña
+    List<AllInfoVentasDirecta> reporteVentasDirecta = GestionVentas.getAllVentasDirecta();
+    List<AllInfoReporteVenta> reporteVentaProducHabiatcion = GestionReportes.getAllReporteVentaProductoHabitacion();
+    double totalProduct = reporteVentaProducHabiatcion.stream().mapToDouble(AllInfoReporteVenta::getPrecioTotalArticulo).sum();
+    List<AllInfoReporteVenta> reporteVentaServcHabiatcion = GestionReportes.getAllReporteVentaServicioHabitacion();
+    double totalService = reporteVentaServcHabiatcion.stream().mapToDouble(AllInfoReporteVenta::getPrecioTotalArticulo).sum();
+    double totalPSrecepcion = totalProduct + totalService;
+
+    //3ra pestaña
+
     List<usersEmployeeDTO> employees = GestionEmployee.getAllEmployees();
     double totalVentaDirecta = GestionVentas.getAmuntTotalVentaDirecta();
-    double totalVentaDirectaByEmpleado = GestionVentas.getMontoTotalVentaPorEmpleado(33);
     List<AllInfoVentasDirecta> allInfoVentasDirectas = GestionVentas.getAllVentasDirecta();
 %>
 <body>
@@ -40,12 +51,12 @@
     <div class="col-md-2">
         <label for="fecha" class="form-label"><strong>Fecha</strong></label>
         <input type="date" id="fecha" class="form-control" value="<%= hoy %>"
-               onchange="SearchReporte('#fecha', '#responsable', '#tablaVentaDirecta', '#registros', 'filterReportes', 1, 10)">
+               onchange="SearchReporte('#fecha', '#responsable', '#registros', 'filterReportes', 1, 10)">
     </div>
     <div class="col-md-2">
         <label for="responsable" class="form-label"><strong>Responsable</strong></label>
         <select id="responsable" class="form-select"
-                onchange="SearchReporte('#fecha', '#responsable','#tablaVentaDirecta','#registros','filterReportes', 1, 10)">
+                onchange="SearchReporte('#fecha', '#responsable', '#registros','filterReportes', 1, 10)">
             <option value="todos">Todos</option>
             <%for (usersEmployeeDTO employeeDTO : employees) {%>
             <option value="<%=employeeDTO.getId_employee()%>"><%=employeeDTO.getName_employee()%>
@@ -58,17 +69,24 @@
 <!-- Pestañas -->
 <ul class="nav nav-tabs mt-4">
     <li class="nav-item">
-        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alquiler" type="button">Tabla alquiler
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alquiler"
+                type="button"
+                onclick="SearchReporte('#fecha', '#responsable', '#registros', 'filterReportes', 1, 10)">
+            Tabla alquiler
         </button>
     </li>
     <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta" type="button">Servicio a la
-            habitación y venta
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta"
+                type="button"
+                onclick="SearchReporte('#fecha', '#responsable', '#registros', 'filterReportes', 1, 10)">
+            Servicio a la habitación y venta
         </button>
     </li>
     <li class="nav-item">
-        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta-directa" type="button">Ventas
-            directa
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#habitacion-venta-directa"
+                type="button"
+                onclick="SearchReporte('#fecha', '#responsable', '#registros', 'filterReportes', 1, 10)">
+            Ventas directa
         </button>
     </li>
     <li class="nav-item ms-auto">
@@ -109,7 +127,7 @@
             </div>
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered align-middle">
+            <table id="reporteAlquiler" class="table table-bordered align-middle">
                 <thead class="table-warning">
                 <tr>
                     <th>N°</th>
@@ -126,7 +144,7 @@
                     <th>Detalles</th>
                 </tr>
                 </thead>
-                <tbody id="tablaReporteDiario">
+                <tbody>
                 <tr>
                     <td>1</td>
                     <td>12345678</td>
@@ -159,27 +177,29 @@
             </nav>
         </div>
     </div>
+
+
     <div class="tab-pane fade" id="habitacion-venta">
         <!-- Resumen de recepción -->
-        <div class="d-flex justify-content-between text-center px-5 mt-4">
+        <div class="d-flex justify-content-between text-center px-5 mt-3">
             <div>
-                <h5>S/.500</h5>
-                <h5>TOTAL RECEPCIÓN</h5>
+                <h5>S/.<%=totalVentaDirecta%></h5>
+                <h5>TOTAL VENTA DIRECTA</h5>
             </div>
             <div>
-                <h5>S/.500</h5>
-                <h5>TOTAL RECEPCIÓN</h5>
+                <h5>S/.<%=totalPSrecepcion%></h5>
+                <h5>TOTAL RECEPCION</h5>
             </div>
             <div>
-                <h5>S/.500</h5>
-                <h5>TOTAL RECEPCIÓN</h5>
+                <h5>S/.<%=totalVentaDirecta + totalPSrecepcion%></h5>
+                <h5>TOTAL</h5>
             </div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
                 <input id="registros" type="number" min="1" max="999" value="1"
-                       class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
+                       class="form-control d-inline-block text-center ms-1 me-1" style="width: 5rem;">
                 registros
             </label>
 
@@ -189,42 +209,64 @@
             </div>
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered align-middle">
+            <table id="tablaServiciosHab" class="table table-bordered align-middle">
                 <thead class="table-warning">
                 <tr>
                     <th>N°</th>
-                    <th>DNI</th>
                     <th>Tipo</th>
                     <th>Habitación</th>
-                    <th>Descuento</th>
-                    <th>Extra</th>
-                    <th>Dinero Adelantado</th>
-                    <th>Servicio</th>
-                    <th>Penalidad</th>
+                    <th>Articulo</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
                     <th>Total</th>
-                    <th>Tiempo Rebasado</th>
-                    <th>Detalles</th>
+                    <th>Fecha - Hora</th>
+                    <th>Responsable</th>
                 </tr>
                 </thead>
-                <tbody id="tablaReporteDiario">
+                <tbody>
+                <%
+                    int count1=1;
+                    for(AllInfoVentasDirecta reportevd : reporteVentasDirecta){%>
                 <tr>
-                    <td>1</td>
-                    <td>12345678</td>
-                    <td>Recepción</td>
-                    <td>696 - 24hr</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td class="text-danger">Si</td>
-                    <td class="d-flex justify-content-center gap-1">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
-                            👁️
-                        </button>
-                    </td>
+                    <td><%=count1%></td>
+                    <td>Venta Directa</td>
+                    <td>--</td>
+                    <td><%=reportevd.getProducto()%></td>
+                    <td><%=reportevd.getCantidad()%></td>
+                    <td><%=reportevd.getPrecio_unitario()%></td>
+                    <td><%=reportevd.getPrecio_total()%></td>
+                    <td><%=reportevd.getFecha_hora()%></td>
+                    <td><%=reportevd.getEmpleado()%></td>
                 </tr>
+                <%count1++;}%>
+                <%
+                    for(AllInfoReporteVenta reporteph : reporteVentaProducHabiatcion){%>
+                <tr>
+                    <td><%=count1%></td>
+                    <td>Recepción</td>
+                    <td><%=reporteph.getNumeroHabitacion()%></td>
+                    <td><%=reporteph.getNombreArticulo()%></td>
+                    <td><%=reporteph.getCantArticulo()%></td>
+                    <td><%=reporteph.getPrecioUnitArticulo()%></td>
+                    <td><%=reporteph.getPrecioTotalArticulo()%></td>
+                    <td><%=reporteph.getFecha_hora_compra()%></td>
+                    <td><%=reporteph.getNombreEmpleado()%></td>
+                </tr>
+                <%count1++;}%>
+                <%
+                    for(AllInfoReporteVenta reportesh : reporteVentaServcHabiatcion){%>
+                <tr>
+                    <td><%=count1%></td>
+                    <td>Recepción</td>
+                    <td><%=reportesh.getNumeroHabitacion()%> - 24H</td>
+                    <td><%=reportesh.getNombreArticulo()%></td>
+                    <td>--</td>
+                    <td>--</td>
+                    <td><%=reportesh.getPrecioTotalArticulo()%></td>
+                    <td><%=reportesh.getFecha_hora_compra()%></td>
+                    <td><%=reportesh.getNombreEmpleado()%></td>
+                </tr>
+                <%count1++;}%>
                 </tbody>
             </table>
         </div>
@@ -239,6 +281,8 @@
             </nav>
         </div>
     </div>
+
+
     <div class="tab-pane fade" id="habitacion-venta-directa">
         <!-- Resumen de recepción -->
         <div class="container mt-4">
@@ -249,7 +293,7 @@
                     <h5>TOTAL RECEPCIÓN</h5>
                 </div>
                 <div>
-                    <h5>S/.<%=totalVentaDirecta%></h5>
+                    <h5 id="totalVentaEmpleadoVD">S/.<%=totalVentaDirecta%></h5>
                     <h5>TOTAL POR EMPLEADO</h5>
                 </div>
             </div>
@@ -268,7 +312,7 @@
             </div>
         </div>
         <div class="table-responsive mt-4">
-            <table id="tablaVentaDirecta" class="table table-bordered align-middle">
+            <table id="tablaReportesVD" class="table table-bordered align-middle">
                 <thead class="table-warning">
                 <tr>
                     <th>N°</th>
@@ -280,7 +324,7 @@
                     <th>Responsable</th>
                 </tr>
                 </thead>
-                <tbody id="tablaReporteDiario">
+                <tbody>
                 <%
                     int count = 1;
                     for (AllInfoVentasDirecta directa : allInfoVentasDirectas) {

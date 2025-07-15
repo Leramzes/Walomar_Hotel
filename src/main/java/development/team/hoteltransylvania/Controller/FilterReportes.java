@@ -1,7 +1,9 @@
 package development.team.hoteltransylvania.Controller;
 
 import development.team.hoteltransylvania.Business.GestionEmployee;
+import development.team.hoteltransylvania.Business.GestionReportes;
 import development.team.hoteltransylvania.Business.GestionVentas;
+import development.team.hoteltransylvania.DTO.AllInfoReporteVenta;
 import development.team.hoteltransylvania.DTO.AllInfoVentasDirecta;
 import development.team.hoteltransylvania.DTO.usersEmployeeDTO;
 import jakarta.servlet.ServletException;
@@ -23,6 +25,7 @@ public class FilterReportes extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
             String fechaParam = req.getParameter("fecha");
             String empleadoIdParam = req.getParameter("empleadoId");
+            int pestania = Integer.parseInt(req.getParameter("pst"));
 
             // Convertir fecha
             Date fechaFiltrada = null;
@@ -41,25 +44,75 @@ public class FilterReportes extends HttpServlet {
             int page = req.getParameter("page") != null ? Integer.parseInt(req.getParameter("page")) : 1;
             int size = req.getParameter("size") != null ? Integer.parseInt(req.getParameter("size")) : 10;
 
-            // Obtener lista filtrada
-            List<AllInfoVentasDirecta> ventasFiltradas = GestionVentas.filterVentaDirecta(idEmpleado, fechaFiltrada, page, size);
-
-            int totalVentas = GestionVentas.countFilteredVentaDirecta(idEmpleado, fechaFiltrada);
-
+            int totalVentas = 0;
             int count = 1;
-            for (AllInfoVentasDirecta ventaFiltrada : ventasFiltradas) {
-                out.println("<tr>");
-                out.println("<td>" + count + "</td>");
-                out.println("<td>" + ventaFiltrada.getProducto() + "</td>");
-                out.println("<td>" + ventaFiltrada.getCantidad() + "</td>");
-                out.println("<td>" + ventaFiltrada.getPrecio_unitario() + "</td>");
-                out.println("<td>" + ventaFiltrada.getPrecio_total() + "</td>");
-                out.println("<td>" + ventaFiltrada.getFecha_hora() + "</td>");
-                out.println("<td>" + ventaFiltrada.getEmpleado() + "</td>");
-                out.println("</tr>");
-                count++;
+
+            switch (pestania) {
+                case 1:
+
+                    break;
+
+
+                case 2:
+                    // Obtener lista filtrada
+                    List<AllInfoReporteVenta> ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, fechaFiltrada, page, size);
+
+                    totalVentas = ventasHabFiltradas.size();
+                    double totalPorEmpleado = 0.0;
+
+                    count = 1;
+                    for (AllInfoReporteVenta venta : ventasHabFiltradas) {
+                        out.println("<tr>");
+                        out.println("<td>" + count + "</td>");
+                        out.println("<td>" + venta.getTipoVenta() + "</td>");
+                        out.println("<td>" + venta.getNumeroHabitacion() + "</td>");
+                        out.println("<td>" + venta.getNombreArticulo() + "</td>");
+                        out.println("<td>" + (venta.getCantArticulo() > 0 ? venta.getCantArticulo() : "-") + "</td>");
+                        out.println("<td>" + (venta.getPrecioUnitArticulo() > 0 ? venta.getPrecioUnitArticulo() : "-") + "</td>");
+                        out.println("<td>" + venta.getPrecioTotalArticulo() + "</td>");
+                        out.println("<td>" + venta.getFecha_hora_compra() + "</td>");
+                        out.println("<td>" + venta.getNombreEmpleado() + "</td>");
+                        out.println("</tr>");
+                        count++;
+                    }
+                    out.println("<!--COUNT:" + totalVentas + "-->");
+                    out.println("<!--TOTAL_EMPLEADO:" + totalPorEmpleado + "-->");
+
+                    break;
+
+
+                case 3:
+                    // Obtener lista filtrada
+                    List<AllInfoVentasDirecta> ventasFiltradas = GestionVentas.filterVentaDirecta(idEmpleado, fechaFiltrada, page, size);
+
+                    totalVentas = ventasFiltradas.size();
+                    totalPorEmpleado = 0.0;
+                    if (fechaFiltrada != null) {
+                        if (idEmpleado == -1) {
+                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorFecha(fechaFiltrada); // 🔁 todos los empleados
+                        } else {
+                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorEmpleadoYFecha(idEmpleado, fechaFiltrada); // 👤 específico
+                        }
+                    }
+                    count = 1;
+                    for (AllInfoVentasDirecta ventaFiltrada : ventasFiltradas) {
+                        out.println("<tr>");
+                        out.println("<td>" + count + "</td>");
+                        out.println("<td>" + ventaFiltrada.getProducto() + "</td>");
+                        out.println("<td>" + ventaFiltrada.getCantidad() + "</td>");
+                        out.println("<td>" + ventaFiltrada.getPrecio_unitario() + "</td>");
+                        out.println("<td>" + ventaFiltrada.getPrecio_total() + "</td>");
+                        out.println("<td>" + ventaFiltrada.getFecha_hora() + "</td>");
+                        out.println("<td>" + ventaFiltrada.getEmpleado() + "</td>");
+                        out.println("</tr>");
+                        count++;
+                    }
+                    out.println("<!--COUNT:" + totalVentas + "-->");
+                    out.println("<!--TOTAL_EMPLEADO:" + totalPorEmpleado + "-->");
+                    break;
             }
-            out.println("<!--COUNT:" + totalVentas + "-->");
+
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

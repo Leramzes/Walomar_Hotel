@@ -24,147 +24,8 @@ import java.util.stream.Collectors;
 
 public class GestionVentas {
     private static final DataSource dataSource = DataBaseUtil.getDataSource();
-    private static final Logger LOGGER = LoggerConfifg.getLogger(GestionClient.class);
+    private static final Logger LOGGER = LoggerConfifg.getLogger(GestionVentas.class);
 
-    /*public static boolean registerVentaDirecta(int reservaid, int roomid, ConsumeProduct productConsumer) {
-        String selectStockSql = "SELECT cantidad FROM productos WHERE id = ?";
-        String insertSql = "INSERT INTO venta_directa (id_comprobante, producto_id, empleado_id, cantidad, precio_unit, total) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-        String updateStockSql = "UPDATE productos SET cantidad = cantidad - ? WHERE id = ?";
-
-        boolean result = false;
-
-        try (Connection cnn = dataSource.getConnection()) {
-            cnn.setAutoCommit(false); // transacción manual
-
-            // 1. Verificar stock disponible
-            try (PreparedStatement psSelect = cnn.prepareStatement(selectStockSql)) {
-                psSelect.setInt(1, productConsumer.getProduct().getId());
-                ResultSet rs = psSelect.executeQuery();
-
-                if (rs.next()) {
-                    int stockDisponible = rs.getInt("cantidad");
-
-                    if (productConsumer.getQuantity() > stockDisponible) {
-                        System.out.println("Stock insuficiente para el producto ID: " + productConsumer.getProduct().getId());
-                        return false;
-                    }
-
-                    // 2. Insertar consumo
-                    try (PreparedStatement psInsert = cnn.prepareStatement(insertSql)) {
-                        psInsert.setInt(1, reservaid);
-                        psInsert.setInt(2, roomid);
-                        psInsert.setInt(3, productConsumer.getProduct().getId());
-                        psInsert.setInt(4, productConsumer.getQuantity());
-                        psInsert.setDouble(5, productConsumer.getPriceUnit());
-                        psInsert.setDouble(6, productConsumer.getPriceTotal());
-
-                        int rowsAffected = psInsert.executeUpdate();
-                        if (rowsAffected > 0) {
-                            // 3. Actualizar stock
-                            try (PreparedStatement psUpdate = cnn.prepareStatement(updateStockSql)) {
-                                psUpdate.setInt(1, productConsumer.getQuantity());
-                                psUpdate.setInt(2, productConsumer.getProduct().getId());
-                                psUpdate.executeUpdate();
-                            }
-
-                            cnn.commit(); // todo correcto
-                            LOGGER.info("Product Consumer " + productConsumer.getProduct().getId() + " registered successfully");
-                            result = true;
-                        }
-                    }
-                } else {
-                    System.out.println("Producto no encontrado.");
-                }
-            }
-
-        } catch (SQLException e) {
-            LOGGER.warning("Error en la venta directa: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return result;
-    }*/
-    /*public static boolean registerVentaDirecta(int reservaid, int empleadoId, ConsumeProduct productConsumer, Voucher voucherConsumer) {
-        String selectStockSql = "SELECT cantidad FROM productos WHERE id = ?";
-        String insertComprobanteSql = "INSERT INTO comprobantes (reserva_id, tipo_comprobante_id, metodo_pago_id, total, subtotal_productos, " +
-                "subtotal_servicios, subtotal_penalidad, fecha_emision) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
-        String insertVentaSql = "INSERT INTO venta_directa (id_comprobante, producto_id, empleado_id, cantidad, precio_unit, total) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-        String updateStockSql = "UPDATE productos SET cantidad = cantidad - ? WHERE id = ?";
-
-        boolean result = false;
-
-        try (Connection cnn = dataSource.getConnection()) {
-            cnn.setAutoCommit(false);
-
-            // Verificar stock
-            try (PreparedStatement psSelect = cnn.prepareStatement(selectStockSql)) {
-                psSelect.setInt(1, productConsumer.getProduct().getId());
-                ResultSet rs = psSelect.executeQuery();
-
-                if (!rs.next()) {
-                    System.out.println("Producto no encontrado.");
-                    return false;
-                }
-
-                int stockDisponible = rs.getInt("cantidad");
-                if (productConsumer.getQuantity() > stockDisponible) {
-                    System.out.println("Stock insuficiente para el producto ID: " + productConsumer.getProduct().getId());
-                    return false;
-                }
-            }
-
-            // Insertar comprobante y obtener ID generado
-            int comprobanteId = -1;
-            try (PreparedStatement psComprobante = cnn.prepareStatement(insertComprobanteSql)) {
-                psComprobante.setInt(1, reservaid);
-                psComprobante.setInt(2, voucherConsumer.getTypeVoucher().getId());
-                psComprobante.setInt(3, voucherConsumer.getPaymentMethod().getId());
-                psComprobante.setDouble(4, voucherConsumer.getTotalAmount());
-                psComprobante.setDouble(5, voucherConsumer.getSubtotalProducts());
-                psComprobante.setDouble(6, voucherConsumer.getSubtotalServices());
-                psComprobante.setDouble(7, voucherConsumer.getSubtotalPenalidad());
-                psComprobante.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
-
-                ResultSet rs = psComprobante.executeQuery();
-                if (rs.next()) {
-                    comprobanteId = rs.getInt(1);
-                } else {
-                    throw new SQLException("No se pudo obtener el ID del comprobante.");
-                }
-            }
-
-            // Insertar venta directa
-            try (PreparedStatement psInsertVenta = cnn.prepareStatement(insertVentaSql)) {
-                psInsertVenta.setInt(1, comprobanteId);
-                psInsertVenta.setInt(2, productConsumer.getProduct().getId());
-                psInsertVenta.setInt(3, empleadoId);
-                psInsertVenta.setInt(4, productConsumer.getQuantity());
-                psInsertVenta.setDouble(5, productConsumer.getPriceUnit());
-                psInsertVenta.setDouble(6, productConsumer.getPriceTotal());
-                psInsertVenta.executeUpdate();
-            }
-
-            // Actualizar stock
-            try (PreparedStatement psUpdate = cnn.prepareStatement(updateStockSql)) {
-                psUpdate.setInt(1, productConsumer.getQuantity());
-                psUpdate.setInt(2, productConsumer.getProduct().getId());
-                psUpdate.executeUpdate();
-            }
-
-            cnn.commit();
-            LOGGER.info("Venta directa registrada exitosamente con comprobante ID " + comprobanteId);
-            result = true;
-
-        } catch (SQLException e) {
-            LOGGER.warning("Error en la venta directa: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return result;
-    }*/
     public static boolean registrarLineaVentaDirecta(int comprobanteId, int empleadoId, ConsumeProduct cp) {
         String selectStockSql = "SELECT cantidad FROM productos WHERE id = ?";
         String insertVentaSql = "INSERT INTO venta_directa (id_comprobante, producto_id, empleado_id, cantidad, precio_unit, total) VALUES (?, ?, ?, ?, ?, ?)";
@@ -281,6 +142,54 @@ public class GestionVentas {
 
         } catch (SQLException e) {
             LOGGER.severe("Error al obtener el monto total de ventas por empleado ID " + empleadoId + ": " + e.getMessage());
+        }
+
+        return total;
+    }
+    public static double getMontoTotalVentaPorEmpleadoYFecha(int empleadoId, Date fecha) {
+        String sql = "SELECT SUM(vd.total)\n" +
+                "FROM venta_directa vd\n" +
+                "INNER JOIN comprobantes co on vd.id_comprobante = co.id\n" +
+                "WHERE empleado_id = ? AND DATE(co.fecha_emision) = ?";
+        double total = 0.0;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, empleadoId);
+            ps.setDate(2, fecha); // ← Aquí aplicamos el filtro por fecha
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error al obtener el monto total de ventas por empleado y fecha: " + e.getMessage());
+        }
+
+        return total;
+    }
+    public static double getMontoTotalVentaPorFecha(Date fecha) {
+        String sql = "SELECT SUM(vd.total) " +
+                "FROM venta_directa vd " +
+                "INNER JOIN comprobantes co ON vd.id_comprobante = co.id " +
+                "WHERE DATE(co.fecha_emision) = ?";
+        double total = 0.0;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setDate(1, fecha);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+                if (rs.wasNull()) total = 0.0;
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error al obtener el monto total de ventas por fecha: " + e.getMessage());
         }
 
         return total;

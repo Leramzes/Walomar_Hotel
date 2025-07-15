@@ -429,9 +429,14 @@ function buscarClienteRecepcion() {
     });
 }
 
-window.SearchReporte = function (wordKey, stateKey, tableSearch, quantitySearch, controller, page = 1, size = 10) {
+window.SearchReporte = function (wordKey, stateKey, quantitySearch, controller, page = 1, size = 10) {
     var fecha = $(wordKey).val();
     var empleadoId = $(stateKey).val();
+    var pestañaActivaId = $(".tab-pane.active").attr("id");
+    var pst = 1;
+    if (pestañaActivaId === "alquiler") pst = 1;
+    else if (pestañaActivaId === "habitacion-venta") pst = 2;
+    else if (pestañaActivaId === "habitacion-venta-directa") pst = 3;
 
     $.ajax({
         url: controller,
@@ -439,17 +444,34 @@ window.SearchReporte = function (wordKey, stateKey, tableSearch, quantitySearch,
             fecha: fecha,
             empleadoId: empleadoId,
             page: page,
-            size: size
+            size: size,
+            pst: pst
         },
         success: function (result) {
-            $(tableSearch).find("tbody").html(result);
+            let tbodyId = "";
+
+            // Determina a qué tabla se va a insertar según la pestaña
+            if (pst === 1) tbodyId = "#reporteAlquiler";
+            else if (pst === 2) tbodyId = "#tablaServiciosHab";
+            else if (pst === 3) tbodyId = "#tablaReportesVD";
+
+            $(tbodyId).find("tbody").html(result);
 
             // Leer el comentario con el número total de registros del servidor
             var match = result.match(/<!--COUNT:(\d+)-->/);
             var totalRecords = match ? parseInt(match[1]) : 0;
 
             // ✅ Aquí se actualiza el valor del input "registros"
-            $(quantitySearch).val(totalRecords);
+            $(quantitySearch).val($(tbodyId).find("tbody tr").length);
+
+            if (pst === 3) {
+                let totalMatch = result.match(/<!--TOTAL_EMPLEADO:(\d+(\.\d{1,2})?)-->/);
+                if (totalMatch) {
+                    $("#totalVentaEmpleadoVD").text("S/." + totalMatch[1]);
+                } else {
+                    $("#totalVentaEmpleadoVD").text("S/.0.00");
+                }
+            }
 
             // Actualizar la paginación
             updatePagination(totalRecords, page, size, wordKey, stateKey, tableSearch, quantitySearch, controller);
