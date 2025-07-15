@@ -1695,7 +1695,7 @@ async function exportarData(tipo) {
     }
 }
 
-async function generarComprobantePDF(idReserva, idClient) {
+async function generarComprobantePDF(idReserva, idClient, devolverBlob = false, penalidad = 0.0) {
     const {jsPDF} = window.jspdf;
     const doc = new jsPDF();
 
@@ -1836,13 +1836,13 @@ async function generarComprobantePDF(idReserva, idClient) {
         const totalHabitacion = reserva.pago_total || 0;
         const totalExtra = reserva.cobro_extra || 0;
         const totalAdelanto = reserva.adelanto || 0;
-        const totalFinal = totalProductos + totalServicios + totalHabitacion + totalExtra - totalAdelanto;
+        const totalFinal = totalProductos + totalServicios + totalHabitacion + totalExtra + parseFloat(penalidad) - totalAdelanto;
 
         doc.text(`Costo Extra:   S/. ${reserva.cobro_extra}`, 15, resumenY);
         doc.text(`Costo Alquiler:   S/. ${reserva.pago_total}`, 15, resumenY + 6);
         doc.text("Dinero Adelantado:   S/. " + totalAdelanto, 15, resumenY + 12);
         doc.text("Servicio a la habitación:   S/. " + (totalProductos + totalServicios), 15, resumenY + 18);
-        doc.text("Penalidad:   S/. 0.0", 15, resumenY + 24);
+        doc.text(`Penalidad:   S/. ${parseFloat(penalidad).toFixed(2)}`, 15, resumenY + 24);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
@@ -1859,21 +1859,29 @@ async function generarComprobantePDF(idReserva, idClient) {
 
         // --- Guardar PDF ---
         const filename = `BOLETA_HAB_${reserva.numberRoom}_${new Date().toISOString().slice(0, 10)}.pdf`;
-        doc.save(filename);
-        Swal.close();
-        Swal.fire({
-            title: "¡Éxito!",
-            text: "BOLETA generada correctamente",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            allowEnterKey: false
-        }).then(() => {
-            window.location.href = "menu.jsp?view=reserva";
-        });
+
+        if (devolverBlob) {
+            const blob = doc.output("blob");
+            return blob; // devolvemos el blob sin mostrar Swal
+        } else {
+            const filename = `BOLETA_HAB_${reserva.numberRoom}_${new Date().toISOString().slice(0, 10)}.pdf`;
+            doc.save(filename);
+            Swal.close();
+            Swal.fire({
+                title: "¡Éxito!",
+                text: "BOLETA generada correctamente",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: false
+            }).then(() => {
+                window.location.href = "menu.jsp?view=reserva";
+            });
+        }
+
 
     } catch (error) {
         console.error("Error en la generación del PDF:", error);
@@ -1882,15 +1890,8 @@ async function generarComprobantePDF(idReserva, idClient) {
     }
 }
 
-function generarComprobanteDesdeInputs() {
-    const idReserva = document.getElementById("idReserva").value;
-    const idClient = document.getElementById("idClient").value;
-
-    generarComprobantePDF(idReserva, idClient); // ← aquí llamas tu función original con los valores correctos
-}
-
-async function generarFacturaPDF(idReserva, idClient) {
-    const { jsPDF } = window.jspdf;
+async function generarFacturaPDF(idReserva, idClient, devolverBlob = false, penalidad = 0.0) {
+    const {jsPDF} = window.jspdf;
     const doc = new jsPDF();
 
     Swal.fire({
@@ -1912,173 +1913,175 @@ async function generarFacturaPDF(idReserva, idClient) {
         const servicios = data.ventasServ;
         const hotel = data.hotel;
 
+        // Cargar logo de forma asíncrona
         const logo = new Image();
         logo.src = 'img/imagenWalomar.jpg';
+        await new Promise((resolve, reject) => {
+            logo.onload = resolve;
+            logo.onerror = () => reject(new Error("No se pudo cargar el logo"));
+        });
 
+        const now = new Date();
+        const fechaTexto = now.toLocaleString('es-PE');
 
-        logo.onload = () => {
-            const now = new Date();
-            const fechaTexto = now.toLocaleString('es-PE');
+        // CABECERA
+        doc.addImage(logo, 'JPG', 15, 10, 35, 35);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(20);
+        doc.text("FACTURA", 95, 28);
 
-            // CABECERA
-            doc.addImage(logo, 'JPG', 15, 10, 35, 35);
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(20);
-            doc.text("FACTURA", 95, 28);
+        // DATOS HOTEL
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text(`Empresa: ${hotel.name}`, 15, 50);
+        doc.text(`RUC: ${hotel.ruc}`, 15, 56);
+        doc.text(`Dirección: ${hotel.address}`, 15, 62);
+        doc.text(`Correo: ${hotel.email}`, 15, 68);
 
-            // DATOS HOTEL
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.text(`Empresa: ${hotel.name}`, 15, 50);
-            doc.text(`RUC: ${hotel.ruc}`, 15, 56);
-            doc.text(`Dirección: ${hotel.address}`, 15, 62);
-            doc.text(`Correo: ${hotel.email}`, 15, 68);
+        // DATOS CLIENTE
+        const boxX = 130, boxY = 44, boxWidth = 65;
+        const fullName = `Cliente: ${cliente.name} ${cliente.apPaterno} ${cliente.apMaterno}`;
+        const maxWidth = boxWidth - 4;
+        const lines = doc.splitTextToSize(fullName, maxWidth);
+        const linesCount = lines.length;
+        const boxHeight = 6 * linesCount + 14;
 
-            // DATOS CLIENTE
-            const boxX = 130, boxY = 44, boxWidth = 65;
-            const fullName = `Cliente: ${cliente.name} ${cliente.apPaterno} ${cliente.apMaterno}`;
-            const maxWidth = boxWidth - 4;
-            const lines = doc.splitTextToSize(fullName, maxWidth);
-            const linesCount = lines.length;
-            // Altura dinámica: líneas de nombre + líneas fijas para RUC y correo (cada una con 5 de alto)
-            const boxHeight = 6 * linesCount + 14;
-            doc.setFillColor(245, 245, 245);
-            doc.setDrawColor(200);
-            doc.rect(boxX, boxY, boxWidth, boxHeight, 'FD');
-            doc.setFontSize(10);
-            doc.setTextColor(0);
-            // Imprimir nombre (multilínea)
-            doc.text(lines, boxX + 2, boxY + 6);
-            // Imprimir RUC y Correo con buen espaciado
-            const offsetY = boxY + 6 + linesCount * 6;
-            doc.text(`RUC/DNI: ${cliente.numberDocument}`, boxX + 2, offsetY);
-            doc.text(`Correo: ${cliente.email}`, boxX + 2, offsetY + 6);
+        doc.setFillColor(245, 245, 245);
+        doc.setDrawColor(200);
+        doc.rect(boxX, boxY, boxWidth, boxHeight, 'FD');
+        doc.setFontSize(10);
+        doc.setTextColor(0);
+        doc.text(lines, boxX + 2, boxY + 6);
+        const offsetY = boxY + 6 + linesCount * 6;
+        doc.text(`RUC/DNI: ${cliente.numberDocument}`, boxX + 2, offsetY);
+        doc.text(`Correo: ${cliente.email}`, boxX + 2, offsetY + 6);
 
+        doc.text(`Fecha: ${fechaTexto}`, 195, boxY + boxHeight + 7, {align: 'right'});
 
-            doc.text(`Fecha: ${fechaTexto}`, 195, boxY + boxHeight + 7, { align: 'right' });
+        // TABLA HABITACIÓN
+        const tablaStartY = boxY + boxHeight + 10;
+        doc.autoTable({
+            startY: tablaStartY,
+            head: [["Habitación", "Tarifa/Tipo", "F.Entrada", "F.Ingreso", "F.Salida", "F.Desalojo", "Descuento(%)", "Precio"]],
+            body: [[
+                reserva.numberRoom,
+                `24H / ${reserva.roomType}`,
+                reserva.checkInDate,
+                reserva.fecha_ingreso,
+                reserva.checkOutDate,
+                reserva.fecha_desalojo,
+                `${reserva.dsct}`,
+                `S/. ${reserva.pago_total}`
+            ]],
+            theme: 'grid',
+            styles: {fontSize: 9, cellPadding: 3},
+            headStyles: {
+                fillColor: [52, 58, 64],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            alternateRowStyles: {fillColor: [245, 245, 245]}
+        });
 
-            // TABLA HABITACIÓN
-            const tablaStartY = boxY + boxHeight + 10;
-            doc.autoTable({
-                startY: tablaStartY,
-                head: [["Habitación", "Tarifa/Tipo", "F.Entrada", "F.Ingreso", "F.Salida", "F.Desalojo", "Descuento(%)", "Precio"]],
-                body: [[
-                    reserva.numberRoom,
-                    `24H / ${reserva.roomType}`,
-                    reserva.checkInDate,
-                    reserva.fecha_ingreso,
-                    reserva.checkOutDate,
-                    reserva.fecha_desalojo,
-                    `${reserva.dsct}`,
-                    `S/. ${reserva.pago_total}`
-                ]],
-                theme: 'grid',
-                styles: { fontSize: 9, cellPadding: 3 },
-                headStyles: {
-                    fillColor: [52, 58, 64],
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold',
-                    halign: 'center'
-                },
-                alternateRowStyles: { fillColor: [245, 245, 245] }
-            });
+        // TABLA PRODUCTOS
+        doc.autoTable({
+            startY: doc.lastAutoTable.finalY + 5,
+            head: [["Producto", "Precio Unitario", "Cantidad", "Estado", "Subtotal"]],
+            body: productos.length > 0
+                ? productos.map(p => [
+                    p.nombreProducto,
+                    `S/. ${p.precioUnitProducto}`,
+                    p.cantidad,
+                    p.estadoProducto === "Pagado" ? "Pagado" : "Pagado al salir",
+                    `S/. ${p.total}`
+                ])
+                : [[{
+                    content: "Sin productos consumidos", colSpan: 5,
+                    styles: {halign: 'center', fontStyle: 'italic'}
+                }]],
+            theme: 'grid',
+            styles: {fontSize: 9, cellPadding: 3},
+            headStyles: {
+                fillColor: [52, 58, 64],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            alternateRowStyles: {fillColor: [245, 245, 245]}
+        });
 
-            // TABLA PRODUCTOS
-            doc.autoTable({
-                startY: doc.lastAutoTable.finalY + 5,
-                head: [["Producto", "Precio Unitario", "Cantidad", "Estado", "Subtotal"]],
-                body: productos.length > 0
-                    ? productos.map(p => [
-                        p.nombreProducto,
-                        `S/. ${p.precioUnitProducto}`,
-                        p.cantidad,
-                        p.estadoProducto === "Pagado" ? "Pagado" : "Pagado al salir",
-                        `S/. ${p.total}`
-                    ])
-                    : [[{
-                        content: "Sin productos consumidos", colSpan: 5,
-                        styles: {halign: 'center', fontStyle: 'italic'}
-                    }]],
-                theme: 'grid',
-                styles: { fontSize: 9, cellPadding: 3 },
-                headStyles: {
-                    fillColor: [52, 58, 64],
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold',
-                    halign: 'center'
-                },
-                alternateRowStyles: { fillColor: [245, 245, 245] }
-            });
+        // TABLA SERVICIOS
+        doc.autoTable({
+            startY: doc.lastAutoTable.finalY + 5,
+            head: [["Servicio", "Estado", "Subtotal"]],
+            body: servicios.length > 0
+                ? servicios.map(s => [
+                    s.nombreServicio,
+                    s.estadoServicio === "Pagado" ? "Pagado" : "Pagado al salir",
+                    `S/. ${s.total}`
+                ])
+                : [[{
+                    content: "Sin servicios consumidos", colSpan: 3,
+                    styles: {halign: 'center', fontStyle: 'italic'}
+                }]],
+            theme: 'grid',
+            styles: {fontSize: 9, cellPadding: 3},
+            headStyles: {
+                fillColor: [52, 58, 64],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            alternateRowStyles: {fillColor: [245, 245, 245]}
+        });
 
-            // TABLA SERVICIOS
-            doc.autoTable({
-                startY: doc.lastAutoTable.finalY + 5,
-                head: [["Servicio", "Estado", "Subtotal"]],
-                body: servicios.length > 0
-                    ? servicios.map(s => [
-                        s.nombreServicio,
-                        s.estadoServicio === "Pagado" ? "Pagado" : "Pagado al salir",
-                        `S/. ${s.total}`
-                    ])
-                    : [[{
-                        content: "Sin servicios consumidos", colSpan: 3, styles:
-                            {halign: 'center', fontStyle: 'italic'}
-                    }]],
-                theme: 'grid',
-                styles: { fontSize: 9, cellPadding: 3 },
-                headStyles: {
-                    fillColor: [52, 58, 64],
-                    textColor: [255, 255, 255],
-                    fontStyle: 'bold',
-                    halign: 'center'
-                },
-                alternateRowStyles: { fillColor: [245, 245, 245] }
-            });
+        // RESUMEN FINAL
+        let resumenY = doc.lastAutoTable.finalY + 8;
+        if (resumenY + 70 > 290) {
+            doc.addPage();
+            resumenY = 20;
+        }
 
-            // RESUMEN FINAL
-            let resumenY = doc.lastAutoTable.finalY + 8;
-            if (resumenY + 70 > 290) {
-                doc.addPage();
-                resumenY = 20;
-            }
+        doc.setFontSize(10);
+        doc.setTextColor(0);
 
-            doc.setFontSize(10);
-            doc.setTextColor(0);
+        const totalProductos = productos
+            .filter(p => p.estadoProducto === "Pagado al salir")
+            .reduce((acc, p) => acc + (parseFloat(p.total) || 0), 0);
+        const totalServicios = servicios
+            .filter(s => s.estadoServicio === "Pagado al salir")
+            .reduce((acc, s) => acc + (parseFloat(s.total) || 0), 0);
+        const totalHabitacion = reserva.pago_total || 0;
+        const totalExtra = reserva.cobro_extra || 0;
+        const totalAdelanto = reserva.adelanto || 0;
+        const totalFinal = totalProductos + totalServicios + totalHabitacion + totalExtra + parseFloat(penalidad) - totalAdelanto;
 
-            // Sumar total productos y servicios (con seguridad)
-            const totalProductos = productos
-                .filter(p => p.estadoProducto === "Pagado al salir")
-                .reduce((acc, p) => acc + (parseFloat(p.total) || 0), 0);
-            // Solo sumar servicios con estado "pagado al salir"
-            const totalServicios = servicios
-                .filter(s => s.estadoServicio === "Pagado al salir")
-                .reduce((acc, s) => acc + (parseFloat(s.total) || 0), 0);
-            const totalHabitacion = reserva.pago_total || 0;
-            const totalExtra = reserva.cobro_extra || 0;
-            const totalAdelanto = reserva.adelanto || 0;
-            const totalFinal = totalProductos + totalServicios + totalHabitacion + totalExtra - totalAdelanto;
+        doc.text(`Costo Extra:   S/. ${reserva.cobro_extra}`, 15, resumenY);
+        doc.text(`Costo Alquiler:   S/. ${reserva.pago_total}`, 15, resumenY + 6);
+        doc.text("Dinero Adelantado:   S/. " + totalAdelanto, 15, resumenY + 12);
+        doc.text("Servicio a la habitación:   S/. " + (totalProductos + totalServicios), 15, resumenY + 18);
+        doc.text(`Penalidad:   S/. ${parseFloat(penalidad).toFixed(2)}`, 15, resumenY + 24);
 
-            doc.text(`Costo Extra:   S/. ${reserva.cobro_extra}`, 15, resumenY);
-            doc.text(`Costo Alquiler:   S/. ${reserva.pago_total}`, 15, resumenY + 6);
-            doc.text("Dinero Adelantado:   S/. " + totalAdelanto, 15, resumenY + 12);
-            doc.text("Servicio a la habitación:   S/. " + (totalProductos + totalServicios), 15, resumenY + 18);
-            doc.text("Penalidad:   S/. 0.0", 15, resumenY + 24);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text(`Total pagado al salir:   S/. ${totalFinal.toFixed(2)}`, 15, resumenY + 32);
 
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(11);
-            doc.text(`Total pagado al salir:   S/. ${totalFinal.toFixed(2)}`, 15, resumenY + 32);
+        // FOOTER
+        const footerY = resumenY + 60;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text(hotel.address, 105, footerY, {align: 'center'});
+        doc.text("Tel: +51 " + hotel.phone, 105, footerY + 5, {align: 'center'});
+        doc.text("Correo: " + hotel.email, 105, footerY + 10, {align: 'center'});
+        doc.text("Gracias por su preferencia, ¡Vuelva pronto a pasarla muy bien!", 105, footerY + 18, {align: 'center'});
 
-            // FOOTER
-            const footerY = resumenY + 60;
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.text(hotel.address, 105, footerY, { align: 'center' });
-            doc.text("Tel: +51 " + hotel.phone, 105, footerY + 5, { align: 'center' });
-            doc.text("Correo: " + hotel.email, 105, footerY + 10, { align: 'center' });
-            doc.text("Gracias por su preferencia, ¡Vuelva pronto a pasarla muy bien!", 105, footerY + 18, { align: 'center' });
-
-            // GUARDAR
-            const filename = `FACTURA_HAB_${reserva.numberRoom}_${new Date().toISOString().slice(0, 10)}.pdf`;
+        // FIN: guardar o devolver PDF
+        const filename = `FACTURA_HAB_${reserva.numberRoom}_${new Date().toISOString().slice(0, 10)}.pdf`;
+        if (devolverBlob) {
+            const blob = doc.output("blob");
+            return blob;
+        } else {
             doc.save(filename);
             Swal.close();
             Swal.fire({
@@ -2088,18 +2091,11 @@ async function generarFacturaPDF(idReserva, idClient) {
                 showConfirmButton: false,
                 timer: 2000,
                 timerProgressBar: true,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: false
+                allowOutsideClick: false
             }).then(() => {
                 window.location.href = "menu.jsp?view=reserva";
             });
-        };
-
-        logo.onerror = () => {
-            Swal.close();
-            Swal.fire("Error", "No se pudo cargar el logo", "error");
-        };
+        }
 
     } catch (error) {
         console.error("Error en la generación del PDF:", error);
@@ -2139,10 +2135,45 @@ async function culminarYGenerarComprobante() {
 
         if (!response.ok) throw new Error("Error en el registro de salida.");
 
-        if (tipoComprobante === "1") {
-            await generarComprobantePDF(idReserva, idClient);
-        } else if (tipoComprobante === "2") {
-            await generarFacturaPDF(idReserva, idClient);
+        // ✅ Luego generar el PDF
+        if (enviarCorreo === "1") {
+            const blob = tipoComprobante === "1"
+                ? await generarComprobantePDF(idReserva, idClient, true, inputPenalidad)
+                : await generarFacturaPDF(idReserva, idClient, true, inputPenalidad);
+
+            const formData = new FormData();
+            if (!(blob instanceof Blob)) {
+                throw new Error("El archivo generado no es un Blob válido.");
+            }
+            formData.append("archivo", blob, "comprobante.pdf");
+            formData.append("idReserva", idReserva);
+            formData.append("idClient", idClient);
+            formData.append("tipo", tipoComprobante === "1" ? "boleta" : "factura");
+
+            const respCorreo = await fetch("envioCorreo", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!respCorreo.ok) throw new Error("Error al enviar el correo.");
+
+            Swal.fire({
+                title: "¡Éxito!",
+                text: "Correo enviado correctamente",
+                icon: "success",
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "menu.jsp?view=reserva";
+            });
+
+        } else {
+            // ✅ Generar y descargar PDF directamente
+            if (tipoComprobante === "1") {
+                await generarComprobantePDF(idReserva, idClient, false);
+            } else {
+                await generarFacturaPDF(idReserva, idClient, false);
+            }
         }
 
     } catch (error) {
