@@ -1,6 +1,7 @@
 package development.team.hoteltransylvania.Test;
 
 import development.team.hoteltransylvania.Business.*;
+import development.team.hoteltransylvania.DTO.AllInfoReporteAlquiler;
 import development.team.hoteltransylvania.DTO.TableReservationDTO;
 import development.team.hoteltransylvania.Model.Product;
 import development.team.hoteltransylvania.Model.Room;
@@ -35,11 +36,8 @@ public class testGeneral {
                 true,
                 archivo
         );*/
-        TableReservationDTO reservation = GestionReservation.getReservationById(101);
-        Duration tiempoextra = TableReservationDTO.parseTiempoRebasado(reservation.getTiempoRebasado());
-        System.out.println(tiempoextra);
-        boolean checkout = GestionReservation.updateCheckoutReservation(101,tiempoextra,50.0);
-        System.out.println(checkout);
+        List<AllInfoReporteAlquiler> alquileres = GestionReportes.getReporteReservation();
+        alquileres.forEach(System.out::println);
     }
 
 }

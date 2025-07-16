@@ -6,6 +6,7 @@
 <%@ page import="development.team.hoteltransylvania.DTO.AllInfoVentasDirecta" %>
 <%@ page import="development.team.hoteltransylvania.DTO.AllInfoReporteVenta" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionReportes" %>
+<%@ page import="development.team.hoteltransylvania.DTO.AllInfoReporteAlquiler" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -17,6 +18,18 @@
 </head>
 
     <%
+    //1era pestaña
+    List<AllInfoReporteAlquiler> alquileres = GestionReportes.getReporteReservation();
+    double totalReservation = alquileres.stream().filter(a -> "Reservación".equalsIgnoreCase(a.getTipoAlquiler()))
+                                .mapToDouble(AllInfoReporteAlquiler::getPago_total_reserva)
+                                .sum();
+    double totalRecepcion = alquileres.stream().filter(a -> "Recepción".equalsIgnoreCase(a.getTipoAlquiler()))
+                                .mapToDouble(AllInfoReporteAlquiler::getPago_total_reserva)
+                                .sum();
+    double recaudacionCancelada = alquileres.stream().filter(a -> "Cancelada *".equalsIgnoreCase(a.getTipoAlquiler()))
+                                .mapToDouble(AllInfoReporteAlquiler::getAdelanto)
+                                .sum();
+
     //2da pestaña
     List<AllInfoVentasDirecta> reporteVentasDirecta = GestionVentas.getAllVentasDirecta();
     List<AllInfoReporteVenta> reporteVentaProducHabiatcion = GestionReportes.getAllReporteVentaProductoHabitacion();
@@ -99,18 +112,22 @@
 <div class="tab-content mt-3">
     <div class="tab-pane fade show active" id="alquiler">
         <!-- Resumen de recepción -->
-        <div class="d-flex justify-content-between text-center px-5 mt-4">
+        <div class="d-flex justify-content-between text-center px-5 mt-3">
             <div>
-                <h5>S/.500</h5>
+                <h5>S/. <%=totalRecepcion%></h5>
                 <h5>TOTAL RECEPCIÓN</h5>
             </div>
             <div>
-                <h5>S/.500</h5>
-                <h5>TOTAL RECEPCIÓN</h5>
+                <h5>S/. <%=totalReservation%></h5>
+                <h5>TOTAL RESERVACION</h5>
             </div>
             <div>
-                <h5>S/.500</h5>
-                <h5>TOTAL RECEPCIÓN</h5>
+                <h5>S/. <%=recaudacionCancelada%></h5>
+                <h5>REC. CANCELADA</h5>
+            </div>
+            <div>
+                <h5>S/.<%=totalRecepcion+totalReservation+recaudacionCancelada%></h5>
+                <h5>TOTAL</h5>
             </div>
         </div>
 
@@ -131,38 +148,58 @@
                 <thead class="table-warning">
                 <tr>
                     <th>N°</th>
-                    <th>DNI</th>
+                    <th>Identificador</th>
                     <th>Tipo</th>
                     <th>Habitación</th>
                     <th>Descuento</th>
                     <th>Extra</th>
                     <th>Dinero Adelantado</th>
-                    <th>Servicio</th>
+                    <th>Servicios</th>
                     <th>Penalidad</th>
-                    <th>Total</th>
+                    <th>Total Alquiler</th>
                     <th>Tiempo Rebasado</th>
                     <th>Detalles</th>
                 </tr>
                 </thead>
                 <tbody>
+                <%
+                    int countAl = 1;
+                    for (AllInfoReporteAlquiler alquiler : alquileres) {
+                        boolean esCancelada = "Cancelada *".equals(alquiler.getTipoAlquiler());
+
+                        // Color para pago total
+                        String clasePagoTotal = esCancelada ? "" : "text-success-emphasis fw-bold";
+                        String pagoTotalTexto = esCancelada
+                                ? alquiler.getPago_total_reserva() + " *"
+                                : String.valueOf(alquiler.getPago_total_reserva());
+
+                        // Color para adelanto
+                        String claseAdelanto = (esCancelada && alquiler.getAdelanto() > 0)
+                                ? "text-success-emphasis fw-bold"
+                                : "";
+                %>
                 <tr>
-                    <td>1</td>
-                    <td>12345678</td>
-                    <td>Recepción</td>
-                    <td>696 - 24hr</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td>S/.0</td>
-                    <td class="text-danger">Si</td>
+                    <td><%= countAl %></td>
+                    <td><%= alquiler.getIdReservation() %></td>
+                    <td><%= alquiler.getTipoAlquiler() %></td>
+                    <td><%= alquiler.getNumberRoom() %>-<%= alquiler.getRoomType() %></td>
+                    <td><%= alquiler.getDsct() %></td>
+                    <td><%= alquiler.getCobro_extra() %></td>
+                    <td class="<%= claseAdelanto %>"><%= alquiler.getAdelanto() %></td>
+                    <td><%= alquiler.getTotal_consumo_productos() + alquiler.getTotal_consumo_servicios() %></td>
+                    <td><%= alquiler.getTotal_penalidad() %></td>
+                    <td class="<%= clasePagoTotal %>"><%= pagoTotalTexto %></td>
+                    <td class="text-danger">Sí</td>
                     <td class="d-flex justify-content-center gap-1">
                         <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
                             👁️
                         </button>
                     </td>
                 </tr>
+                <%
+                        countAl++;
+                    }
+                %>
                 </tbody>
             </table>
         </div>

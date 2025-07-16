@@ -1,8 +1,6 @@
 package development.team.hoteltransylvania.Business;
 
-import development.team.hoteltransylvania.DTO.AllInfoReporteVenta;
-import development.team.hoteltransylvania.DTO.AllInfoTableProdSalida;
-import development.team.hoteltransylvania.DTO.AllInfoVentasDirecta;
+import development.team.hoteltransylvania.DTO.*;
 import development.team.hoteltransylvania.Services.DataBaseUtil;
 import development.team.hoteltransylvania.Util.LoggerConfifg;
 
@@ -217,7 +215,7 @@ public class GestionReportes {
 
         return reporteVentas;
     }
-    public static List<AllInfoReporteVenta> filterReportesHabitacion(int empleadoId, Date fechaFiltrada, int page, int size) {
+    public static List<AllInfoReporteVenta> filterReportesHabitacion(int empleadoId, Date fechaFiltrada) {
         List<AllInfoReporteVenta> combinados = new ArrayList<>();
 
         // 1. Fuente: Venta Directa
@@ -287,7 +285,95 @@ public class GestionReportes {
                 })
                 .collect(Collectors.toList());
 
-        // 5. Paginación
+        return filtrados;
+    }
+    public static List<AllInfoReporteAlquiler> getReporteReservation() {
+        String sql = "SELECT * FROM obtener_reporte_alquiler()";
+        List<AllInfoReporteAlquiler> reservationList = new ArrayList<>();
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                AllInfoReporteAlquiler alquiler = new AllInfoReporteAlquiler();
+                alquiler.setIdReservation(rs.getInt("id_reserva"));
+                alquiler.setIdClient(rs.getInt("id_cliente"));
+                alquiler.setClientName(rs.getString("nombre_cliente"));
+                alquiler.setClientApellidos(rs.getString("apellidos"));
+                alquiler.setDocumentType(rs.getString("tipo_documento"));
+                alquiler.setDocumentNumber(rs.getString("numero_documento"));
+                alquiler.setEmail(rs.getString("email"));
+                alquiler.setPhone(rs.getString("telefono"));
+                alquiler.setEmpleadoId(rs.getInt("id_empleado"));
+                alquiler.setIdRoom(rs.getInt("id_habitacion"));
+                alquiler.setNumberRoom(rs.getString("numero_habitacion"));
+                alquiler.setRoomType(rs.getString("tipo_habitacion"));
+                alquiler.setCheckInDate(rs.getTimestamp("fecha_inicio"));
+                alquiler.setCheckOutDate(rs.getTimestamp("fecha_fin"));
+                alquiler.setFecha_ingreso(rs.getTimestamp("fecha_ingreso"));
+                alquiler.setFecha_desalojo(rs.getTimestamp("fecha_desalojo"));
+                alquiler.setCantDays(rs.getInt("cant_dias"));
+                alquiler.setDsct(rs.getInt("descuento"));
+                alquiler.setCobro_extra(rs.getDouble("cobro_extra"));
+                alquiler.setAdelanto(rs.getDouble("adelanto"));
+                alquiler.setPago_total_reserva(rs.getDouble("pago_total_reserva"));
+                alquiler.setTotal_consumo_productos(rs.getDouble("total_consumo_productos"));
+                alquiler.setTotal_consumo_servicios(rs.getDouble("total_consumo_servicios"));
+                alquiler.setTotal_penalidad(rs.getDouble("total_penalidad"));
+                alquiler.setReservationStatus(rs.getString("estado"));
+                alquiler.setRoomTypeId(rs.getInt("tipo_id"));
+
+                Timestamp fechaInicio = rs.getTimestamp("fecha_inicio");
+                Timestamp fechaIngreso = rs.getTimestamp("fecha_ingreso");
+
+                alquiler.setCheckInDate(fechaInicio);
+                alquiler.setFecha_ingreso(fechaIngreso);
+
+                // Determinar tipo de alquiler
+                if (fechaInicio != null && fechaIngreso != null) {
+                    LocalDate inicio = fechaInicio.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate ingreso = fechaIngreso.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    if (inicio.equals(ingreso)) {
+                        alquiler.setTipoAlquiler("Recepción");
+                    } else {
+                        alquiler.setTipoAlquiler("Reservación");
+                    }
+                } else {
+                    alquiler.setTipoAlquiler("Cancelada *"); // Por si alguna de las fechas es nula
+                }
+
+                reservationList.add(alquiler);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error retrieving reservation report: " + e.getMessage());
+        }
+
+        return reservationList;
+    }
+    public static List<AllInfoReporteAlquiler> filterReportesReservation(int empleadoId, Date fechaFiltrada, int page, int size) {
+        List<AllInfoReporteAlquiler> allAlquileres = getReporteReservation();
+
+        List<AllInfoReporteAlquiler> filtrados = allAlquileres.stream()
+                .filter(alquiler -> {
+                    boolean porEmpleado = empleadoId == -1 || alquiler.getEmpleadoId() == empleadoId;
+
+                    boolean porFecha = true;
+                    if (fechaFiltrada != null) {
+                        LocalDate fechaVenta = alquiler.getCheckInDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate();
+                        LocalDate fechaFiltro = fechaFiltrada.toLocalDate();
+                        porFecha = fechaVenta.equals(fechaFiltro);
+                    }
+
+                    return porEmpleado && porFecha;
+                })
+                .collect(Collectors.toList());
+
+        // Paginación
         int from = Math.max((page - 1) * size, 0);
         int to = Math.min(from + size, filtrados.size());
 

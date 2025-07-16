@@ -3,6 +3,7 @@ package development.team.hoteltransylvania.Controller;
 import development.team.hoteltransylvania.Business.GestionEmployee;
 import development.team.hoteltransylvania.Business.GestionReportes;
 import development.team.hoteltransylvania.Business.GestionVentas;
+import development.team.hoteltransylvania.DTO.AllInfoReporteAlquiler;
 import development.team.hoteltransylvania.DTO.AllInfoReporteVenta;
 import development.team.hoteltransylvania.DTO.AllInfoVentasDirecta;
 import development.team.hoteltransylvania.DTO.usersEmployeeDTO;
@@ -46,19 +47,62 @@ public class FilterReportes extends HttpServlet {
 
             int totalVentas = 0;
             int count = 1;
+            double totalPorEmpleado = 0.0;
 
             switch (pestania) {
                 case 1:
+                    // Obtener lista filtrada
+                    List<AllInfoReporteAlquiler> alquilerFiltradas = GestionReportes.filterReportesReservation(idEmpleado, fechaFiltrada, page, size);
+
+                    int totalAlquileres = alquilerFiltradas.size();
+                    totalPorEmpleado = 0.0;
+
+                    count = 1;
+                    for (AllInfoReporteAlquiler alquiler : alquilerFiltradas) {
+                        boolean esCancelada = "Cancelada *".equals(alquiler.getTipoAlquiler());
+
+                        String clasePagoTotal = esCancelada ? "" : "text-success-emphasis fw-bold";
+                        String pagoTotalTexto = esCancelada
+                                ? alquiler.getPago_total_reserva() + " *"
+                                : String.valueOf(alquiler.getPago_total_reserva());
+
+                        String claseAdelanto = (esCancelada && alquiler.getAdelanto() > 0)
+                                ? "text-success-emphasis fw-bold"
+                                : "";
+
+                        out.println("<tr>");
+                        out.println("<td>" + count + "</td>");
+                        out.println("<td>" + alquiler.getIdReservation() + "</td>");
+                        out.println("<td>" + alquiler.getTipoAlquiler() + "</td>");
+                        out.println("<td>" + alquiler.getNumberRoom() + "-" + alquiler.getRoomType() + "</td>");
+                        out.println("<td>" + alquiler.getDsct() + "</td>");
+                        out.println("<td>" + alquiler.getCobro_extra() + "</td>");
+                        out.println("<td class='" + claseAdelanto + "'>" + alquiler.getAdelanto() + "</td>");
+                        out.println("<td>" + (alquiler.getTotal_consumo_productos() + alquiler.getTotal_consumo_servicios()) + "</td>");
+                        out.println("<td>" + alquiler.getTotal_penalidad() + "</td>");
+                        out.println("<td class='" + clasePagoTotal + "'>" + pagoTotalTexto + "</td>");
+                        out.println("<td class='text-danger'>Sí</td>");
+                        out.println("<td class='d-flex justify-content-center gap-1'>");
+                        out.println("    <button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerDetalle'>");
+                        out.println("        👁️");
+                        out.println("    </button>");
+                        out.println("</td>");
+                        out.println("</tr>");
+
+                        count++;
+                    }
+                    out.println("<!--COUNT:" + totalAlquileres + "-->");
+                    out.println("<!--TOTAL_EMPLEADO:" + totalPorEmpleado + "-->");
 
                     break;
 
 
                 case 2:
                     // Obtener lista filtrada
-                    List<AllInfoReporteVenta> ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, fechaFiltrada, page, size);
+                    List<AllInfoReporteVenta> ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, fechaFiltrada);
 
                     totalVentas = ventasHabFiltradas.size();
-                    double totalPorEmpleado = 0.0;
+                    totalPorEmpleado = 0.0;
 
                     count = 1;
                     for (AllInfoReporteVenta venta : ventasHabFiltradas) {

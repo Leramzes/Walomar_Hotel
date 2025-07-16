@@ -452,7 +452,7 @@ window.SearchReporte = function (wordKey, stateKey, quantitySearch, controller, 
 
             // Determina a qué tabla se va a insertar según la pestaña
             if (pst === 1) tbodyId = "#reporteAlquiler";
-            else if (pst === 2) tbodyId = "#tablaServiciosHab";
+            if (pst === 2) tbodyId = "#tablaServiciosHab";
             else if (pst === 3) tbodyId = "#tablaReportesVD";
 
             $(tbodyId).find("tbody").html(result);
