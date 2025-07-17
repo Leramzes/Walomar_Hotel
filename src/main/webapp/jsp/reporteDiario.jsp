@@ -103,8 +103,8 @@
         </button>
     </li>
     <li class="nav-item ms-auto">
-        <button class="btn btn-success">
-            <i class="fa-solid fa-file-export"></i> Exportar
+        <button class="btn btn-success" onclick="exportarTablaVisible()">
+            <i class="fa-solid fa-file-excel"></i> Exportar
         </button>
     </li>
 </ul>

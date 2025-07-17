@@ -2193,3 +2193,127 @@ async function culminarYGenerarComprobante() {
     }
 
 }
+
+function obtenerBase64DesdeURL(url) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            const reader = new FileReader();
+            reader.onloadend = function () {
+                resolve(reader.result); // resultado en base64
+            };
+            reader.readAsDataURL(xhr.response);
+        };
+        xhr.onerror = function () {
+            reject(new Error("No se pudo cargar la imagen"));
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+    });
+}
+async function exportarTablaVisible() {
+    const logoBase64 = await obtenerBase64DesdeURL('img/imagenWalomar.jpg');
+    const tabActiva = document.querySelector('.tab-pane.active');
+    if (!tabActiva) {
+        Swal.fire('Error', 'No se detectó ninguna pestaña activa', 'error');
+        return;
+    }
+
+    const tabla = tabActiva.querySelector("table");
+    if (!tabla) {
+        Swal.fire('Error', 'No se encontró una tabla en la pestaña activa', 'error');
+        return;
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const hoja = workbook.addWorksheet("Reporte");
+
+
+    const imageId = workbook.addImage({
+        base64: logoBase64,
+        extension: 'jpeg',
+    });
+
+    // Insertar logo (fila 1-6, columna 1-3)
+    hoja.addImage(imageId, {
+        tl: { col: 0, row: 0 },
+        ext: { width: 120, height: 80 }
+    });
+
+    // Título del hotel
+    hoja.mergeCells('D1', 'H1');
+    hoja.getCell('D1').value = "WALOMAR HOTEL";
+    hoja.getCell('D1').font = { name: 'Arial', size: 16, bold: true };
+    hoja.getCell('D1').alignment = { horizontal: 'center' };
+
+    // Fecha de exportación
+    const fecha = new Date();
+    const fechaFormateada = fecha.toLocaleDateString('es-PE', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    hoja.mergeCells('D2', 'H2');
+    hoja.getCell('D2').value = "Fecha de exportación: " + fechaFormateada;
+    hoja.getCell('D2').font = { italic: true };
+    hoja.getCell('D2').alignment = { horizontal: 'center' };
+
+    // Subtítulo con nombre de pestaña
+    hoja.mergeCells('D3', 'H3');
+    const nombrePestana = tabActiva.getAttribute("id") || "Datos";
+    hoja.getCell('D3').value = "Reporte de datos: " + nombrePestana;
+    hoja.getCell('D3').font = { bold: true };
+    hoja.getCell('D3').alignment = { horizontal: 'center' };
+
+    // Espacio
+    hoja.addRow([]);
+
+    // Cabecera de la tabla
+    const filas = tabla.querySelectorAll("tr");
+    const filaCabecera = Array.from(filas[0].cells).map(cell => cell.textContent.trim());
+    const filaEncabezado = hoja.addRow(filaCabecera);
+
+    filaEncabezado.eachCell(cell => {
+        cell.font = { bold: true };
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFB0C4DE' } // celeste
+        };
+        cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+        cell.alignment = { horizontal: 'center' };
+    });
+
+    // Cuerpo de la tabla
+    for (let i = 1; i < filas.length; i++) {
+        const row = Array.from(filas[i].cells).map(cell => cell.textContent.trim());
+        hoja.addRow(row);
+    }
+
+    // Auto ancho de columnas
+    hoja.columns.forEach(col => {
+        let maxLength = 10;
+        col.eachCell({ includeEmpty: true }, cell => {
+            const val = cell.value ? cell.value.toString() : "";
+            maxLength = Math.max(maxLength, val.length);
+        });
+        col.width = maxLength + 2;
+    });
+
+    // Crear archivo y guardar
+    const buffer = await workbook.xlsx.writeBuffer();
+    const nombreArchivo = `reporte_${nombrePestana}_${fecha.toISOString().slice(0, 10)}.xlsx`;
+    saveAs(new Blob([buffer], { type: "application/octet-stream" }), nombreArchivo);
+
+    Swal.fire({
+        icon: 'success',
+        title: '¡Exportación exitosa!',
+        text: `El archivo "${nombreArchivo}" se ha descargado.`,
+        confirmButtonText: 'Aceptar'
+    });
+}
