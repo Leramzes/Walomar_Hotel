@@ -429,7 +429,7 @@ public class GestionVentas {
 
         return ventas;
     }
-    public static List<AllInfoVentasDirecta> filterVentaDirecta(int empleadoId, Date fechaFiltrada, int page, int size) {
+    public static List<AllInfoVentasDirecta> filterVentaDirecta(int empleadoId, Date fechaFiltrada, String nombreProducto, int page, int size) {
         List<AllInfoVentasDirecta> todasVentas = getAllVentasDirecta();
 
         List<AllInfoVentasDirecta> filtradas = todasVentas.stream()
@@ -445,11 +445,16 @@ public class GestionVentas {
                         porFecha = fechaVenta.equals(fechaFiltro);
                     }
 
-                    return porEmpleado && porFecha;
+                    boolean porNombre = true;
+                    if (nombreProducto != null && !nombreProducto.trim().isEmpty()) {
+                        porNombre = venta.getProducto().toLowerCase()
+                                .contains(nombreProducto.toLowerCase());
+                    }
+
+                    return porEmpleado && porFecha && porNombre;
                 })
                 .collect(Collectors.toList());
 
-        // Paginación
         int from = Math.max((page - 1) * size, 0);
         int to = Math.min(from + size, filtradas.size());
 

@@ -215,7 +215,7 @@ public class GestionReportes {
 
         return reporteVentas;
     }
-    public static List<AllInfoReporteVenta> filterReportesHabitacion(int empleadoId, Date fechaFiltrada) {
+    public static List<AllInfoReporteVenta> filterReportesHabitacion(int empleadoId, Date fechaFiltrada, String articulo) {
         List<AllInfoReporteVenta> combinados = new ArrayList<>();
 
         // 1. Fuente: Venta Directa
@@ -281,7 +281,13 @@ public class GestionReportes {
                         porFecha = fechaCompra.equals(fechaFiltrada.toLocalDate());
                     }
 
-                    return porEmpleado && porFecha;
+                    boolean porProducto = true;
+                    if (articulo != null && !articulo.trim().isEmpty()) {
+                        porProducto = rep.getNombreArticulo() != null &&
+                                rep.getNombreArticulo().toLowerCase().contains(articulo.toLowerCase());
+                    }
+
+                    return porEmpleado && porFecha && porProducto;
                 })
                 .collect(Collectors.toList());
 
@@ -353,7 +359,8 @@ public class GestionReportes {
 
         return reservationList;
     }
-    public static List<AllInfoReporteAlquiler> filterReportesReservation(int empleadoId, Date fechaFiltrada, int page, int size) {
+    public static List<AllInfoReporteAlquiler> filterReportesReservation(int empleadoId, Date fechaFiltrada, String roomSearch,
+                                                                         int page, int size) {
         List<AllInfoReporteAlquiler> allAlquileres = getReporteReservation();
 
         List<AllInfoReporteAlquiler> filtrados = allAlquileres.stream()
@@ -369,7 +376,18 @@ public class GestionReportes {
                         porFecha = fechaVenta.equals(fechaFiltro);
                     }
 
-                    return porEmpleado && porFecha;
+                    boolean porHabitacion = true;
+                    if (roomSearch != null && !roomSearch.trim().isEmpty()) {
+                        String searchLower = roomSearch.toLowerCase();
+                        porHabitacion =
+                                (alquiler.getNumberRoom() != null &&
+                                        alquiler.getNumberRoom().toLowerCase().contains(searchLower)) ||
+
+                                        (alquiler.getRoomType() != null &&
+                                                alquiler.getRoomType().toLowerCase().contains(searchLower));
+                    }
+
+                    return porEmpleado && porFecha && porHabitacion;
                 })
                 .collect(Collectors.toList());
 

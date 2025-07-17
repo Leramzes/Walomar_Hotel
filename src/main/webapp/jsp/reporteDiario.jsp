@@ -64,12 +64,12 @@
     <div class="col-md-2">
         <label for="fecha" class="form-label"><strong>Fecha</strong></label>
         <input type="date" id="fecha" class="form-control" value="<%= hoy %>"
-               onchange="SearchReporte('#fecha', '#responsable', '#registros', 'filterReportes', 1, 10)">
+               onchange="SearchReporte('#fecha', '#responsable', '#nameSearch', 'filterReportes', 1, 10)">
     </div>
     <div class="col-md-2">
         <label for="responsable" class="form-label"><strong>Responsable</strong></label>
         <select id="responsable" class="form-select"
-                onchange="SearchReporte('#fecha', '#responsable', '#registros','filterReportes', 1, 10)">
+                onchange="SearchReporte('#fecha', '#responsable', '#nameSearch','filterReportes', 1, 10)">
             <option value="todos">Todos</option>
             <%for (usersEmployeeDTO employeeDTO : employees) {%>
             <option value="<%=employeeDTO.getId_employee()%>"><%=employeeDTO.getName_employee()%>
@@ -133,13 +133,14 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
-                <input id="registros" type="number" min="1" max="999" value="1"
+                <input id="registrosAlquiler" type="number" min="1" max="999" value="1"
                        class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
                 registros
             </label>
 
             <div class="input-group" style="max-width: 250px;">
-                <input type="text" class="form-control" id="nameSearch" placeholder="Buscar">
+                <input type="text" class="form-control" id="roomSearch" placeholder="Buscar por Habitación o Tipo"
+                onkeyup="SearchReporte('#fecha', '#responsable', '#roomSearch', 'filterReportes', 1, 10)">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
         </div>
@@ -235,13 +236,14 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
-                <input id="registros" type="number" min="1" max="999" value="1"
+                <input id="registrosVentaHab" type="number" min="1" max="999" value="1"
                        class="form-control d-inline-block text-center ms-1 me-1" style="width: 5rem;">
                 registros
             </label>
 
             <div class="input-group" style="max-width: 250px;">
-                <input type="text" class="form-control" id="nameSearch" placeholder="Buscar">
+                <input type="text" class="form-control" id="articuloSearch" placeholder="Buscar"
+                       onkeyup="SearchReporte('#fecha', '#responsable', '#articuloSearch', 'filterReportes', 1, 10)">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
         </div>
@@ -338,13 +340,14 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
-                <input id="registros" type="number" min="1" max="999" value="<%=allInfoVentasDirectas.size()%>"
+                <input id="registrosVentaDirecta" type="number" min="1" max="999" value="<%=allInfoVentasDirectas.size()%>"
                        class="form-control d-inline-block text-center ms-1 me-1" style="width: 5rem;" readonly>
                 registros
             </label>
 
             <div class="input-group" style="max-width: 250px;">
-                <input type="text" class="form-control" id="nameSearch" placeholder="Buscar">
+                <input type="text" class="form-control" id="productSearch" placeholder="Buscar por producto"
+                onkeyup="SearchReporte('#fecha', '#responsable', '#productSearch', 'filterReportes', 1, 10)">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
         </div>

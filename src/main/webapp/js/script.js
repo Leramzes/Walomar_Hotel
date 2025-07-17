@@ -429,14 +429,27 @@ function buscarClienteRecepcion() {
     });
 }
 
-window.SearchReporte = function (wordKey, stateKey, quantitySearch, controller, page = 1, size = 10) {
+window.SearchReporte = function (wordKey, stateKey, search, controller, page = 1, size = 10) {
     var fecha = $(wordKey).val();
     var empleadoId = $(stateKey).val();
+    var itemSearch = $(search).val();
     var pestañaActivaId = $(".tab-pane.active").attr("id");
     var pst = 1;
-    if (pestañaActivaId === "alquiler") pst = 1;
-    else if (pestañaActivaId === "habitacion-venta") pst = 2;
-    else if (pestañaActivaId === "habitacion-venta-directa") pst = 3;
+    var idtable = '';
+    let quantityInputId = "";
+    if (pestañaActivaId === "alquiler") {
+        pst = 1;
+        idtable = '#reporteAlquiler';
+        quantityInputId = "#registrosAlquiler"
+    } else if (pestañaActivaId === "habitacion-venta") {
+        pst = 2;
+        idtable = '#tablaServiciosHab';
+        quantityInputId = "#registrosVentaHab"
+    } else if (pestañaActivaId === "habitacion-venta-directa") {
+        pst = 3;
+        idtable = "#tablaReportesVD";
+        quantityInputId = "#registrosVentaDirecta"
+    }
 
     $.ajax({
         url: controller,
@@ -445,7 +458,8 @@ window.SearchReporte = function (wordKey, stateKey, quantitySearch, controller, 
             empleadoId: empleadoId,
             page: page,
             size: size,
-            pst: pst
+            pst: pst,
+            itemSearch: itemSearch
         },
         success: function (result) {
             let tbodyId = "";
@@ -462,7 +476,7 @@ window.SearchReporte = function (wordKey, stateKey, quantitySearch, controller, 
             var totalRecords = match ? parseInt(match[1]) : 0;
 
             // ✅ Aquí se actualiza el valor del input "registros"
-            $(quantitySearch).val($(tbodyId).find("tbody tr").length);
+            $(quantityInputId).val($(idtable).find("tbody tr").length);
 
             if (pst === 3) {
                 let totalMatch = result.match(/<!--TOTAL_EMPLEADO:(\d+(\.\d{1,2})?)-->/);
@@ -473,8 +487,6 @@ window.SearchReporte = function (wordKey, stateKey, quantitySearch, controller, 
                 }
             }
 
-            // Actualizar la paginación
-            updatePagination(totalRecords, page, size, wordKey, stateKey, tableSearch, quantitySearch, controller);
         },
         error: function () {
             console.error("Error al obtener los datos filtrados.");
@@ -483,7 +495,6 @@ window.SearchReporte = function (wordKey, stateKey, quantitySearch, controller, 
 }
 
 window.Search = function (wordKey, stateKey, tableSearch, quantitySearch, controller, page = 1, size = 10) {
-    console.log($(wordKey));
     var nameFilter = $(wordKey).val().trim();
     var stateFilter = $(stateKey).val().trim();
     console.log("Filtros enviados:", {filter: nameFilter, estate: stateFilter, page, size});

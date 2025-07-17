@@ -26,6 +26,7 @@ public class FilterReportes extends HttpServlet {
         try (PrintWriter out = resp.getWriter()) {
             String fechaParam = req.getParameter("fecha");
             String empleadoIdParam = req.getParameter("empleadoId");
+            String item = req.getParameter("itemSearch");
             int pestania = Integer.parseInt(req.getParameter("pst"));
 
             // Convertir fecha
@@ -52,7 +53,7 @@ public class FilterReportes extends HttpServlet {
             switch (pestania) {
                 case 1:
                     // Obtener lista filtrada
-                    List<AllInfoReporteAlquiler> alquilerFiltradas = GestionReportes.filterReportesReservation(idEmpleado, fechaFiltrada, page, size);
+                    List<AllInfoReporteAlquiler> alquilerFiltradas = GestionReportes.filterReportesReservation(idEmpleado, fechaFiltrada, item, page, size);
 
                     int totalAlquileres = alquilerFiltradas.size();
                     totalPorEmpleado = 0.0;
@@ -99,7 +100,8 @@ public class FilterReportes extends HttpServlet {
 
                 case 2:
                     // Obtener lista filtrada
-                    List<AllInfoReporteVenta> ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, fechaFiltrada);
+                    List<AllInfoReporteVenta> ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, fechaFiltrada,
+                            item);
 
                     totalVentas = ventasHabFiltradas.size();
                     totalPorEmpleado = 0.0;
@@ -127,15 +129,21 @@ public class FilterReportes extends HttpServlet {
 
                 case 3:
                     // Obtener lista filtrada
-                    List<AllInfoVentasDirecta> ventasFiltradas = GestionVentas.filterVentaDirecta(idEmpleado, fechaFiltrada, page, size);
+                    List<AllInfoVentasDirecta> ventasFiltradas = GestionVentas.filterVentaDirecta(idEmpleado, fechaFiltrada, item, page, size);
 
                     totalVentas = ventasFiltradas.size();
                     totalPorEmpleado = 0.0;
                     if (fechaFiltrada != null) {
                         if (idEmpleado == -1) {
-                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorFecha(fechaFiltrada); // 🔁 todos los empleados
+                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorFecha(fechaFiltrada);
                         } else {
-                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorEmpleadoYFecha(idEmpleado, fechaFiltrada); // 👤 específico
+                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorEmpleadoYFecha(idEmpleado, fechaFiltrada);
+                        }
+                    } else {
+                        if (idEmpleado != -1) {
+                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorEmpleado(idEmpleado);
+                        } else {
+                            totalPorEmpleado = GestionVentas.getAmuntTotalVentaDirecta();
                         }
                     }
                     count = 1;
