@@ -1,5 +1,6 @@
 <%@ page import="development.team.hoteltransylvania.Model.InformationHotel" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionInformationHotel" %>
+<%@ page import="development.team.hoteltransylvania.Util.ConfigUtil" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,10 +12,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="css/login.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <%
-    //InformationHotel hotelInfo = GestionInformationHotel.getInformationHotel();
+    String siteKey = ConfigUtil.getProperty("recaptcha.site_key");
 %>
 
 <body>
@@ -48,16 +50,9 @@
                                class="form-control form-control-lg bg-light fs-6" placeholder="Contraseña">
                     </div>
 
-                    <div class="input-group mb-5 d-flex justify-content-between">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="formCheck">
-                            <label for="formCheck" class="form-check-label text-secondary">
-                                <small>Recordar</small>
-                            </label>
-                        </div>
-                        <div class="forgot">
-                            <small><a href="#">¿Has olvidado tu contraseña?</a></small>
-                        </div>
+                    <div class="input-group mb-3 d-flex justify-content-between">
+                        <!-- reCAPTCHA -->
+                        <div class="g-recaptcha" data-sitekey="<%=siteKey%>"></div>
                     </div>
                     <div class="input-group mb-3">
                         <button type="submit" class="btn btn-lg w-100 fs-6 text-white"
@@ -66,11 +61,6 @@
                         </button>
                     </div>
                 </form>
-                <!--
-                <div class="row">
-                  <small>¿No tienes cuenta? <a href="registro.jsp">Regístrate</a></small>
-                </div>
-                -->
             </div>
         </div>
     </div>
@@ -142,6 +132,16 @@
         </div>
     </div>
 </div>--%>
+<div id="captcha-alert" class="captcha-alert">
+    ⚠️ Verifica el captcha antes de continuar.
+</div>
+<script>
+    <% if (request.getAttribute("loginError") != null) { %>
+    document.addEventListener("DOMContentLoaded", function () {
+        mostrarAlerta("⚠️ Usuario o contraseña incorrectos.");
+    });
+    <% } %>
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/login.js"></script>
 </body>
