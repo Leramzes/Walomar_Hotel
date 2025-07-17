@@ -212,13 +212,6 @@
                             Reporte Mensual
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link" data-pagina="reporteMensual"
-                           onclick="cargarPagina('jsp/historialVentas.jsp')">
-                            <i class="fa-solid fa-sheet-plastic me-2"></i>
-                            Reporte Mensual
-                        </a>
-                    </li>
                 </ul>
             </li>
 

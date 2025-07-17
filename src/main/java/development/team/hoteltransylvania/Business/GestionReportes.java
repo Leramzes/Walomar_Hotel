@@ -293,6 +293,86 @@ public class GestionReportes {
 
         return filtrados;
     }
+    public static List<AllInfoReporteVenta> filterReportesHabitacion(int empleadoId, Integer anio, Integer mes, String articulo) {
+        List<AllInfoReporteVenta> combinados = new ArrayList<>();
+
+        // 1. Fuente: Venta Directa
+        for (AllInfoVentasDirecta vd : GestionVentas.getAllVentasDirecta()) {
+            AllInfoReporteVenta r = new AllInfoReporteVenta();
+
+            r.setId_venta(vd.getId_venta_directa());
+            r.setNumeroHabitacion("--");
+            r.setNombreArticulo(vd.getProducto());
+            r.setCantArticulo(vd.getCantidad());
+            r.setPrecioUnitArticulo(vd.getPrecio_unitario());
+            r.setPrecioTotalArticulo(vd.getPrecio_total());
+            r.setFecha_hora_compra(vd.getFecha_hora());
+            r.setNombreEmpleado(vd.getEmpleado());
+            r.setIdEmpleado(vd.getId_empleado());
+            r.setTipoVenta("Venta Directa");
+
+            combinados.add(r);
+        }
+
+        // 2. Productos en habitación
+        for (AllInfoReporteVenta ph : GestionReportes.getAllReporteVentaProductoHabitacion()) {
+            AllInfoReporteVenta copia = new AllInfoReporteVenta();
+            copia.setId_venta(ph.getId_venta());
+            copia.setNumeroHabitacion(ph.getNumeroHabitacion());
+            copia.setNombreArticulo(ph.getNombreArticulo());
+            copia.setCantArticulo(ph.getCantArticulo());
+            copia.setPrecioUnitArticulo(ph.getPrecioUnitArticulo());
+            copia.setPrecioTotalArticulo(ph.getPrecioTotalArticulo());
+            copia.setFecha_hora_compra(ph.getFecha_hora_compra());
+            copia.setNombreEmpleado(ph.getNombreEmpleado());
+            copia.setIdEmpleado(ph.getIdEmpleado());
+            copia.setTipoVenta("Recepción");
+            combinados.add(copia);
+        }
+
+        // 3. Servicios en habitación
+        for (AllInfoReporteVenta sh : GestionReportes.getAllReporteVentaServicioHabitacion()) {
+            AllInfoReporteVenta copia = new AllInfoReporteVenta();
+            copia.setId_venta(sh.getId_venta());
+            copia.setNumeroHabitacion(sh.getNumeroHabitacion() + " - 24H");
+            copia.setNombreArticulo(sh.getNombreArticulo());
+            copia.setCantArticulo(0); // sin cantidad
+            copia.setPrecioUnitArticulo(0.0); // sin PU
+            copia.setPrecioTotalArticulo(sh.getPrecioTotalArticulo());
+            copia.setFecha_hora_compra(sh.getFecha_hora_compra());
+            copia.setNombreEmpleado(sh.getNombreEmpleado());
+            copia.setIdEmpleado(sh.getIdEmpleado());
+            copia.setTipoVenta("Recepción");
+            combinados.add(copia);
+        }
+
+        // 4. Aplicar filtros
+        List<AllInfoReporteVenta> filtrados = combinados.stream()
+                .filter(rep -> {
+                    boolean porEmpleado = empleadoId == -1 || rep.getIdEmpleado() == empleadoId;
+
+                    boolean porMesAnio = true;
+                    if (anio != null && mes != null) {
+                        LocalDate fechaCompra = rep.getFecha_hora_compra().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate();
+
+                        porMesAnio = (fechaCompra.getYear() == anio && fechaCompra.getMonthValue() == mes);
+                    }
+
+                    boolean porProducto = true;
+                    if (articulo != null && !articulo.trim().isEmpty()) {
+                        porProducto = rep.getNombreArticulo() != null &&
+                                rep.getNombreArticulo().toLowerCase().contains(articulo.toLowerCase());
+                    }
+
+                    return porEmpleado && porMesAnio && porProducto;
+                })
+                .collect(Collectors.toList());
+
+        return filtrados;
+    }
+
     public static List<AllInfoReporteAlquiler> getReporteReservation() {
         String sql = "SELECT * FROM obtener_reporte_alquiler()";
         List<AllInfoReporteAlquiler> reservationList = new ArrayList<>();
@@ -388,6 +468,43 @@ public class GestionReportes {
                     }
 
                     return porEmpleado && porFecha && porHabitacion;
+                })
+                .collect(Collectors.toList());
+
+        // Paginación
+        int from = Math.max((page - 1) * size, 0);
+        int to = Math.min(from + size, filtrados.size());
+
+        return filtrados.subList(from, to);
+    }
+    public static List<AllInfoReporteAlquiler> filterReportesReservation(int empleadoId, Integer anio, Integer mes,
+                                                                         String roomSearch, int page, int size) {
+        List<AllInfoReporteAlquiler> allAlquileres = getReporteReservation();
+
+        List<AllInfoReporteAlquiler> filtrados = allAlquileres.stream()
+                .filter(alquiler -> {
+                    boolean porEmpleado = empleadoId == -1 || alquiler.getEmpleadoId() == empleadoId;
+
+                    boolean porMesAnio = true;
+                    if (anio != null && mes != null) {
+                        LocalDate fechaVenta = alquiler.getCheckInDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate();
+                        porMesAnio = (fechaVenta.getYear() == anio && fechaVenta.getMonthValue() == mes);
+                    }
+
+                    boolean porHabitacion = true;
+                    if (roomSearch != null && !roomSearch.trim().isEmpty()) {
+                        String searchLower = roomSearch.toLowerCase();
+                        porHabitacion =
+                                (alquiler.getNumberRoom() != null &&
+                                        alquiler.getNumberRoom().toLowerCase().contains(searchLower)) ||
+
+                                        (alquiler.getRoomType() != null &&
+                                                alquiler.getRoomType().toLowerCase().contains(searchLower));
+                    }
+
+                    return porEmpleado && porMesAnio && porHabitacion;
                 })
                 .collect(Collectors.toList());
 

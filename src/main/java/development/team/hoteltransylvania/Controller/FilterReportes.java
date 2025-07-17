@@ -31,8 +31,20 @@ public class FilterReportes extends HttpServlet {
 
             // Convertir fecha
             Date fechaFiltrada = null;
+            int anio = -1;
+            int mes = -1;
+
             if (fechaParam != null && !fechaParam.trim().isEmpty()) {
-                fechaFiltrada = Date.valueOf(fechaParam); // <-- convierte yyyy-MM-dd a java.sql.Date
+                if (fechaParam.length() == 10) { // yyyy-MM-dd
+                    // Fecha completa
+                    fechaFiltrada = Date.valueOf(fechaParam);
+                } else if (fechaParam.length() == 7) { // yyyy-MM
+                    // Solo mes y año
+                    String[] partes = fechaParam.split("-");
+                    anio = Integer.parseInt(partes[0]);
+                    mes = Integer.parseInt(partes[1]);
+                    // Puedes luego usar anio y mes como parámetros en otra función
+                }
             }
 
             // Convertir ID de empleado
@@ -53,7 +65,14 @@ public class FilterReportes extends HttpServlet {
             switch (pestania) {
                 case 1:
                     // Obtener lista filtrada
-                    List<AllInfoReporteAlquiler> alquilerFiltradas = GestionReportes.filterReportesReservation(idEmpleado, fechaFiltrada, item, page, size);
+                    List<AllInfoReporteAlquiler> alquilerFiltradas;
+
+                    if (anio != -1 && mes != -1) {
+                        alquilerFiltradas = GestionReportes.filterReportesReservation(idEmpleado, anio, mes, item, page, size);
+                    } else {
+                        alquilerFiltradas = GestionReportes.filterReportesReservation(idEmpleado, fechaFiltrada, item, page, size);
+                    }
+
 
                     int totalAlquileres = alquilerFiltradas.size();
                     totalPorEmpleado = 0.0;
@@ -100,8 +119,13 @@ public class FilterReportes extends HttpServlet {
 
                 case 2:
                     // Obtener lista filtrada
-                    List<AllInfoReporteVenta> ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, fechaFiltrada,
-                            item);
+                    List<AllInfoReporteVenta> ventasHabFiltradas;
+
+                    if (anio != -1 && mes != -1) {
+                        ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, anio, mes, item);
+                    } else {
+                        ventasHabFiltradas = GestionReportes.filterReportesHabitacion(idEmpleado, fechaFiltrada, item);
+                    }
 
                     totalVentas = ventasHabFiltradas.size();
                     totalPorEmpleado = 0.0;
@@ -129,36 +153,47 @@ public class FilterReportes extends HttpServlet {
 
                 case 3:
                     // Obtener lista filtrada
-                    List<AllInfoVentasDirecta> ventasFiltradas = GestionVentas.filterVentaDirecta(idEmpleado, fechaFiltrada, item, page, size);
+                    List<AllInfoVentasDirecta> ventasFiltradas =
+                            (anio != -1 && mes != -1)
+                                    ? GestionVentas.filterVentaDirectaPorMes(idEmpleado, anio, mes, item, page, size)
+                                    : GestionVentas.filterVentaDirecta(idEmpleado, fechaFiltrada, item, page, size);
 
                     totalVentas = ventasFiltradas.size();
                     totalPorEmpleado = 0.0;
-                    if (fechaFiltrada != null) {
-                        if (idEmpleado == -1) {
-                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorFecha(fechaFiltrada);
+
+                    boolean hayFecha = fechaFiltrada != null;
+                    boolean hayEmpleado = idEmpleado != -1;
+                    boolean hayMesYAnio = anio != -1 && mes != -1;
+
+                    if (hayFecha || hayMesYAnio) {
+                        if (hayEmpleado) {
+                            totalPorEmpleado = hayMesYAnio
+                                    ? GestionVentas.getMontoTotalVentaPorEmpleadoYMes(idEmpleado, anio, mes)
+                                    : GestionVentas.getMontoTotalVentaPorEmpleadoYFecha(idEmpleado, fechaFiltrada);
                         } else {
-                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorEmpleadoYFecha(idEmpleado, fechaFiltrada);
+                            totalPorEmpleado = hayMesYAnio
+                                    ? GestionVentas.getMontoTotalVentaPorMes(anio, mes)
+                                    : GestionVentas.getMontoTotalVentaPorFecha(fechaFiltrada);
                         }
                     } else {
-                        if (idEmpleado != -1) {
-                            totalPorEmpleado = GestionVentas.getMontoTotalVentaPorEmpleado(idEmpleado);
-                        } else {
-                            totalPorEmpleado = GestionVentas.getAmuntTotalVentaDirecta();
-                        }
+                        totalPorEmpleado = hayEmpleado
+                                ? GestionVentas.getMontoTotalVentaPorEmpleado(idEmpleado)
+                                : GestionVentas.getAmuntTotalVentaDirecta();
                     }
+
                     count = 1;
-                    for (AllInfoVentasDirecta ventaFiltrada : ventasFiltradas) {
+                    for (AllInfoVentasDirecta venta : ventasFiltradas) {
                         out.println("<tr>");
-                        out.println("<td>" + count + "</td>");
-                        out.println("<td>" + ventaFiltrada.getProducto() + "</td>");
-                        out.println("<td>" + ventaFiltrada.getCantidad() + "</td>");
-                        out.println("<td>" + ventaFiltrada.getPrecio_unitario() + "</td>");
-                        out.println("<td>" + ventaFiltrada.getPrecio_total() + "</td>");
-                        out.println("<td>" + ventaFiltrada.getFecha_hora() + "</td>");
-                        out.println("<td>" + ventaFiltrada.getEmpleado() + "</td>");
+                        out.println("<td>" + count++ + "</td>");
+                        out.println("<td>" + venta.getProducto() + "</td>");
+                        out.println("<td>" + venta.getCantidad() + "</td>");
+                        out.println("<td>" + venta.getPrecio_unitario() + "</td>");
+                        out.println("<td>" + venta.getPrecio_total() + "</td>");
+                        out.println("<td>" + venta.getFecha_hora() + "</td>");
+                        out.println("<td>" + venta.getEmpleado() + "</td>");
                         out.println("</tr>");
-                        count++;
                     }
+
                     out.println("<!--COUNT:" + totalVentas + "-->");
                     out.println("<!--TOTAL_EMPLEADO:" + totalPorEmpleado + "-->");
                     break;

@@ -170,6 +170,34 @@ public class GestionVentas {
 
         return total;
     }
+    public static double getMontoTotalVentaPorEmpleadoYMes(int empleadoId, int anio, int mes) {
+        String sql = "SELECT SUM(vd.total) " +
+                "FROM venta_directa vd " +
+                "INNER JOIN comprobantes co ON vd.id_comprobante = co.id " +
+                "WHERE vd.empleado_id = ? " +
+                "AND EXTRACT(YEAR FROM co.fecha_emision) = ? " +
+                "AND EXTRACT(MONTH FROM co.fecha_emision) = ?";
+        double total = 0.0;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, empleadoId);
+            ps.setInt(2, anio);
+            ps.setInt(3, mes);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble(1);
+                if (rs.wasNull()) total = 0.0;
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error al obtener el monto total de ventas por empleado y mes: " + e.getMessage());
+        }
+
+        return total;
+    }
     public static double getMontoTotalVentaPorFecha(Date fecha) {
         String sql = "SELECT SUM(vd.total) " +
                 "FROM venta_directa vd " +
@@ -190,6 +218,33 @@ public class GestionVentas {
 
         } catch (SQLException e) {
             LOGGER.severe("Error al obtener el monto total de ventas por fecha: " + e.getMessage());
+        }
+
+        return total;
+    }
+    public static double getMontoTotalVentaPorMes(int anio, int mes) {
+        String sql = "SELECT SUM(vd.total) " +
+                "FROM venta_directa vd " +
+                "INNER JOIN comprobantes co ON vd.id_comprobante = co.id " +
+                "WHERE EXTRACT(YEAR FROM co.fecha_emision) = ? " +
+                "AND EXTRACT(MONTH FROM co.fecha_emision) = ?";
+        double total = 0.0;
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, anio);
+            ps.setInt(2, mes);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+                if (rs.wasNull()) total = 0.0;
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error al obtener el monto total de ventas por mes: " + e.getMessage());
         }
 
         return total;
@@ -455,6 +510,35 @@ public class GestionVentas {
                 })
                 .collect(Collectors.toList());
 
+        int from = Math.max((page - 1) * size, 0);
+        int to = Math.min(from + size, filtradas.size());
+
+        return filtradas.subList(from, to);
+    }
+    public static List<AllInfoVentasDirecta> filterVentaDirectaPorMes(int empleadoId, int anio, int mes, String nombreProducto, int page, int size) {
+        List<AllInfoVentasDirecta> todasVentas = getAllVentasDirecta();
+
+        List<AllInfoVentasDirecta> filtradas = todasVentas.stream()
+                .filter(venta -> {
+                    boolean porEmpleado = empleadoId == -1 || venta.getId_empleado() == empleadoId;
+
+                    // Filtrar por mes y año
+                    LocalDate fechaVenta = venta.getFecha_hora().toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    boolean porMesAnio = fechaVenta.getYear() == anio && fechaVenta.getMonthValue() == mes;
+
+                    // Filtro por nombre de producto
+                    boolean porNombre = true;
+                    if (nombreProducto != null && !nombreProducto.trim().isEmpty()) {
+                        porNombre = venta.getProducto().toLowerCase().contains(nombreProducto.toLowerCase());
+                    }
+
+                    return porEmpleado && porMesAnio && porNombre;
+                })
+                .collect(Collectors.toList());
+
+        // Paginación
         int from = Math.max((page - 1) * size, 0);
         int to = Math.min(from + size, filtradas.size());
 

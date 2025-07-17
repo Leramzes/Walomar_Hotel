@@ -1,6 +1,5 @@
 <%@ page import="development.team.hoteltransylvania.Business.GestionEmployee" %>
 <%@ page import="java.util.List" %>
-<%@ page import="development.team.hoteltransylvania.Model.Employee" %>
 <%@ page import="development.team.hoteltransylvania.DTO.usersEmployeeDTO" %>
 <%@ page import="development.team.hoteltransylvania.Business.GestionVentas" %>
 <%@ page import="development.team.hoteltransylvania.DTO.AllInfoVentasDirecta" %>

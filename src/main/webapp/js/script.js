@@ -2226,6 +2226,13 @@ async function exportarTablaVisible() {
         return;
     }
 
+    const filasT = tabla.querySelectorAll("tr");
+    // Validar que tenga más de solo la cabecera
+    if (filasT.length <= 1) {
+        Swal.fire('Aviso', 'La tabla no contiene datos para exportar.', 'warning');
+        return;
+    }
+
     const workbook = new ExcelJS.Workbook();
     const hoja = workbook.addWorksheet("Reporte");
 
