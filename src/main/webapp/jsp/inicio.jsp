@@ -129,6 +129,24 @@
                 </div>
             </div>
         </div>
+        <div class="card mt-4">
+            <div class="card-header text-white d-flex align-items-center">
+                <p class="mb-0"><i class="fas fa-user-tie me-2"></i> Usuario con más ventas</p>
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title text-success" id="topVendedorNombre">Cargando...</h5>
+                <p class="card-text">Total Ventas: <strong id="topVendedorMonto">S/ 0.00</strong></p>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header text-white d-flex align-items-center">
+                <p class="mb-0"><i class="fas fa-bed me-2"></i> Habitación con más ingresos</p>
+            </div>
+            <div class="card-body text-center">
+                <h5 class="card-title text-primary" id="topHabitacion">Cargando...</h5>
+                <p class="card-text">Ingreso total: <strong id="topHabitacionMonto">S/ 0.00</strong></p>
+            </div>
+        </div>
     </div>
 
     <!-- Tarjeta de Lista de Habitaciones Ocupadas -->

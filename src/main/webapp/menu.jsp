@@ -1002,7 +1002,23 @@
         }
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("dashboardController?action=topVendedor")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("topVendedorNombre").textContent = data.nombre_empleado;
+                document.getElementById("topVendedorMonto").textContent = `S/ ${data.total_ventas.toFixed(2)}`;
+            });
 
+        fetch("dashboardController?action=topHabitacion")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("topHabitacion").textContent = `Habitación ${data.numero_habitacion}`;
+                document.getElementById("topHabitacionMonto").textContent = `S/ ${data.total_ingresos.toFixed(2)}`;
+            });
+    });
+</script>
 <script>
     const API_KEY = "b13b4cd6c3624c3c9d338e82d2117962"; // tu API Key
     let timerCorreo;

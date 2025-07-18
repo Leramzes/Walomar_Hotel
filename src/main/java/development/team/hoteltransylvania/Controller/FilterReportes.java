@@ -101,7 +101,6 @@ public class FilterReportes extends HttpServlet {
                         out.println("<td>" + (alquiler.getTotal_consumo_productos() + alquiler.getTotal_consumo_servicios()) + "</td>");
                         out.println("<td>" + alquiler.getTotal_penalidad() + "</td>");
                         out.println("<td class='" + clasePagoTotal + "'>" + pagoTotalTexto + "</td>");
-                        out.println("<td class='text-danger'>Sí</td>");
                         out.println("<td class='d-flex justify-content-center gap-1'>");
                         out.println("    <button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerDetalle'>");
                         out.println("        👁️");

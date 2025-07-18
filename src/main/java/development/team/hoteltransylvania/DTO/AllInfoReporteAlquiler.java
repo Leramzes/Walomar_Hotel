@@ -28,6 +28,7 @@ public class AllInfoReporteAlquiler {
     private double adelanto;
     private double pago_total_reserva;
     private int empleadoId;
+    private String nombre_empleado;
     private double total_consumo_productos;
     private double total_consumo_servicios;
     private double total_penalidad;
@@ -35,6 +36,14 @@ public class AllInfoReporteAlquiler {
 
     public String getTipoAlquiler() {
         return tipoAlquiler;
+    }
+
+    public String getNombre_empleado() {
+        return nombre_empleado;
+    }
+
+    public void setNombre_empleado(String nombre_empleado) {
+        this.nombre_empleado = nombre_empleado;
     }
 
     public void setTipoAlquiler(String tipoAlquiler) {

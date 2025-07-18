@@ -62,7 +62,7 @@
     %>
     <div class="col-md-2">
         <label for="fecha" class="form-label"><strong>Fecha</strong></label>
-        <input type="date" id="fecha" class="form-control" value="<%= hoy %>"
+        <input type="date" id="fecha" class="form-control"
                onchange="SearchReporte('#fecha', '#responsable', '#nameSearch', 'filterReportes', 1, 10)">
     </div>
     <div class="col-md-2">
@@ -132,12 +132,12 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
             <label for="registros">Mostrando
-                <input id="registrosAlquiler" type="number" min="1" max="999" value="1"
-                       class="form-control d-inline-block text-center ms-1 me-1" style="width: 4rem;">
+                <input id="registrosAlquiler" type="number" min="1" max="999" value="<%=alquileres.size()%>"
+                       class="form-control d-inline-block text-center ms-1 me-1" style="width: 5rem;">
                 registros
             </label>
 
-            <div class="input-group" style="max-width: 250px;">
+            <div class="input-group" style="max-width: 280px;">
                 <input type="text" class="form-control" id="roomSearch" placeholder="Buscar por Habitación o Tipo"
                 onkeyup="SearchReporte('#fecha', '#responsable', '#roomSearch', 'filterReportes', 1, 10)">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -157,7 +157,6 @@
                     <th>Servicios</th>
                     <th>Penalidad</th>
                     <th>Total Alquiler</th>
-                    <th>Tiempo Rebasado</th>
                     <th>Detalles</th>
                 </tr>
                 </thead>
@@ -189,9 +188,10 @@
                     <td><%= alquiler.getTotal_consumo_productos() + alquiler.getTotal_consumo_servicios() %></td>
                     <td><%= alquiler.getTotal_penalidad() %></td>
                     <td class="<%= clasePagoTotal %>"><%= pagoTotalTexto %></td>
-                    <td class="text-danger">Sí</td>
                     <td class="d-flex justify-content-center gap-1">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle">
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerDetalle"
+                                title="Ver Detalle"
+                                onclick="detalleReporte(<%= alquiler.getIdReservation() %>)">
                             👁️
                         </button>
                     </td>
@@ -405,174 +405,96 @@
             <div class="modal-body">
                 <h5>Datos del Cliente:</h5>
                 <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre Completo</label>
-                    <input type="text" class="form-control" id="nombre" readonly>
+                    <label for="nombreReporte" class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" id="nombreReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
-                    <select class="form-select" id="tipoDocumento" disabled>
-                        <option value="DNI">DNI</option>
-                        <option value="PASAPORTE">PASAPORTE</option>
-                        <option value="RUC">RUC</option>
-                    </select>
+                    <label for="tipoDocumentoReporte" class="form-label">Tipo de Documento</label>
+                    <input type="text" class="form-control" id="tipoDocumentoReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="documento" class="form-label">Documento</label>
-                    <input type="text" class="form-control" id="documento" readonly>
+                    <label for="documentoReporte" class="form-label">Documento</label>
+                    <input type="text" class="form-control" id="documentoReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="nit" class="form-label">NIT</label>
-                    <input type="text" class="form-control" id="nit" readonly>
+                    <label for="correoReporte" class="form-label">Correo</label>
+                    <input type="email" class="form-control" id="correoReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="nombreFacturar" class="form-label">Nombre a Facturar</label>
-                    <input type="text" class="form-control" id="nombreFacturar" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="correo" class="form-label">Correo</label>
-                    <input type="email" class="form-control" id="correo" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="tel" class="form-control" id="telefono" readonly>
+                    <label for="telefonoReporte" class="form-label">Teléfono</label>
+                    <input type="tel" class="form-control" id="telefonoReporte" disabled>
                 </div>
 
                 <hr>
 
                 <h5>Datos del Alojamiento:</h5>
                 <div class="mb-3">
-                    <label for="tipoAtencion" class="form-label">Tipo de Atención</label>
-                    <select class="form-select" id="tipoAtencion" disabled>
-                        <option value="recepción">Recepción</option>
-                        <option value="reservación">Reservación</option>
-                    </select>
+                    <label for="tipoAtencionReporte" class="form-label">Tipo de Atención</label>
+                    <input type="text" id="tipoAtencionReporte" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="tipoHabitacion" class="form-label">Tipo de Habitación</label>
-                    <select class="form-select" id="tipoHabitacion" disabled>
-                        <option value="simple">Simple</option>
-                        <option value="doble">Doble</option>
-                        <option value="presidencial">Presidencial</option>
-                    </select>
+                    <label for="tipoHabitacionReporte" class="form-label">Tipo de Habitación</label>
+                    <input type="text" id="tipoHabitacionReporte" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="habitacion" class="form-label">Habitación</label>
-                    <select class="form-select" id="habitacion" disabled>
-                        <option value="696">696</option>
-                        <option value="600">600</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="tarifa" class="form-label">Tarifa</label>
-                    <select class="form-select" id="tarifa" disabled>
-                        <option value="12hr">12hr</option>
-                        <option value="24hr">24hr</option>
-                    </select>
+                    <label for="habitacionReporte" class="form-label">Habitación</label>
+                    <input type="text" id="habitacionReporte" class="form-control" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="descuento" class="form-label">Descuento</label>
-                    <input type="text" class="form-control" id="descuento" readonly>
+                    <input type="text" class="form-control" id="descuentoReporte" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="precioPagar" class="form-label">Precio a Pagar</label>
-                    <input type="text" class="form-control" id="precioPagar" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="creacion" class="form-label">Creación</label>
-                    <input type="date" class="form-control" id="creacion" readonly>
+                    <input type="text" class="form-control" id="precioPagarReporte" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="ingreso" class="form-label">Ingreso</label>
-                    <input type="date" class="form-control" id="ingreso" readonly>
+                    <input type="text" class="form-control" id="ingresoReporte" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="salidaCalculada" class="form-label">Salida Calculada</label>
-                    <input type="date" class="form-control" id="salidaCalculada" readonly>
+                    <input type="text" class="form-control" id="salidaCalculadaReporte" disabled>
                 </div>
                 <div class="mb-3">
                     <label for="salida" class="form-label">Salida</label>
-                    <input type="date" class="form-control" id="salida" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="tiempoRebasado" class="form-label">Tiempo Rebasado</label>
-                    <input type="text" class="form-control" id="tiempoRebasado" readonly>
-                </div>
-                <div class="mb-3">
-                    <label for="observaciones" class="form-label">Observaciones</label>
-                    <input type="text" class="form-control" id="observaciones" readonly>
+                    <input type="text" class="form-control" id="salidaReporte" disabled>
                 </div>
 
                 <hr>
 
                 <h5>Costos:</h5>
                 <div class="mb-3">
-                    <label for="cobroExtra" class="form-label">Cobro extra</label>
-                    <input type="number" class="form-control" id="cobroExtra" readonly>
+                    <label for="cobroExtra" class="form-label">Cobro extra (S/.)</label>
+                    <input type="number" class="form-control" id="cobroExtraReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="costoAlquilerCalculado" class="form-label">Costo Alquiler Calculado</label>
-                    <input type="number" class="form-control" id="costoAlquilerCalculado" readonly>
+                    <label for="costoAlquilerCalculado" class="form-label">Costo Alquiler Calculado (S/.)</label>
+                    <input type="number" class="form-control" id="costoAlquilerCalculadoReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="dineroAdelantado" class="form-label">Dinero Adelantado</label>
-                    <input type="number" class="form-control" id="dineroAdelantado" readonly>
+                    <label for="dineroAdelantado" class="form-label">Dinero Adelantado (S/.)</label>
+                    <input type="number" class="form-control" id="dineroAdelantadoReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="servicio" class="form-label">Servicio</label>
-                    <input type="number" class="form-control" id="servicio" readonly>
+                    <label for="servicio" class="form-label">Servicio (S/.)</label>
+                    <input type="number" class="form-control" id="servicioReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="penalidad" class="form-label">Penalidad</label>
-                    <input type="number" class="form-control" id="penalidad" readonly>
+                    <label for="penalidad" class="form-label">Penalidad (S/.)</label>
+                    <input type="number" class="form-control" id="penalidadReporte" disabled>
                 </div>
                 <div class="mb-3">
-                    <label for="totalPagar" class="form-label">Total a Pagar</label>
-                    <input type="number" class="form-control" id="totalPagar" readonly>
+                    <label for="totalPagar" class="form-label">Total a Pagar (S/.)</label>
+                    <input type="number" class="form-control" id="totalPagarReporte" disabled>
                 </div>
 
                 <hr>
 
-                <h5>Métodos de Pago:</h5>
-                <div class="mb-3">
-                    <label for="dineroAdelantadoPago" class="form-label">Dinero Adelantado</label>
-                    <select class="form-select" id="dineroAdelantadoPago" disabled>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="tarjeta">Tarjeta</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="penalidadAlquilerCalculado" class="form-label">Penalidad y Resto del Alquiler
-                        Calculado</label>
-                    <select class="form-select" id="penalidadAlquilerCalculado" disabled>
-                        <option value="efectivo">Efectivo</option>
-                        <option value="tarjeta">Tarjeta</option>
-                    </select>
-                </div>
-
-                <hr>
-
-                <h5>Responsables:</h5>
+                <h5>Responsable:</h5>
                 <div class="mb-3">
                     <label for="usuarioCreacion" class="form-label">Usuario de Creación</label>
-                    <select class="form-select" id="usuarioCreacion" disabled>
-                        <option value="usuario1">Usuario 1</option>
-                        <option value="usuario2">Usuario 2</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="usuarioModificacion" class="form-label">Usuario de Modificación</label>
-                    <select class="form-select" id="usuarioModificacion" disabled>
-                        <option value="usuario1">Usuario 1</option>
-                        <option value="usuario2">Usuario 2</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="usuarioFinalizacion" class="form-label">Usuario de Finalización</label>
-                    <select class="form-select" id="usuarioFinalizacion" disabled>
-                        <option value="usuario1">Usuario 1</option>
-                        <option value="usuario2">Usuario 2</option>
-                    </select>
+                    <input type="text" id="usuarioCreacionReporte" class="form-control" disabled>
                 </div>
             </div>
             <div class="modal-footer">

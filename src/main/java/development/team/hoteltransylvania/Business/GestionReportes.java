@@ -514,4 +514,76 @@ public class GestionReportes {
 
         return filtrados.subList(from, to);
     }
+    public static AllInfoReporteAlquiler getReporteReservationById(int idReservation) {
+        String sql = "SELECT * FROM obtener_reporte_alquiler_por_id(?)";
+
+        try (Connection cnn = dataSource.getConnection();
+             PreparedStatement ps = cnn.prepareStatement(sql)) {
+
+            ps.setInt(1, idReservation);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    AllInfoReporteAlquiler alquiler = new AllInfoReporteAlquiler();
+
+                    alquiler.setIdReservation(rs.getInt("id_reserva"));
+                    alquiler.setIdClient(rs.getInt("id_cliente"));
+                    alquiler.setClientName(rs.getString("nombre_cliente"));
+                    alquiler.setClientApellidos(rs.getString("apellidos"));
+                    alquiler.setDocumentType(rs.getString("tipo_documento"));
+                    alquiler.setDocumentNumber(rs.getString("numero_documento"));
+                    alquiler.setEmail(rs.getString("email"));
+                    alquiler.setPhone(rs.getString("telefono"));
+                    alquiler.setEmpleadoId(rs.getInt("id_empleado"));
+                    alquiler.setIdRoom(rs.getInt("id_habitacion"));
+                    alquiler.setNumberRoom(rs.getString("numero_habitacion"));
+                    alquiler.setRoomTypeId(rs.getInt("tipo_id"));
+                    alquiler.setRoomType(rs.getString("tipo_habitacion"));
+
+                    Timestamp fechaInicio = rs.getTimestamp("fecha_inicio");
+                    Timestamp fechaFin = rs.getTimestamp("fecha_fin");
+                    Timestamp fechaIngreso = rs.getTimestamp("fecha_ingreso");
+                    Timestamp fechaDesalojo = rs.getTimestamp("fecha_desalojo");
+
+                    alquiler.setCheckInDate(fechaInicio);
+                    alquiler.setCheckOutDate(fechaFin);
+                    alquiler.setFecha_ingreso(fechaIngreso);
+                    alquiler.setFecha_desalojo(fechaDesalojo);
+
+                    alquiler.setCantDays(rs.getInt("cant_dias"));
+                    alquiler.setDsct(rs.getInt("descuento"));
+                    alquiler.setCobro_extra(rs.getDouble("cobro_extra"));
+                    alquiler.setAdelanto(rs.getDouble("adelanto"));
+                    alquiler.setPago_total_reserva(rs.getDouble("pago_total_reserva"));
+                    alquiler.setTotal_consumo_productos(rs.getDouble("total_consumo_productos"));
+                    alquiler.setTotal_consumo_servicios(rs.getDouble("total_consumo_servicios"));
+                    alquiler.setTotal_penalidad(rs.getDouble("total_penalidad"));
+                    alquiler.setReservationStatus(rs.getString("estado"));
+                    alquiler.setNombre_empleado(rs.getString("nombre_empleado"));
+
+                    // Determinar tipo de alquiler
+                    if (fechaInicio != null && fechaIngreso != null) {
+                        LocalDate inicio = fechaInicio.toLocalDateTime().toLocalDate();
+                        LocalDate ingreso = fechaIngreso.toLocalDateTime().toLocalDate();
+
+                        if (inicio.equals(ingreso)) {
+                            alquiler.setTipoAlquiler("Recepción");
+                        } else {
+                            alquiler.setTipoAlquiler("Reservación");
+                        }
+                    } else {
+                        alquiler.setTipoAlquiler("Cancelada *");
+                    }
+
+                    return alquiler;
+                }
+            }
+
+        } catch (SQLException e) {
+            LOGGER.severe("Error al obtener el reporte de alquiler con ID " + idReservation + ": " + e.getMessage());
+        }
+
+        return null;
+    }
+
 }

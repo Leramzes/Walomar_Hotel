@@ -244,6 +244,56 @@ function detalleReserva(id) {
         .catch(error => console.error("Error al obtener datos:", error));
 }
 
+function detalleReporte(id) {
+
+    fetch("reporteController?action=get&idreserva=" + id)
+        .then(response => response.json())  // Convertimos la respuesta a JSON
+        .then(data => {
+            document.getElementById("nombreReporte").value = data.clientName +' '+ data.clientApellidos;
+            document.getElementById("tipoDocumentoReporte").value = data.documentType;
+            document.getElementById("documentoReporte").value = data.documentNumber;
+            document.getElementById("correoReporte").value = data.email;
+            document.getElementById("telefonoReporte").value = data.phone;
+            document.getElementById("tipoAtencionReporte").value = data.tipoAlquiler;
+            document.getElementById("tipoHabitacionReporte").value = data.roomType;
+            document.getElementById("habitacionReporte").value = data.numberRoom;
+            document.getElementById("descuentoReporte").value = data.dsct;
+            document.getElementById("precioPagarReporte").value = data.pago_total_reserva;
+            document.getElementById("ingresoReporte").value = data.checkInDate;
+            document.getElementById("salidaCalculadaReporte").value = data.checkOutDate;
+            document.getElementById("salidaReporte").value = data.fecha_desalojo;
+
+            document.getElementById("cobroExtraReporte").value = data.cobro_extra;
+            document.getElementById("costoAlquilerCalculadoReporte").value = data.pago_total_reserva;
+            document.getElementById("dineroAdelantadoReporte").value = data.adelanto;
+            document.getElementById("servicioReporte").value = data.total_consumo_servicios + data.total_consumo_productos;
+            document.getElementById("penalidadReporte").value = data.total_penalidad;
+            const totalPagar = data.pago_total_reserva + data.total_consumo_servicios + data.total_consumo_productos + data.total_penalidad - data.adelanto - data.cobro_extra;
+            const totalPagarElem = document.getElementById("totalPagarReporte");
+            const adelantoElem = document.getElementById("dineroAdelantadoReporte");
+            const salidaElem = document.getElementById("salidaReporte");
+
+            totalPagarElem.value = totalPagar;
+            totalPagarElem.style.color = ""; // Reset color
+            adelantoElem.style.color = ""; // Reset color
+            salidaElem.parentElement.style.display = "block"; // Mostrar por defecto
+
+            // Si está cancelada
+            if (data.tipoAlquiler === "Cancelada *") {
+                // Oculta la salida
+                salidaElem.parentElement.style.display = "none";
+                // Resalta total a pagar en rojo
+                totalPagarElem.style.color = "red";
+                // Resalta el adelanto en verde
+                adelantoElem.style.color = "green";
+            }
+
+            document.getElementById("usuarioCreacionReporte").value = data.nombre_empleado;
+
+        })
+        .catch(error => console.error("Error al obtener datos:", error));
+}
+
 function editarReserva(id) {
     fetch("reservatioController?action=get&idreserva=" + id)
         .then(response => response.json())
