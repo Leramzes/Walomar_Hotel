@@ -50,6 +50,7 @@ function cargarPagina(pagina, view = "", limpiarView = false) {
             setTimeout(() => {
                 if (pagina === "jsp/inicio.jsp") {
                     iniciarGrafica(); // Ejecutar solo si es la página de inicio
+                    cargarDashboardData();
                 } else if (pagina === "jsp/reservaCalendario.jsp") {
                     // Ejecuta la función de inicialización del calendario si es la vista del calendario
                     if (typeof iniciarCalendario === 'function') {
@@ -63,7 +64,31 @@ function cargarPagina(pagina, view = "", limpiarView = false) {
             document.getElementById('contenido').innerHTML = '<div class="alert alert-danger">No se pudo cargar el contenido.</div>';
         });
 }
+function cargarDashboardData() {
+    fetch("dashboardController?action=topVendedor")
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.nombre_empleado) {
+                document.getElementById("topVendedorNombre").textContent = data.nombre_empleado;
+                document.getElementById("topVendedorMonto").textContent = `S/ ${data.total_ventas.toFixed(2)}`;
+            } else {
+                document.getElementById("topVendedorNombre").textContent = "No disponible";
+                document.getElementById("topVendedorMonto").textContent = "S/ 0.00";
+            }
+        });
 
+    fetch("dashboardController?action=topHabitacion")
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.numero_habitacion) {
+                document.getElementById("topHabitacion").textContent = `Habitación ${data.numero_habitacion}`;
+                document.getElementById("topHabitacionMonto").textContent = `S/ ${data.total_ingresos.toFixed(2)}`;
+            } else {
+                document.getElementById("topHabitacion").textContent = "No disponible";
+                document.getElementById("topHabitacionMonto").textContent = "S/ 0.00";
+            }
+        });
+}
 function iniciarGrafica() {
     const canvas = document.getElementById("graficaIngresos");
     if (!canvas) {

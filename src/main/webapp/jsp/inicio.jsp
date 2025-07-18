@@ -110,28 +110,7 @@
     <div class="<%=modClassAdmin1%>">
         <div class="card mt-4">
             <div class="card-header text-white d-flex align-items-center">
-                <p class="mb-0"><i class="fa-solid fa-chart-area me-2"></i> Estadísticas</p>
-            </div>
-            <div class="card-body">
-                <!-- Filtro para seleccionar el rango de fechas por año-->
-                <div class="mb-3">
-                    <label for="filtroAnio" class="form-label">Seleccionar Año:</label>
-                    <select id="filtroAnio" class="form-select">
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                        <option value="2025" selected>2025</option>
-                    </select>
-                </div>
-
-                <!-- Gráfica de barras -->
-                <div style="height: auto;">
-                    <canvas id="graficaIngresos"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-header text-white d-flex align-items-center">
-                <p class="mb-0"><i class="fas fa-user-tie me-2"></i> Usuario con más ventas</p>
+                <p class="mb-0"><i class="fas fa-user-tie me-2"></i> Usuario con más ventas en Habitaciones</p>
             </div>
             <div class="card-body text-center">
                 <h5 class="card-title text-success" id="topVendedorNombre">Cargando...</h5>
@@ -188,5 +167,35 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        cargarDashboardData();
+    });
 
+    function cargarDashboardData() {
+        fetch("dashboardController?action=topVendedor")
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.nombre_empleado) {
+                    document.getElementById("topVendedorNombre").textContent = data.nombre_empleado;
+                    document.getElementById("topVendedorMonto").textContent = `S/ ${data.total_ventas.toFixed(2)}`;
+                } else {
+                    document.getElementById("topVendedorNombre").textContent = "No disponible";
+                    document.getElementById("topVendedorMonto").textContent = "S/ 0.00";
+                }
+            });
+
+        fetch("dashboardController?action=topHabitacion")
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.numero_habitacion) {
+                    document.getElementById("topHabitacion").textContent = `Habitación ${data.numero_habitacion}`;
+                    document.getElementById("topHabitacionMonto").textContent = `S/ ${data.total_ingresos.toFixed(2)}`;
+                } else {
+                    document.getElementById("topHabitacion").textContent = "No disponible";
+                    document.getElementById("topHabitacionMonto").textContent = "S/ 0.00";
+                }
+            });
+    }
+</script>
 </body>

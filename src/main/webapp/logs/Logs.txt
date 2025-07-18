@@ -22,3 +22,15 @@ GRAVE: Error retrieving Rooms: ERROR: syntax error at or near "."
 jul. 11, 2025 10:44:13 A. M. development.team.hoteltransylvania.Business.GestionRecepcion getReservationOcupada
 GRAVE: Error retrieving Rooms: ERROR: syntax error at or near "."
   Position: 292
+jul. 18, 2025 11:31:44 A. M. development.team.hoteltransylvania.Business.GestionDashboard getTopVendedor
+INFORMACIÓN: Top vendedor obtenido correctamente: LENIN RAMIREZ UCAÑAY
+jul. 18, 2025 11:32:09 A. M. development.team.hoteltransylvania.Business.GestionDashboard getTopVendedor
+INFORMACIÓN: Top vendedor obtenido correctamente: LENIN RAMIREZ UCAÑAY
+jul. 18, 2025 11:39:57 A. M. development.team.hoteltransylvania.Business.GestionDashboard getTopVendedor
+INFORMACIÓN: Top vendedor obtenido correctamente: LENIN RAMIREZ UCAÑAY
+jul. 18, 2025 11:41:07 A. M. development.team.hoteltransylvania.Business.GestionDashboard getTopVendedor
+GRAVE: Error retrieving employee by ID: ERROR: column r.total does not exist
+  Position: 87
+jul. 18, 2025 11:42:26 A. M. development.team.hoteltransylvania.Business.GestionDashboard getTopVendedor
+GRAVE: Error retrieving employee by ID: ERROR: column r.total does not exist
+  Position: 87
