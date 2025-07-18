@@ -102,9 +102,11 @@ public class FilterReportes extends HttpServlet {
                         out.println("<td>" + alquiler.getTotal_penalidad() + "</td>");
                         out.println("<td class='" + clasePagoTotal + "'>" + pagoTotalTexto + "</td>");
                         out.println("<td class='d-flex justify-content-center gap-1'>");
-                        out.println("    <button class='btn btn-info btn-sm' data-bs-toggle='modal' data-bs-target='#modalVerDetalle'>");
-                        out.println("        👁️");
-                        out.println("    </button>");
+                        out.println("<button class=\"btn btn-info btn-sm\" data-bs-toggle=\"modal\" data-bs-target=\"#modalVerDetalle\""
+                                + " title=\"Ver Detalle\""
+                                + " onclick=\"detalleReporte(" + alquiler.getIdReservation() + ")\">"
+                                + "👁️"
+                                + "</button>");
                         out.println("</td>");
                         out.println("</tr>");
 

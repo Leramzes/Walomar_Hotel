@@ -214,8 +214,12 @@ public class GestionClient {
         return getAllClients().stream()
                 .filter(client -> {
                     String nombreCompleto = (client.getName() + " " + client.getApPaterno() + " " + client.getApMaterno()).toLowerCase().trim();
-                    String razonSocial = client.getRazonSocial() != null ? client.getRazonSocial().toLowerCase() : "";
-                    return nombreCompleto.contains(nombre.toLowerCase()) || razonSocial.contains(nombre.toLowerCase());
+                    String razonSocial = client.getRazonSocial() != null ? client.getRazonSocial().toLowerCase().trim() : "";
+                    String documento = client.getNumberDocument() != null ? client.getNumberDocument().toLowerCase().trim() : "";
+
+                    return nombreCompleto.contains(nombre)
+                            || razonSocial.contains(nombre)
+                            || documento.contains(nombre);
                 })
                 .collect(Collectors.toList());
     }

@@ -248,7 +248,7 @@
                         <option value="Inactivo">Inactivos</option>
                     </select>
                 </div>
-                <input type="text" class="form-control" id="nameClientSearch" placeholder="Buscar por nombre"
+                <input type="text" class="form-control" id="nameClientSearch" placeholder="Buscar por nombre/documento"
                        onkeyup="Search('#nameClientSearch','#estadoSelect','#tablaClients','#sizeClients','filterClientServlet',1,10)">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
