@@ -138,7 +138,8 @@
                     </td>
                     <td>
                         <input type="number" id="inputPenalidad" name="inputPenalidad" class="form-control" value="0" min="0"
-                               oninput="actualizarTotalConPenalidad()">
+                               oninput="actualizarTotalConPenalidad()"
+                            <%= "0 días 0 horas 0 minutos".equals(reservation.getTiempoRebasado()) ? "disabled" : "" %>>
                     </td>
                     <td><%= reservation.getPago_total() - reservation.getAdelanto()%>
                     </td>
@@ -260,7 +261,7 @@
         <div class="centro">
             <label>
                 <input type="checkbox" name="enviarCorreo" value="1" id="enviarCorreo">
-                Enviar estado de cuenta por correo
+                Enviar comprobante por correo
             </label>
         </div>
 

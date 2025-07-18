@@ -2324,3 +2324,11 @@ async function exportarTablaVisible() {
         confirmButtonText: 'Aceptar'
     });
 }
+window.onload = function () {
+    const tiempo = document.getElementById("tiempoRebasado").value;
+    const input = document.getElementById("inputPenalidad");
+
+    if (tiempo.trim() === "0 días 0 horas 0 minutos") {
+        input.disabled = true; // Bloquea el input
+    }
+}
