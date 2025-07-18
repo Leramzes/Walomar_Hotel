@@ -48,7 +48,7 @@ public class FilterProductController extends HttpServlet {
                 out.println("<td>" + count + "</td>");
                 out.println("<td>" + product.getName() + "</td>");
                 out.println("<td>S/. " + product.getPrice() + "</td>");
-                out.println("<td>S/. " + product.getQuantity() + "</td>");
+                out.println("<td>" + product.getQuantity() + "</td>");
                 out.println("<td class='align-middle text-center'>");
                 out.println("<div class='d-flex justify-content-center align-items-center gap-1'>");
                 out.println("<button class='btn btn-warning' id='btn-editar' data-bs-toggle='modal' data-bs-target='#modalEditarCatalogoProducto' onclick='abrirModalEditar(" + product.getId() + ")'>✏️</button>");

@@ -139,6 +139,7 @@
                                     <label for="tipoHabitacion">Tipo de Habitación</label>
                                     <select class="form-select" id="tipoHabitacion" name="tipoHabitacion"
                                             onchange="getRoomsByType('#tipoHabitacion')" required>
+                                        <option value="" disabled selected>Seleccione un tipo de habitación</option>
                                         <%for (TypeRoom typeRoom : allTypeRooms) {%>
                                         <option value="<%=typeRoom.getId()%>"><%=typeRoom.getName()%>
                                         </option>

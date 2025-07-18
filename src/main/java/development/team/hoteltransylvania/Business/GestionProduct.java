@@ -194,7 +194,7 @@ public class GestionProduct {
                                 (estado == null ||
                                         (estado == 1 && product.getStatus() == 1) ||
                                         (estado == 0 && product.getStatus() == 0) ||
-                                        (estado == 3 && product.getQuantity() <= 5 && product.getQuantity() > 0) ||
+                                        (estado == 3 && product.getQuantity() <= 3 && product.getQuantity() > 0) ||
                                         (estado == -1 && product.getQuantity() == 0)
                                 )
                 )

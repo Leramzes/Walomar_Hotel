@@ -27,7 +27,7 @@
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/menu.jsp">Inicio</a></li>
             <li class="breadcrumb-item"><a href="#"
-                                           onclick="cargarPagina('jsp/VerificacionSalidas.jsp')">Habitaciones</a></li>
+                                           onclick="cargarPagina('jsp/verificacionSalidas.jsp')">Habitaciones</a></li>
             <li class="breadcrumb-item active" aria-current="page">Proceso Salida</li>
         </ol>
     </nav>

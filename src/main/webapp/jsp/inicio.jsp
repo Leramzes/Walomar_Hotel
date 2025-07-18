@@ -53,7 +53,7 @@
                 <i class="fas fa-bed room-icon"></i>
             </div>
             <%if (rolUser == 1) {%>
-            <a onclick="cargarPagina('jsp/habitaciones.jsp')" class="small-box-footer">Mas info <i
+            <a onclick="cargarPagina('jsp/habitaciones.jsp')" class="small-box-footer" style="cursor: pointer;">Mas info <i
                     class="fas fa-arrow-circle-right"></i></a>
             <%}%>
         </div>
@@ -70,7 +70,7 @@
                 <i class="fas fa-bed room-icon"></i>
             </div>
             <%if (rolUser == 1) {%>
-            <a onclick="cargarPagina('jsp/habitaciones.jsp')" class="small-box-footer">Mas info <i
+            <a onclick="cargarPagina('jsp/habitaciones.jsp')" class="small-box-footer" style="cursor: pointer;">Mas info <i
                     class="fas fa-arrow-circle-right"></i></a>
             <%}%>
         </div>
@@ -87,7 +87,7 @@
                 <i class="fas fa-bed room-icon"></i>
             </div>
             <%if (rolUser == 1) {%>
-            <a onclick="cargarPagina('jsp/habitaciones.jsp')" class="small-box-footer">Mas info <i
+            <a onclick="cargarPagina('jsp/recepcion.jsp')" class="small-box-footer" style="cursor: pointer;">Mas info <i
                     class="fas fa-arrow-circle-right"></i></a>
             <%}%>
         </div>
