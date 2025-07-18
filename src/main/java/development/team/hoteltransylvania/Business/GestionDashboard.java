@@ -55,12 +55,17 @@ public class GestionDashboard {
     }
 
     public static TopHabitacion getTopHabitacion() {
-        String sql = "SELECT h.numero AS numero_habitacion, SUM(r.pago_total_reserva) AS total_ingresos\n" +
-                "        FROM reservas r\n" +
-                "        INNER JOIN habitaciones h ON r.habitacion_id = h.id\n" +
-                "        GROUP BY h.numero\n" +
-                "        ORDER BY total_ingresos DESC\n" +
-                "        LIMIT 1";
+        String sql = "SELECT\n" +
+                "    h.id AS id_habitacion,\n" +
+                "    h.numero AS numero_habitacion,\n" +
+                "    COUNT(r.id) AS cantidad_reservas,\n" +
+                "    sum(dh.pago_total) as total_ingresos\n" +
+                "FROM reservas r\n" +
+                "    INNER JOIN detalle_habitacion dh on dh.reserva_id = r.id\n" +
+                "         INNER JOIN habitaciones h ON dh.habitacion_id = h.id\n" +
+                "GROUP BY h.id, h.numero\n" +
+                "ORDER BY cantidad_reservas DESC\n" +
+                "LIMIT 1";
 
         TopHabitacion habitacion = null;
 
@@ -72,6 +77,7 @@ public class GestionDashboard {
                 if (rs.next()) {
                     habitacion = new TopHabitacion();
                     habitacion.setNumero_habitacion(rs.getString("numero_habitacion"));
+                    habitacion.setCantidad_reservas(rs.getInt("cantidad_reservas"));
                     habitacion.setTotal_ingresos(rs.getDouble("total_ingresos"));
                     LOGGER.info("Top habitación obtenida correctamente: " + habitacion.getNumero_habitacion());
                 }

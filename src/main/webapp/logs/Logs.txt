@@ -34,3 +34,5 @@ GRAVE: Error retrieving employee by ID: ERROR: column r.total does not exist
 jul. 18, 2025 11:42:26 A. M. development.team.hoteltransylvania.Business.GestionDashboard getTopVendedor
 GRAVE: Error retrieving employee by ID: ERROR: column r.total does not exist
   Position: 87
+jul. 18, 2025 1:10:20 P. M. development.team.hoteltransylvania.Business.GestionDashboard getTopHabitacion
+INFORMACIÓN: Top habitación obtenida correctamente: 202

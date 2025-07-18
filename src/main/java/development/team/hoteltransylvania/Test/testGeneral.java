@@ -3,6 +3,7 @@ package development.team.hoteltransylvania.Test;
 import development.team.hoteltransylvania.Business.*;
 import development.team.hoteltransylvania.DTO.AllInfoReporteAlquiler;
 import development.team.hoteltransylvania.DTO.TableReservationDTO;
+import development.team.hoteltransylvania.DTO.TopHabitacion;
 import development.team.hoteltransylvania.DTO.TopVendedor;
 import development.team.hoteltransylvania.Model.Product;
 import development.team.hoteltransylvania.Model.Room;
@@ -37,8 +38,8 @@ public class testGeneral {
                 true,
                 archivo
         );*/
-        TopVendedor vendedor = GestionDashboard.getTopVendedor();
-        System.out.println(vendedor);
+        TopHabitacion h = GestionDashboard.getTopHabitacion();
+        System.out.println(h);
     }
 
 }
