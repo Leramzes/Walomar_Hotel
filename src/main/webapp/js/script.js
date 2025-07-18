@@ -1841,13 +1841,11 @@ async function generarComprobantePDF(idReserva, idClient, devolverBlob = false, 
         // --- Tabla Habitación ---
         doc.autoTable({
             startY: 58,
-            head: [["Habitación", "Tarifa/Tipo", "F.Entrada", "F.Ingreso", "F.Salida", "F.Desalojo", "Descuento(%)", "Precio"]],
+            head: [["Habitación", "Tarifa/Tipo", "F.Entrada", "F.Salida", "Descuento(%)", "Precio"]],
             body: [[
                 reserva.numberRoom,
                 `24H / ${reserva.roomType}`,
-                reserva.checkInDate,
                 reserva.fecha_ingreso,
-                reserva.checkOutDate,
                 reserva.fecha_desalojo,
                 `${reserva.dsct}`,
                 `S/. ${reserva.pago_total}`
@@ -2048,15 +2046,12 @@ async function generarFacturaPDF(idReserva, idClient, devolverBlob = false, pena
         const tablaStartY = boxY + boxHeight + 10;
         doc.autoTable({
             startY: tablaStartY,
-            head: [["Habitación", "Tarifa/Tipo", "F.Entrada", "F.Ingreso", "F.Salida", "F.Desalojo", "Descuento(%)", "Precio"]],
+            head: [["Habitación", "Tarifa/Tipo", "F.Entrada", "F.Salida", "Precio"]],
             body: [[
                 reserva.numberRoom,
                 `24H / ${reserva.roomType}`,
-                reserva.checkInDate,
                 reserva.fecha_ingreso,
-                reserva.checkOutDate,
                 reserva.fecha_desalojo,
-                `${reserva.dsct}`,
                 `S/. ${reserva.pago_total}`
             ]],
             theme: 'grid',
@@ -2143,15 +2138,26 @@ async function generarFacturaPDF(idReserva, idClient, devolverBlob = false, pena
         const totalAdelanto = reserva.adelanto || 0;
         const totalFinal = totalProductos + totalServicios + totalHabitacion + totalExtra + parseFloat(penalidad) - totalAdelanto;
 
-        doc.text(`Costo Extra:   S/. ${reserva.cobro_extra}`, 15, resumenY);
-        doc.text(`Costo Alquiler:   S/. ${reserva.pago_total}`, 15, resumenY + 6);
-        doc.text("Dinero Adelantado:   S/. " + totalAdelanto, 15, resumenY + 12);
-        doc.text("Servicio a la habitación:   S/. " + (totalProductos + totalServicios), 15, resumenY + 18);
-        doc.text(`Penalidad:   S/. ${parseFloat(penalidad).toFixed(2)}`, 15, resumenY + 24);
+        // Calcular IGV incluido (si totalFinal ya incluye IGV)
+        const totalConIGV = totalFinal;
+        const igv = totalConIGV * 0.18 / 1.18;
+        const totalSinIGV = totalConIGV / 1.18;
+
+        const rightX = 195; // posición X para alinear a la derecha
+        const align = 'right';
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text(`Costo Extra:   S/. ${parseFloat(reserva.cobro_extra).toFixed(2)}`, rightX, resumenY, { align });
+        doc.text(`Costo Alquiler:   S/. ${parseFloat(reserva.pago_total).toFixed(2)}`, rightX, resumenY + 6, { align });
+        doc.text(`Dinero Adelantado:   S/. ${parseFloat(totalAdelanto).toFixed(2)}`, rightX, resumenY + 12, { align });
+        doc.text(`Servicio a la habitación:   S/. ${(totalProductos + totalServicios).toFixed(2)}`, rightX, resumenY + 18, { align });
+        doc.text(`Penalidad:   S/. ${parseFloat(penalidad).toFixed(2)}`, rightX, resumenY + 24, { align });
+        doc.text(`IGV (18% incluido):   S/. ${igv.toFixed(2)}`, rightX, resumenY + 30, { align });
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
-        doc.text(`Total pagado al salir:   S/. ${totalFinal.toFixed(2)}`, 15, resumenY + 32);
+        doc.text(`Total pagado al salir:   S/. ${totalConIGV.toFixed(2)}`, rightX, resumenY + 38, { align });
 
         // FOOTER
         const footerY = resumenY + 60;
